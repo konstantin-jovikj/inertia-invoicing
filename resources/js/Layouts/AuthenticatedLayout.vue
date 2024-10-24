@@ -1,12 +1,12 @@
 <script setup>
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
-import SideNav from '@/SideNav/SideNav.vue';
+import { ref } from "vue";
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
+import NavLink from "@/Components/NavLink.vue";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import { Link } from "@inertiajs/vue3";
+import SideNav from "@/SideNav/SideNav.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -14,9 +14,7 @@ const showingNavigationDropdown = ref(false);
 <template>
     <div>
         <div class="min-h-screen bg-gray-100">
-            <nav
-                class="bg-white border-b border-gray-100"
-            >
+            <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -150,13 +148,9 @@ const showingNavigationDropdown = ref(false);
                     </div>
 
                     <!-- Responsive Settings Options -->
-                    <div
-                        class="pt-4 pb-1 border-t border-gray-200"
-                    >
+                    <div class="pt-4 pb-1 border-t border-gray-200">
                         <div class="px-4">
-                            <div
-                                class="text-base font-medium text-gray-800"
-                            >
+                            <div class="text-base font-medium text-gray-800">
                                 {{ $page.props.auth.user.name }}
                             </div>
                             <div class="text-sm font-medium text-gray-500">
@@ -181,10 +175,7 @@ const showingNavigationDropdown = ref(false);
             </nav>
 
             <!-- Page Heading -->
-            <header
-                class="bg-white shadow"
-                v-if="$slots.header"
-            >
+            <header class="bg-white shadow" v-if="$slots.header">
                 <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
@@ -192,8 +183,10 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
-                <SideNav />
-                <slot />
+                <div class="flex">
+                    <SideNav />
+                    <slot />
+                </div>
             </main>
         </div>
     </div>
