@@ -58,7 +58,10 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        //
+        // dd($country);
+        return inertia('Settings/CountryEdit',[
+            'country' => $country
+        ]);
     }
 
     /**

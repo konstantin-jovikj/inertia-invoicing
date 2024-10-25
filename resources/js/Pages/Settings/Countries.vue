@@ -40,7 +40,7 @@ watch(
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Countries" />
 
     <AuthenticatedLayout>
         <div class="py-12">
@@ -93,13 +93,21 @@ watch(
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
+                                    class="hover:bg-slate-100"
                                     v-for="country in countries.data"
                                     :key="country.id"
                                 >
                                     <td class="">{{ country.id }}</td>
                                     <td class="">{{ country.name }}</td>
                                     <td class="">{{ country.code }}</td>
-                                    <td class="">button</td>
+                                    <td class="">
+                                        <div class="flex gap-2">
+
+                                            <Link class="px-2 py-1 text-xs font-bold text-white uppercase rounded-md bg-emerald-600 hover:bg-emerald-700" :href="route('country.edit', country.id)">Измени</Link>
+
+                                            <Link class="px-2 py-1 text-xs font-bold text-white uppercase bg-red-600 rounded-md hover:bg-red-700" href="#">Избриши</Link>
+                                        </div>
+                                        </td>
                                 </tr>
                             </tbody>
                         </table>

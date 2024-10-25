@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/countries', [CountryController::class, 'index'])->name('country.index');
     Route::get('/countries/add', [CountryController::class, 'create'])->name('country.create');
     Route::post('/countries/store', [CountryController::class, 'store'])->name('country.store');
+    Route::get('/countries/edit/{country}', [CountryController::class, 'edit'])->name('country.edit');
 });
 
 require __DIR__.'/auth.php';
