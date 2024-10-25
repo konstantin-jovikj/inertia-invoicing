@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import TextInput from "../../Components/TextInput.vue";
+import SecondaryButton from "../../Components/SecondaryButton.vue";
 import { computed, ref, watch } from "vue";
 import { debounce } from "lodash";
 // import { defineProps } from "vue";
@@ -15,7 +16,7 @@ import { debounce } from "lodash";
 
 const props = defineProps({
     countries: Object,
-    searchTerm: String
+    searchTerm: String,
 });
 // const search = ref(props.searchTerm);
 const search = ref(props.searchTerm || "");
@@ -36,9 +37,6 @@ watch(
         500
     )
 );
-
-
-
 </script>
 
 <template>
@@ -50,6 +48,11 @@ watch(
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-end mb-4">
+                            <Link
+                            href="countries/add"
+                                class="px-4 py-2 mr-10 text-3xl rounded-lg hover:bg-sky-400 bg-sky-200"
+                                >+</Link
+                            >
                             <TextInput
                                 placeholder="Барај ..."
                                 v-model="search"
@@ -93,7 +96,7 @@ watch(
                                     v-for="country in countries.data"
                                     :key="country.id"
                                 >
-                                    <td class=""> {{  country.id }}</td>
+                                    <td class="">{{ country.id }}</td>
                                     <td class="">{{ country.name }}</td>
                                     <td class="">{{ country.code }}</td>
                                     <td class="">button</td>
@@ -102,21 +105,24 @@ watch(
                         </table>
 
                         <!-- Pagination Links -->
-                        <div v-if="countries && countries.links">
-                            <Link
+                        <div v-if="countries && countries.links" class="flex flex-col lg:flex-row lg:justify-around">
+                            <div class="mt-2">
+
+                                <Link
                                 v-for="link in countries.links"
                                 :key="link.label"
                                 v-html="link.label"
-                                 v-bind="{ href: link.url || '#' }"
-                                class="p-1 mx-1"
+                                v-bind="{ href: link.url || '#' }"
+                                class="p-1 mx-1 hover:bg-sky-200"
                                 :class="{
                                     'text-slate-300': !link.url,
                                     'text-sky-500 font-bold': link.active,
                                 }"
                             >
-                            </Link>
+                        </Link>
+                    </div>
 
-                            <p>
+                            <p class="mt-3 text-xs text-gray-500">
                                 Прикажани се од {{ countries.from }} до
                                 {{ countries.to }} од вкупно
                                 {{ countries.total }} записи

@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/countries', [CountryController::class, 'index'])->name('country.index');
+    Route::get('/countries/add', [CountryController::class, 'create'])->name('country.create');
+    Route::post('/countries/store', [CountryController::class, 'store'])->name('country.store');
 });
 
 require __DIR__.'/auth.php';

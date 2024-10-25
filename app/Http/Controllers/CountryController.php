@@ -14,7 +14,8 @@ class CountryController extends Controller
     public function index(Request $request)
     {
         $countries = Country::when($request->search, function ($query) use ($request) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%' . $request->search . '%')
+            ->orWhere('code', 'like', '%' . $request->search . '%');
         })->paginate(20)->withQueryString();
 
         return inertia('Settings/Countries', [
@@ -28,7 +29,7 @@ class CountryController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Settings/CountryAdd');
     }
 
     /**
@@ -36,7 +37,12 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required', 'max:255', 'unique:countries'],
+            'code' => ['required', 'max:255', 'unique:countries'],
+        ]);
+        Country::create($data);
+        return redirect()->route('country.index');
     }
 
     /**
