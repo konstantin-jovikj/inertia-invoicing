@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/countries/store', [CountryController::class, 'store'])->name('country.store');
     Route::get('/countries/edit/{country}', [CountryController::class, 'edit'])->name('country.edit');
     Route::put('/countries/update/{country}', [CountryController::class, 'update'])->name('country.update');
+    Route::delete('/countries/delete/{country}', [CountryController::class, 'destroy'])->name('country.delete');
 });
 
 require __DIR__ . '/auth.php';

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 
 
 class CountryController extends Controller
@@ -86,6 +88,7 @@ class CountryController extends Controller
      */
     public function destroy(Country $country)
     {
-        //
+        $country->delete();
+        return redirect()->route('country.index')->with('success', 'Country updated successfully.');
     }
 }

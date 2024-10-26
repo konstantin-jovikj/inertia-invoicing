@@ -5,14 +5,6 @@ import TextInput from "../../Components/TextInput.vue";
 import SecondaryButton from "../../Components/SecondaryButton.vue";
 import { computed, ref, watch } from "vue";
 import { debounce } from "lodash";
-// import { defineProps } from "vue";
-
-// import { onMounted } from "vue";
-
-// onMounted(() => {
-//     console.log("countries.current_page:", countries.current_page);
-//     console.log("countries.per_page:", countries.per_page);
-// });
 
 const props = defineProps({
     countries: Object,
@@ -37,6 +29,13 @@ watch(
         500
     )
 );
+
+// Delete country function
+const deleteCountry = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваа земја?")) {
+        router.delete("/countries/delete/" + id);
+    }
+};
 </script>
 
 <template>
@@ -49,7 +48,7 @@ watch(
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-end mb-4">
                             <Link
-                            href="countries/add"
+                                href="countries/add"
                                 class="px-4 py-2 mr-10 text-3xl rounded-lg hover:bg-sky-400 bg-sky-200"
                                 >+</Link
                             >
@@ -102,33 +101,53 @@ watch(
                                     <td class="">{{ country.code }}</td>
                                     <td class="">
                                         <div class="flex gap-2">
+                                            <Link
+                                                class="px-2 py-1 text-xs font-bold text-white uppercase rounded-md bg-emerald-600 hover:bg-emerald-700"
+                                                :href="
+                                                    route(
+                                                        'country.edit',
+                                                        country.id
+                                                    )
+                                                "
+                                                >Измени</Link
+                                            >
 
-                                            <Link class="px-2 py-1 text-xs font-bold text-white uppercase rounded-md bg-emerald-600 hover:bg-emerald-700" :href="route('country.edit', country.id)">Измени</Link>
-
-                                            <Link class="px-2 py-1 text-xs font-bold text-white uppercase bg-red-600 rounded-md hover:bg-red-700" href="#">Избриши</Link>
+                                            <button
+                                                class="px-2 py-1 text-xs font-bold text-white uppercase bg-red-600 rounded-md hover:bg-red-700"
+                                                @click="
+                                                    () =>
+                                                        deleteCountry(
+                                                            country.id
+                                                        )
+                                                "
+                                            >
+                                                Delete
+                                            </button>
                                         </div>
-                                        </td>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
 
                         <!-- Pagination Links -->
-                        <div v-if="countries && countries.links" class="flex flex-col lg:flex-row lg:justify-around">
+                        <div
+                            v-if="countries && countries.links"
+                            class="flex flex-col lg:flex-row lg:justify-around"
+                        >
                             <div class="mt-2">
-
                                 <Link
-                                v-for="link in countries.links"
-                                :key="link.label"
-                                v-html="link.label"
-                                v-bind="{ href: link.url || '#' }"
-                                class="p-1 mx-1 hover:bg-sky-200"
-                                :class="{
-                                    'text-slate-300': !link.url,
-                                    'text-sky-500 font-bold': link.active,
-                                }"
-                            >
-                        </Link>
-                    </div>
+                                    v-for="link in countries.links"
+                                    :key="link.label"
+                                    v-html="link.label"
+                                    v-bind="{ href: link.url || '#' }"
+                                    class="p-1 mx-1 hover:bg-sky-200"
+                                    :class="{
+                                        'text-slate-300': !link.url,
+                                        'text-sky-500 font-bold': link.active,
+                                    }"
+                                >
+                                </Link>
+                            </div>
 
                             <p class="mt-3 text-xs text-gray-500">
                                 Прикажани се од {{ countries.from }} до
