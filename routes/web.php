@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/countries/add', [CountryController::class, 'create'])->name('country.create');
     Route::post('/countries/store', [CountryController::class, 'store'])->name('country.store');
     Route::get('/countries/edit/{country}', [CountryController::class, 'edit'])->name('country.edit');
+    Route::put('/countries/update/{country}', [CountryController::class, 'update'])->name('country.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

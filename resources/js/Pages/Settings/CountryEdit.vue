@@ -21,6 +21,7 @@ const { country } = toRefs(props);
 const form = useForm({
     name: country.value.name,
     code: country.value.code,
+    id: country.value.id,
 });
 
 const submit = () => {
@@ -35,7 +36,13 @@ const submit = () => {
             <div class="mx-auto max-w-11/12 sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <form @submit.prevent="submit">
+                        <form
+                            @submit.prevent="
+                                form.put(`/countries/update/${country}`, {
+                                    onError: () => form.reset(),
+                                })
+                            "
+                        >
                             <div>
                                 <InputLabel for="name">Име</InputLabel>
                                 <TextInput

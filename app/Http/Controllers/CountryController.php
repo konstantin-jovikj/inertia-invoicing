@@ -15,7 +15,7 @@ class CountryController extends Controller
     {
         $countries = Country::when($request->search, function ($query) use ($request) {
             $query->where('name', 'like', '%' . $request->search . '%')
-            ->orWhere('code', 'like', '%' . $request->search . '%');
+                ->orWhere('code', 'like', '%' . $request->search . '%');
         })->paginate(20)->withQueryString();
 
         return inertia('Settings/Countries', [
@@ -58,8 +58,7 @@ class CountryController extends Controller
      */
     public function edit(Country $country)
     {
-        // dd($country);
-        return inertia('Settings/CountryEdit',[
+        return inertia('Settings/CountryEdit', [
             'country' => $country
         ]);
     }
@@ -67,11 +66,21 @@ class CountryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Country $country)
+    public function update(Request $request)
     {
-        //
-    }
+        // dd($request);
+        $validated = $request->validate([
+            'id' => 'required|integer|exists:countries,id',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:10',
+        ]);
 
+        // Find the country by `id` in the request body
+        $country = Country::findOrFail($validated['id']);
+        $country->update($validated);
+
+        return redirect()->route('country.index')->with('success', 'Country updated successfully.');
+    }
     /**
      * Remove the specified resource from storage.
      */
