@@ -23,12 +23,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // COUNTRIES
+
     Route::get('/countries', [CountryController::class, 'index'])->name('country.index');
     Route::get('/countries/add', [CountryController::class, 'create'])->name('country.create');
     Route::post('/countries/store', [CountryController::class, 'store'])->name('country.store');
     Route::get('/countries/edit/{country}', [CountryController::class, 'edit'])->name('country.edit');
     Route::put('/countries/update/{country}', [CountryController::class, 'update'])->name('country.update');
     Route::delete('/countries/delete/{country}', [CountryController::class, 'destroy'])->name('country.delete');
+
+    // CITIES
+
+
 });
 
 require __DIR__ . '/auth.php';
