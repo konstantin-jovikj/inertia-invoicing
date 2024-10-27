@@ -1,9 +1,9 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import TextInput from "../../Components/TextInput.vue";
 import SecondaryButton from "../../Components/SecondaryButton.vue";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import { debounce } from "lodash";
 
 const props = defineProps({
@@ -12,6 +12,8 @@ const props = defineProps({
 });
 // const search = ref(props.searchTerm);
 const search = ref(props.searchTerm || "");
+const { props: pageProps } = usePage();
+const flashMessage = ref(pageProps.flash?.message || "");
 
 watch(
     search,
@@ -36,6 +38,14 @@ const deleteCountry = (id) => {
         router.delete("/countries/delete/" + id);
     }
 };
+
+onMounted(() => {
+    if (flashMessage.value) {
+        setTimeout(() => {
+            flashMessage.value = "";
+        }, 3000);
+    }
+});
 </script>
 
 <template>
@@ -44,6 +54,13 @@ const deleteCountry = (id) => {
     <AuthenticatedLayout>
         <div class="py-12">
             <div class="mx-auto max-w-11/12 sm:px-6 lg:px-8">
+                <!-- message -->
+                <div
+                    v-if="flashMessage"
+                    class="px-4 py-2 bg-red-200 rounded-md"
+                >
+                    {{ flashMessage }}
+                </div>
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-end mb-4">

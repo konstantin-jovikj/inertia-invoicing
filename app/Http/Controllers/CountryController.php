@@ -44,7 +44,7 @@ class CountryController extends Controller
             'code' => ['required', 'max:255', 'unique:countries'],
         ]);
         Country::create($data);
-        return redirect()->route('country.index');
+        return redirect()->route('country.index')->with('message', 'Државата е успешно додадена');
     }
 
     /**
