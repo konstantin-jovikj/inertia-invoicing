@@ -35,7 +35,12 @@ watch(
 // Delete country function
 const deleteCountry = (id) => {
     if (confirm("Дали сигурно сакаш да ја избришеш оваа земја?")) {
-        router.delete("/countries/delete/" + id);
+        router.delete("/countries/delete/" + id, {
+            preserveState: false,
+            onSuccess: () => {
+                flashMessage.value = props.flash.message;
+            },
+        });
     }
 };
 
