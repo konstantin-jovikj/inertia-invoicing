@@ -81,7 +81,7 @@ class CountryController extends Controller
         $country = Country::findOrFail($validated['id']);
         $country->update($validated);
 
-        return redirect()->route('country.index')->with('success', 'Country updated successfully.');
+        return redirect()->route('country.index')->with('message', 'Државата е успешно едитирана');
     }
     /**
      * Remove the specified resource from storage.
@@ -89,6 +89,6 @@ class CountryController extends Controller
     public function destroy(Country $country)
     {
         $country->delete();
-        return redirect()->route('country.index')->with('success', 'Country updated successfully.');
+        return redirect()->route('country.index')->with('message', 'Државата е успешно избришана.');
     }
 }
