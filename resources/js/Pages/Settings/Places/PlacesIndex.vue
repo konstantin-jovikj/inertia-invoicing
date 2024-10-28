@@ -94,6 +94,12 @@ onMounted(() => {
                                         scope="col"
                                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
                                     >
+                                        Id
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
                                         Бр
                                     </th>
                                     <th
@@ -119,10 +125,11 @@ onMounted(() => {
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
                                     class="hover:bg-slate-100"
-                                    v-for="place in places.data"
+                                    v-for="(place, index) in places.data"
                                     :key="place.id"
                                 >
-                                    <td class="">{{ place.id }}</td>
+                                <td class="text-xs text-slate-300">{{ place.id }}</td>
+                                    <td class="">{{ places.from + index }}</td>
                                     <td class="">{{ place.zip }}</td>
                                     <td class="">{{ place.place }} <span class="mx-4">-</span> <span class="text-xs italic text-slate-500">{{ place.country.name }}</span></td>
                                     <td class="">

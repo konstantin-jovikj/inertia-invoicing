@@ -73,7 +73,7 @@ onMounted(() => {
                             <div class="flex ">
 
                                 <Link
-                                href="places/add"
+                                href="countries/add"
                                 class="px-4 py-1 mr-10 text-3xl rounded-lg hover:bg-sky-400 bg-sky-200"
                                 >+</Link
                                 >
@@ -90,6 +90,12 @@ onMounted(() => {
                         >
                             <thead class="bg-primary">
                                 <tr>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
+                                        index
+                                    </th>
                                     <th
                                         scope="col"
                                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
@@ -119,10 +125,11 @@ onMounted(() => {
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
                                     class="hover:bg-slate-100"
-                                    v-for="country in countries.data"
+                                    v-for="(country, index) in countries.data"
                                     :key="country.id"
                                 >
-                                    <td class="">{{ country.id }}</td>
+                                <td class="text-xs text-slate-300">{{ country.id }} {{  }}</td>
+                                    <td class="">{{ countries.from + index }} {{  }}</td>
                                     <td class="">{{ country.name }}</td>
                                     <td class="">{{ country.code }}</td>
                                     <td class="">

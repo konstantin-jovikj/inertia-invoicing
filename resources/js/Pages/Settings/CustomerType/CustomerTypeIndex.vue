@@ -72,6 +72,12 @@ onMounted(() => {
                                         scope="col"
                                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
                                     >
+                                        Id
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
                                         Бр
                                     </th>
                                     <th
@@ -92,10 +98,11 @@ onMounted(() => {
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
                                     class="hover:bg-slate-100"
-                                    v-for="type in customer_types.data"
+                                    v-for="(type, index) in customer_types.data"
                                     :key="type.id"
                                 >
-                                    <td class="">{{ type.id }}</td>
+                                    <td class="text-xs text-slate-300">{{ type.id }}</td>
+                                    <td class="">{{ customer_types.from + index }}</td>
                                     <td class="">{{ type.type }}</td>
 
                                     <td class="">
