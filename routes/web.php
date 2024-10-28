@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\CustomerTypeController;
-use App\Http\Controllers\PlaceController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CompanyController;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerTypeController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -54,6 +56,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/customertype/store', [CustomerTypeController::class, 'store'])->name('customertype.store');
     Route::put('/customertype/update/{customer_type}', [CustomerTypeController::class, 'update'])->name('customertype.update');
 
+    // CUSTOMERS - Komintenti
+
+    Route::get('/customers/add', [CustomerController::class, 'create'])->name('customer.create');
+    Route::post('/customers/store', [CustomerController::class, 'store'])->name('customer.store');
+
+
+
+        // COMPANIES
+
+        Route::get('/companies/add/{customer}', [CompanyController::class, 'create'])->name('company.create');
+        Route::post('/companies/store', [CompanyController::class, 'store'])->name('company.store');
 
 
 });

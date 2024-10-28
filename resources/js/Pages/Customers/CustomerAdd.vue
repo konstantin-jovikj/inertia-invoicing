@@ -1,43 +1,31 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import TextInput from "../../../Components/TextInput.vue";
-import InputLabel from "../../../Components/InputLabel.vue";
-import { useForm, Link } from "@inertiajs/vue3";
-import { toRefs } from "vue";
+import { Head, Link, router } from "@inertiajs/vue3";
 
-// Define `country` as a prop
+import InputLabel from "../../Components/InputLabel.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import { reactive } from "vue";
+import { useForm } from "@inertiajs/vue3";
+
 const props = defineProps({
-    place: {
-        type: Object,
-        required: true,
-    },
-    countries: {
-        type: Array,
-        required: true,
-    },
+    customer_types: Array,
 });
 
-// Extract `country` for reactivity
-const { place } = toRefs(props);
-
-// Initialize `form` with the values from `country`
 const form = useForm({
-    place: place.value.place,
-    zip: place.value.zip,
-    id: place.value.id,
-    country_id: place.value.country_id,
-});
+    customer_type_id: "",
 
-console.log("Place:", place);
+});
 
 const submit = () => {
-    console.log("Form data:", form);
-    // Handle form submission logic here
+    console.log(form);
 };
+
+console.log("Customer_Type:", props.customer_types);
 </script>
 
 <template>
+    <Head title="Add New Customer" />
+
     <AuthenticatedLayout>
         <div class="py-12">
             <div class="mx-auto max-w-11/12 sm:px-6 lg:px-8">
@@ -45,7 +33,7 @@ const submit = () => {
                     <div class="p-6 text-gray-900">
                         <form
                             @submit.prevent="
-                                form.put('/places/update/' + form.id, {
+                                form.post('/customers/store', {
                                     onError: () => form.reset(),
                                 })
                             "
@@ -58,11 +46,10 @@ const submit = () => {
                                 >
                                     <div class="text-gray-600">
                                         <p class="text-lg font-medium">
-                                            Едитирај го Градот / Местото
+                                            Тип на Коминтент
                                         </p>
                                         <p>
-                                            Едитирај го името и / или кодот на
-                                            Градот / Местото
+                                            Одбери го типот на Коминтент
                                         </p>
                                     </div>
 
@@ -72,22 +59,22 @@ const submit = () => {
                                         >
                                             <div class="md:col-span-5">
                                                 <InputLabel for="country"
-                                                    >Одбери Држава</InputLabel
+                                                    >Одбери Тип на Коминтент</InputLabel
                                                 >
                                                 <select
-                                                    v-model="form.country_id"
+                                                    v-model="form.customer_type_id"
                                                     id="country"
                                                     class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
                                                 >
                                                     <option value="" disabled>
-                                                        Избери држава
+                                                        Тип на Коминтент ...
                                                     </option>
                                                     <option
-                                                        v-for="country in countries"
-                                                        :key="country.id"
-                                                        :value="country.id"
+                                                        v-for="type in customer_types"
+                                                        :key="type.id"
+                                                        :value="type.id"
                                                     >
-                                                        {{ country.name }}
+                                                        {{ type.type }}
                                                     </option>
                                                 </select>
                                                 <span
@@ -98,46 +85,8 @@ const submit = () => {
                                                 >
                                             </div>
 
-                                            <div
-                                                class="md:col-span-3"
-                                                v-if="form.country_id"
-                                            >
-                                                <InputLabel for="name"
-                                                    >Име</InputLabel
-                                                >
 
-                                                <TextInput
-                                                    v-model="form.place"
-                                                    type="text"
-                                                    id="name"
-                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
-                                                />
-                                                <span
-                                                    class="text-xs italic text-red-600"
-                                                    >{{
-                                                        form.errors.place
-                                                    }}</span
-                                                >
-                                            </div>
 
-                                            <div
-                                                class="md:col-span-2"
-                                                v-if="form.country_id"
-                                            >
-                                                <InputLabel for="code"
-                                                    >Код</InputLabel
-                                                >
-                                                <TextInput
-                                                    v-model="form.zip"
-                                                    type="text"
-                                                    id="code"
-                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
-                                                />
-                                                <span
-                                                    class="text-xs italic text-red-600"
-                                                    >{{ form.errors.zip }}</span
-                                                >
-                                            </div>
 
                                             <div
                                                 class="flex justify-between text-right md:col-span-5"
@@ -148,13 +97,14 @@ const submit = () => {
                                                     >Назад</Link
                                                 >
                                                 <div
+                                                v-if="form.customer_type_id"
                                                     class="inline-flex items-end"
                                                 >
                                                     <button
                                                         type="submit"
                                                         class="px-4 py-2 mt-4 font-bold text-white rounded bg-sky-500 hover:bg-sky-700"
                                                     >
-                                                        Измени
+                                                        Креирај
                                                     </button>
                                                 </div>
                                             </div>
