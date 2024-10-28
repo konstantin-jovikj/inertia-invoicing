@@ -41,7 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/places/delete/{place}', [PlaceController::class, 'destroy'])->name('place.delete');
     Route::get('/places/add', [PlaceController::class, 'create'])->name('place.create');
     Route::post('/places/store', [PlaceController::class, 'store'])->name('place.store');
-
+    Route::get('/places/edit/{place}', [PlaceController::class, 'edit'])->name('place.edit');
+    Route::put('/places/update/{place}', [PlaceController::class, 'update'])->name('place.update');
 
 });
 

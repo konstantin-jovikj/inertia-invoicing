@@ -14,7 +14,7 @@ class PlaceController extends Controller
      */
     public function index(Request $request)
     {
-        $places = Place::when($request->search, function ($query) use ($request) {
+        $places = Place::with('country')->when($request->search, function ($query) use ($request) {
             $query->where('place', 'like', '%' . $request->search . '%')
                 ->orWhere('zip', 'like', '%' . $request->search . '%');
         })->paginate(20)->withQueryString();
@@ -68,7 +68,12 @@ class PlaceController extends Controller
      */
     public function edit(Place $place)
     {
-        //
+        $countries = Country::all();
+
+        return inertia('Settings/Places/PlacesEdit', [
+            'place' => $place,
+            'countries' => $countries,
+        ]);
     }
 
     /**
@@ -76,7 +81,21 @@ class PlaceController extends Controller
      */
     public function update(Request $request, Place $place)
     {
-        //
+
+
+        // Validate data
+        $validated = $request->validate([
+            'id' => 'required|integer|exists:places,id',
+            'country_id' => 'required|integer|exists:countries,id',
+            'place' => 'required|string|max:255',
+            'zip' => 'required|string|max:6',
+        ]);
+
+        // Update the record
+
+        $place->update($validated);
+
+        return redirect()->route('place.index')->with('message', 'Градот / Местото е успешно едитирано');
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Country;
 use Illuminate\Database\Eloquent\Model;
 
 class Place extends Model
@@ -11,4 +12,8 @@ class Place extends Model
         'place',
         'country_id'
     ];
+
+    public function country(){
+        return $this->belongsTo(Country::class);
+    }
 }

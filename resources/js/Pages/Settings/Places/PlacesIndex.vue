@@ -62,7 +62,7 @@ onMounted(() => {
                 <!-- message -->
                 <div
                     v-if="flashMessage"
-                    class="px-4 py-2 bg-red-200 rounded-md"
+                    class="px-4 py-2 rounded-md bg-sky-200"
                 >
                     {{ flashMessage }}
                 </div>
@@ -124,7 +124,7 @@ onMounted(() => {
                                 >
                                     <td class="">{{ place.id }}</td>
                                     <td class="">{{ place.zip }}</td>
-                                    <td class="">{{ place.place }}</td>
+                                    <td class="">{{ place.place }} <span class="mx-4">-</span> <span class="text-xs italic text-slate-500">{{ place.country.name }}</span></td>
                                     <td class="">
                                         <div class="flex gap-2">
                                             <Link
