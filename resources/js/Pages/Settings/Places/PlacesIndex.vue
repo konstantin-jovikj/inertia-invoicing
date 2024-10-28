@@ -1,13 +1,13 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
-import TextInput from "../../Components/TextInput.vue";
-import SecondaryButton from "../../Components/SecondaryButton.vue";
+import TextInput from "../../../Components/TextInput.vue";
+import SecondaryButton from "../../../Components/SecondaryButton.vue";
 import { computed, ref, watch, onMounted } from "vue";
 import { debounce } from "lodash";
 
 const props = defineProps({
-    countries: Object,
+    places: Object,
     searchTerm: String,
 });
 // const search = ref(props.searchTerm);
@@ -20,7 +20,7 @@ watch(
     debounce(
         (query) =>
             router.get(
-                "/countries",
+                "/places",
                 {
                     search: query,
                 },
@@ -33,9 +33,9 @@ watch(
 );
 
 // Delete country function
-const deleteCountry = (id) => {
-    if (confirm("Дали сигурно сакаш да ја избришеш оваа земја?")) {
-        router.delete("/countries/delete/" + id, {
+const deletePlace = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваместо?")) {
+        router.delete("/places/delete/" + id, {
             preserveState: false,
             onSuccess: () => {
                 flashMessage.value = props.flash.message;
@@ -54,7 +54,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="Countries" />
+    <Head title="Places" />
 
     <AuthenticatedLayout>
         <div class="py-12">
@@ -69,7 +69,7 @@ onMounted(() => {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
-                            <h2 class="font-bold text-sky-800">Држави</h2>
+                            <h2 class="font-bold text-sky-800">Градови / Места</h2>
                             <div class="flex ">
 
                                 <Link
@@ -100,13 +100,13 @@ onMounted(() => {
                                         scope="col"
                                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
                                     >
-                                        Име
+                                        Zip
                                     </th>
                                     <th
                                         scope="col"
                                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
                                     >
-                                        Ознака
+                                        Место
                                     </th>
                                     <th
                                         scope="col"
@@ -119,20 +119,20 @@ onMounted(() => {
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
                                     class="hover:bg-slate-100"
-                                    v-for="country in countries.data"
-                                    :key="country.id"
+                                    v-for="place in places.data"
+                                    :key="place.id"
                                 >
-                                    <td class="">{{ country.id }}</td>
-                                    <td class="">{{ country.name }}</td>
-                                    <td class="">{{ country.code }}</td>
+                                    <td class="">{{ place.id }}</td>
+                                    <td class="">{{ place.zip }}</td>
+                                    <td class="">{{ place.place }}</td>
                                     <td class="">
                                         <div class="flex gap-2">
                                             <Link
                                                 class="px-2 py-1 text-xs font-bold text-white uppercase rounded-md bg-emerald-600 hover:bg-emerald-700"
                                                 :href="
                                                     route(
-                                                        'country.edit',
-                                                        country.id
+                                                        'place.edit',
+                                                        place.id
                                                     )
                                                 "
                                                 >Измени</Link
@@ -142,8 +142,8 @@ onMounted(() => {
                                                 class="px-2 py-1 text-xs font-bold text-white uppercase bg-red-600 rounded-md hover:bg-red-700"
                                                 @click="
                                                     () =>
-                                                        deleteCountry(
-                                                            country.id
+                                                        deletePlace(
+                                                            place.id
                                                         )
                                                 "
                                             >
@@ -157,12 +157,12 @@ onMounted(() => {
 
                         <!-- Pagination Links -->
                         <div
-                            v-if="countries && countries.links"
+                            v-if="places && places.links"
                             class="flex flex-col lg:flex-row lg:justify-around"
                         >
                             <div class="mt-2">
                                 <Link
-                                    v-for="link in countries.links"
+                                    v-for="link in places.links"
                                     :key="link.label"
                                     v-html="link.label"
                                     v-bind="{ href: link.url || '#' }"
@@ -176,9 +176,9 @@ onMounted(() => {
                             </div>
 
                             <p class="mt-3 text-xs text-gray-500">
-                                Прикажани се од {{ countries.from }} до
-                                {{ countries.to }} од вкупно
-                                {{ countries.total }} записи
+                                Прикажани се од {{ places.from }} до
+                                {{ places.to }} од вкупно
+                                {{ places.total }} записи
                             </p>
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,13 @@ Route::middleware('auth')->group(function () {
     Route::put('/countries/update/{country}', [CountryController::class, 'update'])->name('country.update');
     Route::delete('/countries/delete/{country}', [CountryController::class, 'destroy'])->name('country.delete');
 
-    // CITIES
+    // PLACES
+
+    Route::get('/places', [PlaceController::class, 'index'])->name('place.index');
+    Route::get('/places/edit/{place}', [PlaceController::class, 'edit'])->name('place.edit');
+    Route::delete('/places/delete/{place}', [PlaceController::class, 'destroy'])->name('place.delete');
+    Route::get('/places/add', [PlaceController::class, 'create'])->name('place.create');
+    Route::post('/places/store', [PlaceController::class, 'store'])->name('place.store');
 
 
 });

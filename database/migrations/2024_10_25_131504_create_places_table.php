@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('places', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('country_id')->constrained('countries')->onDelete('cascade');
+            $table->string('zip')->nullable();
+            $table->string('place');
             $table->timestamps();
         });
     }

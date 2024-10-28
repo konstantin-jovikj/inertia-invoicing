@@ -75,12 +75,11 @@ const showingNavigationDropdown = ref(false);
                                             Држави
                                         </DropdownLink>
                                         <DropdownLink
-                                            :href="route('logout')"
-                                            method="post"
-                                            as="button"
+                                            :href="route('place.index')"
                                         >
-                                            Log Out
+                                            Места / Градови
                                         </DropdownLink>
+
                                     </template>
                                 </Dropdown>
                             </div>

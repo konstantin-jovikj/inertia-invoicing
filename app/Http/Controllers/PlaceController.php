@@ -3,16 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Place;
+use App\Models\Country;
 use Illuminate\Http\Request;
+
 
 class PlaceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $places = Place::when($request->search, function ($query) use ($request) {
+            $query->where('place', 'like', '%' . $request->search . '%')
+                ->orWhere('zip', 'like', '%' . $request->search . '%');
+        })->paginate(20)->withQueryString();
 
+
+
+        return inertia('Settings/Places/PlacesIndex', [
+            'places' => $places,
+            'searchTerm' => $request->search,
+
+        ]);
     }
 
     /**
@@ -20,7 +33,11 @@ class PlaceController extends Controller
      */
     public function create()
     {
-        //
+        $countries = Country::all();
+
+        return inertia('Settings/Places/PlacesAdd', [
+            'countries' => $countries,
+        ]);
     }
 
     /**
@@ -28,7 +45,14 @@ class PlaceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $data = $request->validate([
+            'zip' => ['required', 'max:6', 'unique:places'],
+            'place' => ['required', 'max:255', 'unique:places'],
+            'country_id' => ['required'],
+        ]);
+        Place::create($data);
+        return redirect()->route('place.index')->with('message', 'Местото / Градот е успешно додадена');
     }
 
     /**
@@ -60,6 +84,7 @@ class PlaceController extends Controller
      */
     public function destroy(Place $place)
     {
-        //
+        $place->delete();
+        return redirect()->route('place.index')->with('message', 'Градот / Местото е успешно избришано.');
     }
 }
