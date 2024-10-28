@@ -51,6 +51,13 @@ onMounted(() => {
         }, 3000);
     }
 });
+
+const getPaginationLabel = (label) => {
+    // Handle special cases for prev/next arrows
+    if (label === "&laquo; Previous") return "<<";
+    if (label === "Next &raquo;") return ">>";
+    return label;
+};
 </script>
 
 <template>
@@ -168,17 +175,18 @@ onMounted(() => {
                             class="flex flex-col lg:flex-row lg:justify-around"
                         >
                             <div class="mt-2">
+
                                 <Link
                                     v-for="link in places.links"
                                     :key="link.label"
-                                    v-html="link.label"
-                                    v-bind="{ href: link.url || '#' }"
+                                    :href="link.url || '#'"
                                     class="p-1 mx-1 hover:bg-sky-200"
                                     :class="{
                                         'text-slate-300': !link.url,
                                         'text-sky-500 font-bold': link.active,
                                     }"
                                 >
+                                    {{ getPaginationLabel(link.label) }}
                                 </Link>
                             </div>
 

@@ -51,6 +51,13 @@ onMounted(() => {
         }, 3000);
     }
 });
+
+const getPaginationLabel = (label) => {
+    // Handle special cases for prev/next arrows
+    if (label === "&laquo; Previous") return "<<";
+    if (label === "Next &raquo;") return ">>";
+    return label;
+};
 </script>
 
 <template>
@@ -70,17 +77,16 @@ onMounted(() => {
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
                             <h2 class="font-bold text-sky-800">Држави</h2>
-                            <div class="flex ">
-
+                            <div class="flex">
                                 <Link
-                                href="countries/add"
-                                class="px-4 py-1 mr-10 text-3xl rounded-lg hover:bg-sky-400 bg-sky-200"
-                                >+</Link
+                                    href="countries/add"
+                                    class="px-4 py-1 mr-10 text-3xl rounded-lg hover:bg-sky-400 bg-sky-200"
+                                    >+</Link
                                 >
                                 <TextInput
-                                placeholder="Барај ..."
-                                v-model="search"
-                                type="search"
+                                    placeholder="Барај ..."
+                                    v-model="search"
+                                    type="search"
                                 />
                             </div>
                         </div>
@@ -128,8 +134,12 @@ onMounted(() => {
                                     v-for="(country, index) in countries.data"
                                     :key="country.id"
                                 >
-                                <td class="text-xs text-slate-300">{{ country.id }} {{  }}</td>
-                                    <td class="">{{ countries.from + index }} {{  }}</td>
+                                    <td class="text-xs text-slate-300">
+                                        {{ country.id }} {{}}
+                                    </td>
+                                    <td class="">
+                                        {{ countries.from + index }} {{}}
+                                    </td>
                                     <td class="">{{ country.name }}</td>
                                     <td class="">{{ country.code }}</td>
                                     <td class="">
@@ -171,14 +181,14 @@ onMounted(() => {
                                 <Link
                                     v-for="link in countries.links"
                                     :key="link.label"
-                                    v-html="link.label"
-                                    v-bind="{ href: link.url || '#' }"
+                                    :href="link.url || '#'"
                                     class="p-1 mx-1 hover:bg-sky-200"
                                     :class="{
                                         'text-slate-300': !link.url,
                                         'text-sky-500 font-bold': link.active,
                                     }"
                                 >
+                                    {{ getPaginationLabel(link.label) }}
                                 </Link>
                             </div>
 

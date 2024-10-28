@@ -13,7 +13,6 @@ const props = defineProps({
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
 
-
 // Delete country function
 const deleteCUstomerType = (id) => {
     if (confirm("Дали сигурно сакаш да го избришеш типот на коминтент?")) {
@@ -33,6 +32,13 @@ onMounted(() => {
         }, 3000);
     }
 });
+
+const getPaginationLabel = (label) => {
+    // Handle special cases for prev/next arrows
+    if (label === "&laquo; Previous") return "<<";
+    if (label === "Next &raquo;") return ">>";
+    return label;
+};
 </script>
 
 <template>
@@ -51,15 +57,15 @@ onMounted(() => {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
-                            <h2 class="font-bold text-sky-800">Тип на Коминтенти</h2>
-                            <div class="flex ">
-
+                            <h2 class="font-bold text-sky-800">
+                                Тип на Коминтенти
+                            </h2>
+                            <div class="flex">
                                 <Link
-                                href="customertype/add"
-                                class="px-4 py-1 mr-10 text-3xl rounded-lg hover:bg-sky-400 bg-sky-200"
-                                >+</Link
+                                    href="customertype/add"
+                                    class="px-4 py-1 mr-10 text-3xl rounded-lg hover:bg-sky-400 bg-sky-200"
+                                    >+</Link
                                 >
-
                             </div>
                         </div>
 
@@ -84,7 +90,7 @@ onMounted(() => {
                                         scope="col"
                                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
                                     >
-                                    Тип на Коминтент
+                                        Тип на Коминтент
                                     </th>
 
                                     <th
@@ -101,8 +107,12 @@ onMounted(() => {
                                     v-for="(type, index) in customer_types.data"
                                     :key="type.id"
                                 >
-                                    <td class="text-xs text-slate-300">{{ type.id }}</td>
-                                    <td class="">{{ customer_types.from + index }}</td>
+                                    <td class="text-xs text-slate-300">
+                                        {{ type.id }}
+                                    </td>
+                                    <td class="">
+                                        {{ customer_types.from + index }}
+                                    </td>
                                     <td class="">{{ type.type }}</td>
 
                                     <td class="">
@@ -122,7 +132,7 @@ onMounted(() => {
                                                 class="px-2 py-1 text-xs font-bold text-white uppercase bg-red-600 rounded-md hover:bg-red-700"
                                                 @click="
                                                     () =>
-                                                    deleteCUstomerType(
+                                                        deleteCUstomerType(
                                                             type.id
                                                         )
                                                 "
@@ -144,14 +154,14 @@ onMounted(() => {
                                 <Link
                                     v-for="link in customer_types.links"
                                     :key="link.label"
-                                    v-html="link.label"
-                                    v-bind="{ href: link.url || '#' }"
+                                    :href="link.url || '#'"
                                     class="p-1 mx-1 hover:bg-sky-200"
                                     :class="{
                                         'text-slate-300': !link.url,
                                         'text-sky-500 font-bold': link.active,
                                     }"
                                 >
+                                    {{ getPaginationLabel(link.label) }}
                                 </Link>
                             </div>
 
