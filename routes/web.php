@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CustomerTypeController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -43,6 +44,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/places/store', [PlaceController::class, 'store'])->name('place.store');
     Route::get('/places/edit/{place}', [PlaceController::class, 'edit'])->name('place.edit');
     Route::put('/places/update/{place}', [PlaceController::class, 'update'])->name('place.update');
+
+    // CUSTOMER TYPE
+
+    Route::get('/customertype', [CustomerTypeController::class, 'index'])->name('customertype.index');
+    Route::get('/customertype/edit/{customer_type}', [CustomerTypeController::class, 'edit'])->name('customertype.edit');
+    Route::delete('/customertype/delete/{customer_type}', [CustomerTypeController::class, 'destroy'])->name('customertype.delete');
+    Route::get('/customertype/add', [CustomerTypeController::class, 'create'])->name('customertype.create');
+    Route::post('/customertype/store', [CustomerTypeController::class, 'store'])->name('customertype.store');
+    Route::put('/customertype/update/{customer_type}', [CustomerTypeController::class, 'update'])->name('customertype.update');
+
+
 
 });
 

@@ -79,6 +79,11 @@ const showingNavigationDropdown = ref(false);
                                         >
                                             Места / Градови
                                         </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('customertype.index')"
+                                        >
+                                            Тип на Коминтенти
+                                        </DropdownLink>
 
                                     </template>
                                 </Dropdown>
