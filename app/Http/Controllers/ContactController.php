@@ -28,7 +28,21 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:50',
+            'mob' => 'nullable|string|max:50',
+            'email' => 'nullable|email',
+            'position' => 'nullable|string|max:50',
+
+        ]);
+
+        $company = Contact::create($validatedData);
+
+        // return inertia('Companies/CompaniesIndex');
+        return redirect()->route('companies.index');
     }
 
     /**

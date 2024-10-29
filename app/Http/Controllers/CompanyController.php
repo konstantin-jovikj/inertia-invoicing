@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Place;
 use App\Models\Company;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -13,7 +15,10 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        return inertia('Companies/CompaniesIndex');
+        $companies = Company::all();
+        return inertia('Companies/CompaniesIndex',[
+            'companies' => $companies,
+        ]);
     }
 
     /**
@@ -22,9 +27,9 @@ class CompanyController extends Controller
     public function create(Customer $customer)
     {
         // dd($customer);
-       return inertia('Companies/CompanyAdd',[
-        'customer' => $customer,
-       ]);
+        return inertia('Companies/CompanyAdd', [
+            'customer' => $customer,
+        ]);
     }
 
     /**
@@ -35,12 +40,14 @@ class CompanyController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'customer_id' => 'nullable|exists:customers,id',
+            'place_id' => 'nullable|exists:places,id',
             'name' => 'required|string|max:255',
             'reg_number' => 'nullable|string|max:50',
             'tax_number' => 'nullable|string|max:50',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional, adjust size limit as needed
             'cert' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional, adjust size limit as needed
-            'web' => 'nullable'
+            'web' => 'nullable',
+            'address' => 'nullable|string|max:255',
         ]);
 
         // Set is_customer to true if customer_id is provided, else false
@@ -58,6 +65,10 @@ class CompanyController extends Controller
 
         // Create the company
         $company = Company::create($validatedData);
+
+        // Eager load the place and place->country relationship
+        $company->load('place.country');
+        $company->logo = Storage::url($company->logo);
 
         return inertia('Contacts/ContactAdd', [
             'company' => $company,

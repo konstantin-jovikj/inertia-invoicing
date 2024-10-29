@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Place;
 use App\Models\Customer;
 use App\Models\CustomerType;
 use Illuminate\Http\Request;
@@ -37,11 +38,13 @@ class CustomerController extends Controller
                     'customer_type_id' => ['required', 'integer'],
                 ]);
                 $customer = Customer::create($validated);
+                $places = Place::all();
                 // dd($customer);
                 // return redirect()->route('company.create', ['customer' => $customer]);
 
                 return inertia('Companies/CompanyAdd',[
                     'customer' => $customer,
+                    'places' => $places,
                    ]);
     }
 

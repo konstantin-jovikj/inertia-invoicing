@@ -1,5 +1,5 @@
 <template>
-    Final Step - Add contact
+    Companies Index
 </template>
 
 

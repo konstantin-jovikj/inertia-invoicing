@@ -13,13 +13,21 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    places: {
+        type: Array,
+        required: true,
+    },
 
 });
+
+// console.log(places);
 
 
 const form = useForm({
     user_id: auth.user ? auth.user.id : null,
     customer_id: props.customer.id,
+    place_id: "",
+    address: "",
     name: "",
     reg_number: "",
     tax_number: "",
@@ -182,6 +190,78 @@ const clearCert = () => {
                                             </div>
                                         </div>
 
+
+                                        <div
+                                            class="grid grid-cols-1 gap-4 mt-4 text-sm gap-y-2 md:grid-cols-12"
+                                        >
+                                            <div class="md:col-span-4">
+                                                <InputLabel for="address"
+                                                    >Адреса</InputLabel
+                                                >
+
+                                                <TextInput
+                                                    v-model="form.address"
+                                                    type="text"
+                                                    id="address"
+                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                                                />
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.address
+                                                    }}</span
+                                                >
+                                            </div>
+
+
+                                            <div class="md:col-span-4">
+                                                <InputLabel for="place"
+                                                    >Одбери Место</InputLabel
+                                                >
+                                                <select
+                                                    v-model="form.place_id"
+                                                    id="place"
+                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                                                >
+                                                    <option value="" disabled>
+                                                        Избери место
+                                                    </option>
+                                                    <option
+                                                        v-for="place in places"
+                                                        :key="place.id"
+                                                        :value="place.id"
+                                                    >
+                                                        {{ place.place }}
+                                                    </option>
+                                                </select>
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.place
+                                                    }}</span
+                                                >
+                                            </div>
+
+                                            <div class="md:col-span-4">
+                                                <InputLabel for="web"
+                                                    >Web</InputLabel
+                                                >
+
+                                                <TextInput
+                                                    v-model="form.web"
+                                                    type="text"
+                                                    id="web"
+                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                                                />
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.web
+                                                    }}</span
+                                                >
+                                            </div>
+                                        </div>
+
                                         <!-- Logo and CErt Upload -->
                                         <div class="grid grid-cols-1 gap-4 mt-8 text-sm gap-y-2 md:grid-cols-12">
 
@@ -319,31 +399,10 @@ const clearCert = () => {
                                             </div>
                                         </div>
 
-                                        <div
-                                            class="grid grid-cols-1 gap-4 text-sm gap-y-2 md:grid-cols-12"
-                                        >
-                                            <div class="md:col-span-12">
-                                                <InputLabel for="web"
-                                                    >Web</InputLabel
-                                                >
 
-                                                <TextInput
-                                                    v-model="form.web"
-                                                    type="text"
-                                                    id="web"
-                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
-                                                />
-                                                <span
-                                                    class="text-xs italic text-red-600"
-                                                    >{{
-                                                        form.errors.web
-                                                    }}</span
-                                                >
-                                            </div>
-                                        </div>
 
                                         <div
-                                                class="text-right md:col-span-9"
+                                                class="mt-4 text-right md:col-span-9"
                                             >
                                                 <div
                                                     class="inline-flex items-end"
