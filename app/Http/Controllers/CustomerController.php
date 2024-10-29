@@ -33,12 +33,16 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
                    //    dd($request);
-                   $data = $request->validate([
-                    'customer_type_id' => ['required', 'max:6'],
+                   $validated = $request->validate([
+                    'customer_type_id' => ['required', 'integer'],
                 ]);
-                $customer = Customer::create($data);
-                // dd($customer->id);
-                return redirect()->route('company.create', ['customer' => $customer->id]);
+                $customer = Customer::create($validated);
+                // dd($customer);
+                // return redirect()->route('company.create', ['customer' => $customer]);
+
+                return inertia('Companies/CompanyAdd',[
+                    'customer' => $customer,
+                   ]);
     }
 
     /**

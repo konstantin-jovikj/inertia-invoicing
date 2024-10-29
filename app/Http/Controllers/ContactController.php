@@ -20,7 +20,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Contacts/ContactAdd');
     }
 
     /**

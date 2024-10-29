@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ContactController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -59,15 +60,20 @@ Route::middleware('auth')->group(function () {
     // CUSTOMERS - Komintenti
 
     Route::get('/customers/add', [CustomerController::class, 'create'])->name('customer.create');
-    Route::post('/customers/store', [CustomerController::class, 'store'])->name('customer.store');
+    Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
 
 
 
-        // COMPANIES
+    // COMPANIES
+    Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
+    Route::get('/companies/add', [CompanyController::class, 'create'])->name('company.create');
+    Route::post('/companies/store', [CompanyController::class, 'store'])->name('company.store');
 
-        Route::get('/companies/add/{customer}', [CompanyController::class, 'create'])->name('company.create');
-        Route::post('/companies/store', [CompanyController::class, 'store'])->name('company.store');
 
+
+    // CONTACTS
+
+    // Route::get('/contacts/add', [ContactController::class, 'create'])->name('contacts.create');
 
 });
 

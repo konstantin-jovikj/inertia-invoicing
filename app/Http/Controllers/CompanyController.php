@@ -13,7 +13,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Companies/CompaniesIndex');
     }
 
     /**
@@ -32,7 +32,36 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'customer_id' => 'nullable|exists:customers,id',
+            'name' => 'required|string|max:255',
+            'reg_number' => 'nullable|string|max:50',
+            'tax_number' => 'nullable|string|max:50',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional, adjust size limit as needed
+            'cert' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional, adjust size limit as needed
+            'web' => 'nullable'
+        ]);
+
+        // Set is_customer to true if customer_id is provided, else false
+        $validatedData['is_customer'] = !empty($validatedData['customer_id']);
+
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            $validatedData['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        // Handle cert upload
+        if ($request->hasFile('cert')) {
+            $validatedData['cert'] = $request->file('cert')->store('certs', 'public');
+        }
+
+        // Create the company
+        $company = Company::create($validatedData);
+
+        return inertia('Contacts/ContactAdd', [
+            'company' => $company,
+        ]);
     }
 
     /**

@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->foreignId(column: 'user_id')->constrained('users');
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade')->nullable();
             $table->string('name');
             $table->string('tax_number')->nullable();
             $table->string('vat_number')->nullable();
             $table->string('reg_number')->nullable();
             $table->string('logo')->nullable();
             $table->string('cert')->nullable();
+            $table->string('web')->nullable();
+            $table->boolean('is_customer')->default(true);
 
 
             $table->timestamps();
