@@ -6,39 +6,41 @@ import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
 import ViewIcon from "../../Components/ViewIcon.vue";
 import AddIcon from "../../Components/AddIcon.vue";
+import AddContactIcon from "@/Components/AddContactIcon.vue";
 import SecondaryButton from "../../Components/SecondaryButton.vue";
 import { computed, ref, watch, onMounted } from "vue";
 import { debounce } from "lodash";
+import { Tippy } from "vue-tippy";
 
 const props = defineProps({
     companies: Object,
     searchTerm: String,
 });
+
 const search = ref(props.searchTerm || "");
-const { url } = usePage();  // Get the current URL directly from usePage()
+const { url } = usePage(); // Get the current URL directly from usePage()
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
 
-
 // Computed property to check if the current URL is '/companies'
 const isCompaniesIndex = computed(() => {
-  return url === '/companies'; // Returns true only if the URL is exactly '/companies'
+    return url === "/companies"; // Returns true only if the URL is exactly '/companies'
 });
-console.log('PageProps URL', url);
-// const isCompaniesIndex = computed(() => {
-//     return pageProps.url === '/companies'; // Use strict equality for comparison
-//     c
-// });
+console.log("PageProps URL", url);
 
 // Watch for changes in search input
 watch(
     search,
     debounce((query) => {
-        router.get("/companies", {
-            search: query,
-        }, {
-            preserveState: true,
-        });
+        router.get(
+            "/companies",
+            {
+                search: query,
+            },
+            {
+                preserveState: true,
+            }
+        );
     }, 500)
 );
 
@@ -70,7 +72,6 @@ const getPaginationLabel = (label) => {
 };
 </script>
 
-
 <template>
     <Head title="Companies" />
 
@@ -92,12 +93,18 @@ const getPaginationLabel = (label) => {
                             </h2>
                             <div class="flex">
                                 <Link
-
                                     v-if="isCompaniesIndex"
                                     href="customers/add"
                                     class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
-                                    ><AddIcon /></Link
-                                >
+                                    ><AddIcon
+                                /></Link>
+
+                                <Link
+                                    v-else
+                                    href="add"
+                                    class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
+                                    ><AddIcon
+                                /></Link>
                                 <TextInput
                                     placeholder="Барај ..."
                                     v-model="search"
@@ -159,15 +166,30 @@ const getPaginationLabel = (label) => {
                                     <td class="">
                                         {{ company.place.place }}
                                         <span class="mx-4">-</span>
-                                        <span
-                                            class=""
-                                            >{{
-                                                company.place.country.name
-                                            }}</span
-                                        >
+                                        <span class="">{{
+                                            company.place.country.name
+                                        }}</span>
                                     </td>
                                     <td class="">
                                         <div class="flex gap-2">
+                                            <Link
+                                                class="px-4 hover:text-orange-600 text-slate-300"
+                                                :href="
+                                                    route(
+                                                        'company.show',
+                                                        company.id
+                                                    )
+                                                "
+                                            >
+                                                <AddContactIcon
+                                                    v-tippy="{
+                                                        content:
+                                                            'Додај Контакт',
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"
+                                                />
+                                            </Link>
 
                                             <Link
                                                 class="hover:text-sky-600 text-slate-300"
@@ -177,10 +199,14 @@ const getPaginationLabel = (label) => {
                                                         company.id
                                                     )
                                                 "
-                                                >
-                                                <ViewIcon />
+                                            >
+                                                <ViewIcon v-tippy="{
+                                                        content:
+                                                            'Детален Преглед',
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }" />
                                             </Link>
-
 
                                             <Link
                                                 class="hover:text-green-600 text-slate-300"
@@ -190,17 +216,28 @@ const getPaginationLabel = (label) => {
                                                         company.id
                                                     )
                                                 "
-                                                >
-                                                <EditIcon />
+                                            >
+                                                <EditIcon v-tippy="{
+                                                        content:
+                                                            'Измени',
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"/>
                                             </Link>
 
                                             <button
-                                                class=" hover:text-red-700 text-slate-300"
+                                                class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
                                                         deletePlace(company.id)
                                                 "
-                                            ><DeleteIcon />
+                                            >
+                                                <DeleteIcon v-tippy="{
+                                                        content:
+                                                            'Избриши',
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"/>
                                             </button>
                                         </div>
                                     </td>

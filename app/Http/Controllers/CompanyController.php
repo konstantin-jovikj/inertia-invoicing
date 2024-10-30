@@ -39,8 +39,13 @@ class CompanyController extends Controller
     public function create(Customer $customer)
     {
         // dd($customer);
+
+        // $isCustomer = request()->routeIs('companies.index') ? 1 : 0;
+        $places = Place::all();
         return inertia('Companies/CompanyAdd', [
+            'places' => $places,
             'customer' => $customer,
+            // 'isCustomer' => $isCustomer,
         ]);
     }
 
@@ -82,9 +87,15 @@ class CompanyController extends Controller
         $company->load('place.country');
         $company->logo = Storage::url($company->logo);
 
-        return inertia('Contacts/ContactAdd', [
-            'company' => $company,
-        ]);
+        // return inertia('Contacts/ContactAdd', [
+        //     'company' => $company,
+        // ]);
+
+        if($validatedData['is_customer']){
+            return redirect()->route('companies.index');
+        }else{
+            return redirect()->route('companies.notcustomer.index');
+        }
     }
 
     /**
