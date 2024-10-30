@@ -5,6 +5,7 @@ import TextInput from "../../Components/TextInput.vue";
 import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
 import ViewIcon from "../../Components/ViewIcon.vue";
+import AddIcon from "../../Components/AddIcon.vue";
 import SecondaryButton from "../../Components/SecondaryButton.vue";
 import { computed, ref, watch, onMounted } from "vue";
 import { debounce } from "lodash";
@@ -13,34 +14,35 @@ const props = defineProps({
     companies: Object,
     searchTerm: String,
 });
-// const search = ref(props.searchTerm);
 const search = ref(props.searchTerm || "");
+const { url } = usePage();  // Get the current URL directly from usePage()
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
 
-// Accessing the place and country data
-// const place = props.company.place;
-// const country = place ? place.country : null;
-// Ensure place exists before accessing country
 
+// Computed property to check if the current URL is '/companies'
+const isCompaniesIndex = computed(() => {
+  return url === '/companies'; // Returns true only if the URL is exactly '/companies'
+});
+console.log('PageProps URL', url);
+// const isCompaniesIndex = computed(() => {
+//     return pageProps.url === '/companies'; // Use strict equality for comparison
+//     c
+// });
+
+// Watch for changes in search input
 watch(
     search,
-    debounce(
-        (query) =>
-            router.get(
-                "/companies",
-                {
-                    search: query,
-                },
-                {
-                    preserveState: true,
-                }
-            ),
-        500
-    )
+    debounce((query) => {
+        router.get("/companies", {
+            search: query,
+        }, {
+            preserveState: true,
+        });
+    }, 500)
 );
 
-// Delete country function
+// Delete place function
 const deletePlace = (id) => {
     if (confirm("Дали сигурно сакаш да ја избришеш оваместо?")) {
         router.delete("/places/delete/" + id, {
@@ -68,6 +70,7 @@ const getPaginationLabel = (label) => {
 };
 </script>
 
+
 <template>
     <Head title="Companies" />
 
@@ -89,9 +92,11 @@ const getPaginationLabel = (label) => {
                             </h2>
                             <div class="flex">
                                 <Link
-                                    href="places/add"
-                                    class="px-4 py-1 mr-10 text-3xl rounded-lg hover:bg-sky-400 bg-sky-200"
-                                    >+</Link
+
+                                    v-if="isCompaniesIndex"
+                                    href="customers/add"
+                                    class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
+                                    ><AddIcon /></Link
                                 >
                                 <TextInput
                                     placeholder="Барај ..."
@@ -168,7 +173,7 @@ const getPaginationLabel = (label) => {
                                                 class="hover:text-sky-600 text-slate-300"
                                                 :href="
                                                     route(
-                                                        'place.edit',
+                                                        'company.show',
                                                         company.id
                                                     )
                                                 "

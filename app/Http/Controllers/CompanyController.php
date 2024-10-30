@@ -15,7 +15,9 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        $companies = Company::with('place.country') // eager load relationships
+        $isCustomer = request()->routeIs('companies.index') ? 1 : 0;
+
+        $companies = Company::with('place.country')->where('is_customer', $isCustomer) // eager load relationships
             ->when($request->search, function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->search . '%')
                       ->orWhereHas('place', function ($query) use ($request) {
@@ -90,7 +92,12 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+         // Eager load the place and place->country relationship
+         $company->load('place.country');
+
+        return inertia('Companies/CompanyShow', [
+            'company' => $company
+        ]);
     }
 
     /**

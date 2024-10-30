@@ -4,6 +4,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
+import ArrowDown from "@/Components/ArrowDown.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
 
@@ -30,7 +31,6 @@ const showingNavigationDropdown = ref(false);
                             <!-- Navigation Links -->
                             <!-- START SETTINGS -->
 
-
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
@@ -52,18 +52,7 @@ const showingNavigationDropdown = ref(false);
                                             >
                                                 Подесувања
 
-                                                <svg
-                                                    class="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
+                                                <ArrowDown />
                                             </button>
                                         </span>
                                     </template>
@@ -84,7 +73,12 @@ const showingNavigationDropdown = ref(false);
                                         >
                                             Тип на Коминтенти
                                         </DropdownLink>
-
+                                        <hr/>
+                                        <DropdownLink
+                                            :href="route('companies.notcustomer.index')"
+                                        >
+                                            Сопствени Фирми
+                                        </DropdownLink>
                                     </template>
                                 </Dropdown>
 
@@ -99,18 +93,7 @@ const showingNavigationDropdown = ref(false);
                                             >
                                                 Коминтенти
 
-                                                <svg
-                                                    class="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
+                                                <ArrowDown />
                                             </button>
                                         </span>
                                     </template>
@@ -126,11 +109,8 @@ const showingNavigationDropdown = ref(false);
                                         >
                                             Листа на Коминтенти
                                         </DropdownLink>
-
-
                                     </template>
                                 </Dropdown>
-
                             </div>
                         </div>
 
@@ -278,9 +258,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
-
-                    <slot />
-
+                <slot />
             </main>
         </div>
     </div>
