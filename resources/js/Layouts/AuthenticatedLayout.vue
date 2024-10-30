@@ -122,7 +122,7 @@ const showingNavigationDropdown = ref(false);
                                             Додај нов Коминтент
                                         </DropdownLink>
                                         <DropdownLink
-                                            :href="route('place.index')"
+                                            :href="route('companies.index')"
                                         >
                                             Листа на Коминтенти
                                         </DropdownLink>

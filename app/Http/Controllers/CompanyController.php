@@ -13,13 +13,23 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $companies = Company::all();
-        return inertia('Companies/CompaniesIndex',[
+        $companies = Company::with('place.country') // eager load relationships
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%')
+                      ->orWhereHas('place', function ($query) use ($request) {
+                          $query->where('place', 'like', '%' . $request->search . '%');
+                      });
+            })
+            ->paginate(20)
+            ->withQueryString();
+
+        return inertia('Companies/CompaniesIndex', [
             'companies' => $companies,
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
