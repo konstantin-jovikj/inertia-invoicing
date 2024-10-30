@@ -176,7 +176,7 @@ const getPaginationLabel = (label) => {
                                                 class="px-4 hover:text-orange-600 text-slate-300"
                                                 :href="
                                                     route(
-                                                        'company.show',
+                                                        'contacts.create',
                                                         company.id
                                                     )
                                                 "

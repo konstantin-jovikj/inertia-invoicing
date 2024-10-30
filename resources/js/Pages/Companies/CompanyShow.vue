@@ -9,6 +9,9 @@ const props = defineProps({
     searchTerm: String,
 });
 
+const companyContacts = props.company.contacts;
+console.log("Company Contacts:", companyContacts);
+
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
 </script>
@@ -38,15 +41,60 @@ const flashMessage = ref(pageProps.flash?.message || "");
                             <div
                                 class="w-full p-4 border border-blue-500 rounded md:w-50"
                             >
-                                <h2 class="text-xl font-bold">
-                                    {{ company.name }}
+                                <div>
+                                    <h2 class="text-xl font-bold">
+                                        {{ company.name }}
+                                    </h2>
+                                    <p>{{ company.address }}</p>
+                                    <p>
+                                        {{ company.place.zip }}-{{
+                                            company.place.place
+                                        }}
+                                    </p>
+                                    <p>{{ company.place.country.name }}</p>
+                                </div>
+                                <hr class="my-4" />
+                                <h2
+                                    class="px-6 py-2 mb-4 text-lg font-bolder bg-slate-100"
+                                >
+                                    Контакти
                                 </h2>
-                                <p>
-                                    {{ company.place.zip }}-{{
-                                        company.place.place
-                                    }}
-                                </p>
-                                <p>{{ company.place.country.name }}</p>
+                                <div class="px-6">
+                                    <!-- <hr class="my-4" /> -->
+                                    <ul class="list-disc">
+                                        <p class="text-red-500" v-if="companyContacts.length === 0">
+                                            Не се пронајдени контакти.
+                                        </p>
+                                        <li
+                                            class="mb-6"
+                                            v-for="contact in companyContacts"
+                                            :key="contact.id"
+                                        >
+                                            <span
+                                                class="font-bold "
+                                                >{{ contact.first_name }}
+                                                {{ contact.last_name }}</span
+                                            >
+
+                                            <span> - </span>
+                                            <span class="text-teal-800">{{ contact.position }}</span>
+                                            <p>
+                                                <span class="text-xs italic">емаил: </span><a
+                                                :href="`mailto:${contact.email}`"
+                                                ><span class="text-sky-600">{{ contact.email }}</span></a
+                                            >
+                                            </p>
+
+                                            <p>
+                                                <span class="text-xs italic">телефон: </span>{{ contact.phone }}
+                                            </p>
+                                            <p>
+                                                <span class="text-xs italic">мобилен: </span>
+                                                {{ contact.mob }}
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <div
                                 class="w-full p-4 border border-blue-500 rounded md:w-50"

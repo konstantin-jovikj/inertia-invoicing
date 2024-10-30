@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
@@ -18,9 +19,13 @@ class ContactController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Company $company)
     {
-        return inertia('Contacts/ContactAdd');
+        $company->load('place.country');
+
+        return inertia('Contacts/ContactAdd',[
+            'company' => $company
+        ]);
     }
 
     /**

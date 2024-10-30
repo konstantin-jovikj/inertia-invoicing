@@ -78,7 +78,7 @@ Route::middleware('auth')->group(function () {
 
     // CONTACTS
 
-    // Route::get('/contacts/add', [ContactController::class, 'create'])->name('contacts.create');
+    Route::get('/contacts/add/{company}', [ContactController::class, 'create'])->name('contacts.create');
     Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
 
 });
