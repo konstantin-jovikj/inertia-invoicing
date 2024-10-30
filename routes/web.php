@@ -69,6 +69,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/companies/notcustomer', [CompanyController::class, 'index'])->name('companies.notcustomer.index');
 
+    Route::get('/companies/edit/{company}', [CompanyController::class, 'edit'])->name('company.edit');
+
+    Route::put('/companies/update/{company}', [CompanyController::class, 'update'])->name('company.update');
 
     Route::get('/companies/add', [CompanyController::class, 'create'])->name('company.create');
     Route::post('/companies/store', [CompanyController::class, 'store'])->name('company.store');

@@ -212,7 +212,7 @@ const getPaginationLabel = (label) => {
                                                 class="hover:text-green-600 text-slate-300"
                                                 :href="
                                                     route(
-                                                        'place.edit',
+                                                        'company.edit',
                                                         company.id
                                                     )
                                                 "

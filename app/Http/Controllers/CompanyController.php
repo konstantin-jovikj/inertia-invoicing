@@ -116,7 +116,12 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        //
+        $places = Place::with('country')->get();
+
+        return inertia('Companies/CompanyEdit',[
+            'places' => $places,
+            'company' => $company,
+        ]);
     }
 
     /**
@@ -124,7 +129,45 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+        dd($request->all());
+        $validated = $request->validate([
+            'id' => 'required|integer|exists:companies,id',
+            'user_id' => 'required|exists:users,id',
+            'customer_id' => 'nullable|exists:customers,id',
+            'place_id' => 'nullable|exists:places,id',
+            'name' => 'required|string|max:255',
+            'reg_number' => 'nullable|string|max:50',
+            'tax_number' => 'nullable|string|max:50',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional, adjust size limit as needed
+            'cert' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional, adjust size limit as needed
+            'web' => 'nullable',
+            'address' => 'nullable|string|max:255',
+        ]);
+        // dd($validated);
+
+        // Set is_customer to true if customer_id is provided, else false
+        $validated['is_customer'] = !empty($validated['customer_id']);
+
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            $validated['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
+        // Handle cert upload
+        if ($request->hasFile('cert')) {
+            $validated['cert'] = $request->file('cert')->store('certs', 'public');
+        }
+
+
+        $company->update($validated);
+
+
+
+        if($validated['is_customer']){
+            return redirect()->route('companies.index');
+        }else{
+            return redirect()->route('companies.notcustomer.index');
+        }
     }
 
     /**

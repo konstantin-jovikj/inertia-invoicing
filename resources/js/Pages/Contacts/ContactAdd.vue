@@ -68,7 +68,7 @@ const submit = () => {
                                             </h3>
                                             <img
                                                 v-if="company.logo"
-                                                :src="company.logo"
+                                                :src="`/storage/${company.logo}`"
                                                 alt="Company Logo"
                                                 class="object-contain w-40 h-20 border border-gray-100 rounded-lg"
                                             />
