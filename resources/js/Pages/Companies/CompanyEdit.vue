@@ -31,74 +31,12 @@ const form = useForm({
     name: company.value.name,
     reg_number: company.value.reg_number,
     tax_number: company.value.tax_number,
-    logo: company.value.logo,
-    cert: company.value.cert, // Define cert for file upload
+
     web: company.value.web,
 });
 console.log("FORM Data : ", form);
 
-const submit = () => {
-    console.log("Submitting form:", form);
-    form.put(`/companies/update/${form.id}`, {
-        onError: (errors) => {
-            console.error("Submission errors:", errors);
-            form.reset(); // Comment this out for debugging
-        },
-        forceFormData: true,
-    });
-};
 
-const selectedLogo = ref("");
-const LogoPreview = ref(null);
-
-const handleLogoUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        // Update form and filename
-        form.logo = file;
-        selectedLogo.value = file.name;
-
-        // Create image preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            LogoPreview.value = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-};
-
-const clearLogo = () => {
-    form.logo = null;
-    selectedLogo.value = "";
-    LogoPreview.value = null;
-    document.getElementById("logo").value = "";
-};
-
-const selectedCert = ref("");
-const CertPreview = ref(null);
-
-const handleCertUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        // Update form and filename
-        form.cert = file;
-        selectedCert.value = file.name;
-
-        // Create image preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            CertPreview.value = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-};
-
-const clearCert = () => {
-    form.cert = null;
-    selectedCert.value = "";
-    CertPreview.value = null;
-    document.getElementById("cert").value = "";
-};
 </script>
 
 <template>
@@ -109,7 +47,9 @@ const clearCert = () => {
             <div class="mx-auto max-w-11/12 sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <form submit.prevent="submit">
+                        <form @submit.prevent="form.put('/companies/update/' + form.id, {
+                            onError: () => form.reset()
+                        })">
                             <div
                                 class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
                             >
@@ -255,141 +195,6 @@ const clearCert = () => {
                                                     class="text-xs italic text-red-600"
                                                     >{{ form.errors.web }}</span
                                                 >
-                                            </div>
-                                        </div>
-
-                                        <!-- Logo and CErt Upload -->
-                                        <div
-                                            class="grid grid-cols-1 gap-4 mt-8 text-sm gap-y-2 md:grid-cols-12"
-                                        >
-                                            <!-- Logo -->
-                                            <div class="md:col-span-6">
-                                                <label
-                                                    for="logo"
-                                                    class="items-center block gap-2 px-4 py-2 transition-colors bg-white border border-gray-300 rounded-md shadow-sm cursor-pointer hover:bg-gray-50"
-                                                >
-                                                    <UploadFileIcon />
-                                                    <span
-                                                        class="text-sm font-medium text-gray-700"
-                                                        >Прикачи Ново Лого</span
-                                                    >
-                                                </label>
-                                                <div class="mt-6">
-                                                    <p>Тековно Лого</p>
-                                                    <img
-                                                        v-if="form.logo"
-                                                        :src="`/storage/${form.logo}`"
-                                                        alt="Company Logo"
-                                                        class="object-contain w-40 h-20 border border-gray-100 rounded-lg"
-                                                    />
-                                                </div>
-
-                                                <input
-                                                    type="file"
-                                                    id="logo"
-                                                    class="hidden"
-                                                    @change="handleLogoUpload"
-                                                    accept="image/*"
-                                                />
-
-                                                <!-- Selected file name with delete option -->
-                                                <div
-                                                    v-if="selectedLogo"
-                                                    class="flex items-center gap-2 mt-2 text-sm text-gray-600"
-                                                >
-                                                    <span>{{
-                                                        selectedLogo
-                                                    }}</span>
-                                                    <button
-                                                        @click="clearLogo"
-                                                        type="button"
-                                                        class="text-red-500 hover:text-red-700"
-                                                    >
-                                                        ×
-                                                    </button>
-                                                </div>
-
-                                                <!-- Image Preview -->
-                                                <div
-                                                    v-if="LogoPreview"
-                                                    class="mt-4"
-                                                >
-                                                    <img
-                                                        :src="LogoPreview"
-                                                        alt="Preview"
-                                                        class="object-contain w-40 h-40 border border-gray-200 rounded-lg"
-                                                    />
-                                                </div>
-
-                                                <span
-                                                    class="text-xs italic text-red-600"
-                                                    >{{
-                                                        form.errors.logo
-                                                    }}</span
-                                                >
-                                            </div>
-
-                                            <!-- Cert -->
-
-                                            <div class="md:col-span-6">
-                                                <label
-                                                    for="cert"
-                                                    class="items-center block gap-2 px-4 py-2 transition-colors bg-white border border-gray-300 rounded-md shadow-sm cursor-pointer hover:bg-gray-50"
-                                                >
-                                                    <UploadFileIcon />
-                                                    <span
-                                                        class="text-sm font-medium text-gray-700"
-                                                        >Прикачи Нов
-                                                        Сертификат</span
-                                                    >
-                                                </label>
-
-                                                <div class="mt-6">
-                                                    <p>Тековен Сертификат</p>
-                                                    <img
-                                                        v-if="form.cert"
-                                                        :src="`/storage/${form.cert}`"
-                                                        alt="Company Logo"
-                                                        class="object-contain w-40 h-20 border border-gray-100 rounded-lg"
-                                                    />
-                                                </div>
-
-                                                <input
-                                                    type="file"
-                                                    id="cert"
-                                                    class="hidden"
-                                                    @change="handleCertUpload"
-                                                    accept="image/*"
-                                                />
-
-                                                <!-- Selected file name with delete option -->
-                                                <div
-                                                    v-if="selectedCert"
-                                                    class="flex items-center gap-2 mt-2 text-sm text-gray-600"
-                                                >
-                                                    <span>{{
-                                                        selectedCert
-                                                    }}</span>
-                                                    <button
-                                                        @click="clearCert"
-                                                        type="button"
-                                                        class="text-red-500 hover:text-red-700"
-                                                    >
-                                                        ×
-                                                    </button>
-                                                </div>
-
-                                                <!-- Image Preview -->
-                                                <div
-                                                    v-if="CertPreview"
-                                                    class="mt-4"
-                                                >
-                                                    <img
-                                                        :src="CertPreview"
-                                                        alt="Preview"
-                                                        class="object-contain w-40 h-40 border border-gray-200 rounded-lg"
-                                                    />
-                                                </div>
                                             </div>
                                         </div>
 

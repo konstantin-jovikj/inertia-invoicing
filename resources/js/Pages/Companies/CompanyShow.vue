@@ -10,7 +10,7 @@ const props = defineProps({
 });
 
 const companyContacts = props.company.contacts;
-console.log("Company Contacts:", companyContacts);
+console.log("Company:", props.company);
 
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
@@ -46,12 +46,8 @@ const flashMessage = ref(pageProps.flash?.message || "");
                                         {{ company.name }}
                                     </h2>
                                     <p>{{ company.address }}</p>
-                                    <p>
-                                        {{ company.place.zip }}-{{
-                                            company.place.place
-                                        }}
-                                    </p>
-                                    <p>{{ company.place.country.name }}</p>
+                                    <p v-if="company.place">{{ company.place.zip }} - {{ company.place.place }}</p>
+                                    <p v-if="company.place && company.place.country">{{ company.place.country.name }}</p>
                                 </div>
                                 <hr class="my-4" />
                                 <h2

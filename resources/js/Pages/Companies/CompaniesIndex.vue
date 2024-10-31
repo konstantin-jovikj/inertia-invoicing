@@ -7,6 +7,7 @@ import DeleteIcon from "../../Components/DeleteIcon.vue";
 import ViewIcon from "../../Components/ViewIcon.vue";
 import AddIcon from "../../Components/AddIcon.vue";
 import AddContactIcon from "@/Components/AddContactIcon.vue";
+import ImageIcon from "@/Components/ImageIcon.vue";
 import SecondaryButton from "../../Components/SecondaryButton.vue";
 import { computed, ref, watch, onMounted } from "vue";
 import { debounce } from "lodash";
@@ -220,6 +221,23 @@ const getPaginationLabel = (label) => {
                                                 <EditIcon v-tippy="{
                                                         content:
                                                             'Измени',
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"/>
+                                            </Link>
+
+                                            <Link
+                                                class="hover:text-pink-400 text-slate-300"
+                                                :href="
+                                                    route(
+                                                        'company.logo.edit',
+                                                        company.id
+                                                    )
+                                                "
+                                            >
+                                                <ImageIcon v-tippy="{
+                                                        content:
+                                                            'Измени Лого',
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"/>
