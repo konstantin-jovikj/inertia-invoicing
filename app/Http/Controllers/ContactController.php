@@ -79,6 +79,10 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        //
+        $companyId = $contact->company_id;
+        $contact->delete();
+
+        return redirect()->route('company.show', $companyId)
+            ->with('message', 'Контактот е успешно избришан.');
     }
 }

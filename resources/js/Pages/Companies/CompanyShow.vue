@@ -1,6 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import EditIcon from "../../Components/EditIcon.vue";
+import DeleteIcon from "../../Components/DeleteIcon.vue";
 
 import { computed, ref, watch, onMounted } from "vue";
 
@@ -14,6 +16,46 @@ console.log("Company:", props.company);
 
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
+
+// Delete contact function
+const deleteContact = (id) => {
+    if (confirm("Дали сигурно сакаш да го избришеш овој контакт?")) {
+        router.delete("/contacts/delete/" + id, {
+            preserveState: false,
+            onSuccess: () => {
+                flashMessage.value = props.flash.message;
+            },
+        });
+    }
+};
+
+onMounted(() => {
+    if (flashMessage.value) {
+        setTimeout(() => {
+            flashMessage.value = "";
+        }, 3000);
+    }
+});
+
+const websiteDomain = computed(() => {
+    try {
+        const url = new URL(
+            props.company.web.startsWith("http")
+                ? props.company.web
+                : `http://${props.company.web}`
+        );
+        return {
+            href: url.href, // Complete URL with protocol
+            hostname: url.hostname, // Just the domain, e.g., "www.frigosan.com.mk"
+        };
+    } catch (error) {
+        return {
+            href: props.company.web,
+            hostname: props.company.web,
+        };
+    }
+});
+console.log(props.company.web);
 </script>
 
 <template>
@@ -42,12 +84,69 @@ const flashMessage = ref(pageProps.flash?.message || "");
                                 class="w-full p-4 border border-blue-500 rounded md:w-50"
                             >
                                 <div>
-                                    <h2 class="text-xl font-bold">
+                                    <div class="pb-2">
+                                        <Link
+                                            class="hover:text-green-600 text-slate-300"
+                                            :href="
+                                                route(
+                                                    'company.edit',
+                                                    company.id
+                                                )
+                                            "
+                                        >
+                                            <EditIcon
+                                                v-tippy="{
+                                                    content: 'Измени',
+                                                    arrow: true,
+                                                    theme: 'light',
+                                                }"
+                                            />
+                                        </Link>
+                                    </div>
+                                    <h2
+                                        class="text-xl font-bold"
+                                        v-if="company.name"
+                                    >
                                         {{ company.name }}
                                     </h2>
-                                    <p>{{ company.address }}</p>
-                                    <p v-if="company.place">{{ company.place.zip }} - {{ company.place.place }}</p>
-                                    <p v-if="company.place && company.place.country">{{ company.place.country.name }}</p>
+                                    <p v-if="company.address">
+                                        {{ company.address }}
+                                    </p>
+                                    <p v-if="company.place">
+                                        {{ company.place.zip }} -
+                                        {{ company.place.place }}
+                                    </p>
+                                    <p
+                                        v-if="
+                                            company.place &&
+                                            company.place.country
+                                        "
+                                    >
+                                        {{ company.place.country.name }}
+                                    </p>
+                                    <hr class="py-2" />
+                                    <p v-if="company.tax_number">
+                                        <span class="text-sm italic"
+                                            >Даночен Бр : </span
+                                        >{{ company.tax_number }}
+                                    </p>
+                                    <p v-if="company.reg_number">
+                                        <span class="text-sm italic"
+                                            >Рег Бр / ЕМБС : </span
+                                        >{{ company.reg_number }}
+                                    </p>
+                                    <p v-if="company.web">
+                                        <span class="text-sm italic"
+                                            >Web :
+                                        </span>
+                                        <a
+                                            :href="websiteDomain.href"
+                                            target="_blank"
+                                            class="text-sky-600"
+                                        >
+                                            {{ websiteDomain.href }}
+                                        </a>
+                                    </p>
                                 </div>
                                 <hr class="my-4" />
                                 <h2
@@ -58,34 +157,99 @@ const flashMessage = ref(pageProps.flash?.message || "");
                                 <div class="px-6">
                                     <!-- <hr class="my-4" /> -->
                                     <ul class="list-disc">
-                                        <p class="text-red-500" v-if="companyContacts.length === 0">
+                                        <p
+                                            class="text-red-500"
+                                            v-if="companyContacts.length === 0"
+                                        >
                                             Не се пронајдени контакти.
                                         </p>
                                         <li
-                                            class="mb-6"
+                                            class="p-4 mb-6 hover:bg-slate-50"
                                             v-for="contact in companyContacts"
                                             :key="contact.id"
                                         >
-                                            <span
-                                                class="font-bold "
-                                                >{{ contact.first_name }}
-                                                {{ contact.last_name }}</span
-                                            >
+                                            <div class="flex justify-between">
+                                                <div>
+                                                    <span class="font-bold"
+                                                        >{{
+                                                            contact.first_name
+                                                        }}
+                                                        {{
+                                                            contact.last_name
+                                                        }}</span
+                                                    >
 
-                                            <span> - </span>
-                                            <span class="text-teal-800">{{ contact.position }}</span>
+                                                    <span> - </span>
+                                                    <span
+                                                        class="text-teal-800"
+                                                        >{{
+                                                            contact.position
+                                                        }}</span
+                                                    >
+                                                </div>
+                                                <div class="flex justify-end">
+                                                    <Link
+                                                        class="hover:text-green-600 text-slate-300"
+                                                        :href="
+                                                            route(
+                                                                'contact.edit',
+                                                                contact.id
+                                                            )
+                                                        "
+                                                    >
+                                                        <EditIcon
+                                                            v-tippy="{
+                                                                content:
+                                                                    'Едитирај Контакт',
+                                                                arrow: true,
+                                                                theme: 'light',
+                                                            }"
+                                                        />
+                                                    </Link>
+
+                                                    <button
+                                                        class="hover:text-red-700 text-slate-300"
+                                                        @click="
+                                                            () =>
+                                                                deleteContact(
+                                                                    contact.id
+                                                                )
+                                                        "
+                                                    >
+                                                        <DeleteIcon
+                                                            v-tippy="{
+                                                                content:
+                                                                    'Избриши Контакт',
+                                                                arrow: true,
+                                                                theme: 'light',
+                                                            }"
+                                                        />
+                                                    </button>
+                                                </div>
+                                            </div>
                                             <p>
-                                                <span class="text-xs italic">емаил: </span><a
-                                                :href="`mailto:${contact.email}`"
-                                                ><span class="text-sky-600">{{ contact.email }}</span></a
-                                            >
+                                                <span class="text-xs italic"
+                                                    >емаил: </span
+                                                ><a
+                                                    :href="`mailto:${contact.email}`"
+                                                    ><span
+                                                        class="text-sky-600"
+                                                        >{{
+                                                            contact.email
+                                                        }}</span
+                                                    ></a
+                                                >
                                             </p>
 
                                             <p>
-                                                <span class="text-xs italic">телефон: </span>{{ contact.phone }}
+                                                <span class="text-xs italic"
+                                                    >телефон: </span
+                                                >{{ contact.phone }}
                                             </p>
                                             <p>
-                                                <span class="text-xs italic">мобилен: </span>
+                                                <span class="text-xs italic"
+                                                    >мобилен:
+                                                </span>
                                                 {{ contact.mob }}
                                             </p>
                                         </li>
