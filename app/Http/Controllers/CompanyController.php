@@ -20,9 +20,9 @@ class CompanyController extends Controller
         $companies = Company::with('place.country')->where('is_customer', $isCustomer) // eager load relationships
             ->when($request->search, function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->search . '%')
-                      ->orWhereHas('place', function ($query) use ($request) {
-                          $query->where('place', 'like', '%' . $request->search . '%');
-                      });
+                    ->orWhereHas('place', function ($query) use ($request) {
+                        $query->where('place', 'like', '%' . $request->search . '%');
+                    });
             })
             ->paginate(20)
             ->withQueryString();
@@ -91,9 +91,9 @@ class CompanyController extends Controller
         //     'company' => $company,
         // ]);
 
-        if($validatedData['is_customer']){
+        if ($validatedData['is_customer']) {
             return redirect()->route('companies.index');
-        }else{
+        } else {
             return redirect()->route('companies.notcustomer.index');
         }
     }
@@ -103,8 +103,8 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-         // Eager load the place and place->country relationship
-         $company->load('place.country', 'contacts');
+        // Eager load the place and place->country relationship
+        $company->load('place.country', 'contacts');
         //  dd($company);
         return inertia('Companies/CompanyShow', [
             'company' => $company,
@@ -118,7 +118,7 @@ class CompanyController extends Controller
     {
         $places = Place::with('country')->get();
 
-        return inertia('Companies/CompanyEdit',[
+        return inertia('Companies/CompanyEdit', [
             'places' => $places,
             'company' => $company,
         ]);
@@ -132,13 +132,13 @@ class CompanyController extends Controller
         $validated = $request->validate([
             'id' => ['required', 'integer', 'exists:companies,id'],
             'user_id' => ['required', 'exists:users,id'],
-            'customer_id' => ['nullable','exists:customers,id'],
-            'place_id' => ['nullable','exists:places,id'],
-            'name' => ['required','string','max:255'],
-            'reg_number' => ['nullable','string','max:50'],
-            'tax_number' => ['nullable','string','max:50'],
+            'customer_id' => ['nullable', 'exists:customers,id'],
+            'place_id' => ['nullable', 'exists:places,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'reg_number' => ['nullable', 'string', 'max:50'],
+            'tax_number' => ['nullable', 'string', 'max:50'],
             'web' => ['nullable'],
-            'address' => ['nullable','string','max:255'],
+            'address' => ['nullable', 'string', 'max:255'],
         ]);
 
 
@@ -147,16 +147,16 @@ class CompanyController extends Controller
 
         $company->update($validated);
 
-        if($validated['is_customer']){
+        if ($validated['is_customer']) {
             return redirect()->route('companies.index');
-        }else{
+        } else {
             return redirect()->route('companies.notcustomer.index');
         }
     }
 
     public function editLogo(Company $company)
     {
-        return inertia('Companies/CompanyLogoEdit',[
+        return inertia('Companies/CompanyLogoEdit', [
             'company' => $company,
         ]);
     }
@@ -164,18 +164,27 @@ class CompanyController extends Controller
     public function updateLogo(Request $request, Company $company)
     {
 
-            $validated = $request->validate([
-                'logo' => 'image|max:6144', // 6MB max
-            ]);
+        $validated = $request->validate([
+            'logo' => 'nullable|image|max:6144', // 6MB max
+            'cert' => 'nullable|image|max:6144', // 6MB max
+        ]);
 
-            if ($request->hasFile('logo')) {
-                $logoPath = $request->file('logo')->store('logos', 'public');
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('logos', 'public');
 
-                $company->logo = $logoPath;
-                $company->save();
-
-                return redirect()->route('companies.notcustomer.index');
+            $company->logo = $logoPath;
+            $company->save();
         }
+
+        if ($request->hasFile('cert')) {
+            $certPath = $request->file('cert')->store('certs', 'public');
+
+            $company->cert = $certPath;
+            $company->save();
+        }
+
+
+        return redirect()->route('companies.notcustomer.index');
     }
 
 
