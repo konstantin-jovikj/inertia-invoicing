@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Arr;
 
 class CompanyController extends Controller
 {
@@ -141,9 +142,9 @@ class CompanyController extends Controller
             'address' => ['nullable', 'string', 'max:255'],
         ]);
 
+        $validated['customer_id'] = $company->customer_id;
+        $validated['is_customer'] = $company->is_customer;
 
-        // Set is_customer to true if customer_id is provided, else false
-        $validated['is_customer'] = !empty($validated['customer_id']);
 
         $company->update($validated);
 
