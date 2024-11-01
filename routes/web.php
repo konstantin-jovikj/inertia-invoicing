@@ -78,7 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/companies/add', [CompanyController::class, 'create'])->name('company.create');
     Route::post('/companies/store', [CompanyController::class, 'store'])->name('company.store');
     Route::get('/companies/show/{company}', [CompanyController::class, 'show'])->name('company.show');
-
+    Route::delete('/companies/delete/{company}', [CompanyController::class, 'destroy'])->name('company.delete');
 
 
     // CONTACTS

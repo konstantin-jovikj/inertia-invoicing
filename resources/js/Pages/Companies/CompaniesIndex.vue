@@ -46,9 +46,9 @@ watch(
 );
 
 // Delete place function
-const deletePlace = (id) => {
-    if (confirm("Дали сигурно сакаш да ја избришеш оваместо?")) {
-        router.delete("/places/delete/" + id, {
+const deleteCompany = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваа копанија?")) {
+        router.delete("/companies/delete/" + id, {
             preserveState: false,
             onSuccess: () => {
                 flashMessage.value = props.flash.message;
@@ -247,7 +247,7 @@ const getPaginationLabel = (label) => {
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
-                                                        deletePlace(company.id)
+                                                        deleteCompany(company.id)
                                                 "
                                             >
                                                 <DeleteIcon v-tippy="{
