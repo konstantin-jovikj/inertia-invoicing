@@ -201,12 +201,14 @@ const getPaginationLabel = (label) => {
                                                     )
                                                 "
                                             >
-                                                <ViewIcon v-tippy="{
+                                                <ViewIcon
+                                                    v-tippy="{
                                                         content:
                                                             'Детален Преглед',
                                                         arrow: true,
                                                         theme: 'light',
-                                                    }" />
+                                                    }"
+                                                />
                                             </Link>
 
                                             <Link
@@ -218,12 +220,13 @@ const getPaginationLabel = (label) => {
                                                     )
                                                 "
                                             >
-                                                <EditIcon v-tippy="{
-                                                        content:
-                                                            'Измени',
+                                                <EditIcon
+                                                    v-tippy="{
+                                                        content: 'Измени',
                                                         arrow: true,
                                                         theme: 'light',
-                                                    }"/>
+                                                    }"
+                                                />
                                             </Link>
 
                                             <Link
@@ -235,27 +238,31 @@ const getPaginationLabel = (label) => {
                                                     )
                                                 "
                                             >
-                                                <ImageIcon v-tippy="{
-                                                        content:
-                                                            'Измени Лого',
+                                                <ImageIcon
+                                                    v-tippy="{
+                                                        content: 'Измени Лого',
                                                         arrow: true,
                                                         theme: 'light',
-                                                    }"/>
+                                                    }"
+                                                />
                                             </Link>
 
                                             <button
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
-                                                        deleteCompany(company.id)
+                                                        deleteCompany(
+                                                            company.id
+                                                        )
                                                 "
                                             >
-                                                <DeleteIcon v-tippy="{
-                                                        content:
-                                                            'Избриши',
+                                                <DeleteIcon
+                                                    v-tippy="{
+                                                        content: 'Избриши',
                                                         arrow: true,
                                                         theme: 'light',
-                                                    }"/>
+                                                    }"
+                                                />
                                             </button>
                                         </div>
                                     </td>

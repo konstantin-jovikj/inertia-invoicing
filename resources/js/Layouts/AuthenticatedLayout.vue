@@ -73,6 +73,13 @@ const showingNavigationDropdown = ref(false);
                                         >
                                             Тип на Коминтенти
                                         </DropdownLink>
+
+                                        <DropdownLink
+                                            :href="route('banks.index')"
+                                        >
+                                            Банки
+                                        </DropdownLink>
+
                                         <hr/>
                                         <DropdownLink
                                             :href="route('companies.notcustomer.index')"

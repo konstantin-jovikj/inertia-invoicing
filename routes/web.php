@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactController;
 use Inertia\Inertia;
@@ -87,6 +88,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/contacts/edit/{contact}', [ContactController::class, 'edit'])->name('contact.edit');
     Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
     Route::delete('/contacts/delete/{contact}', [ContactController::class, 'destroy'])->name('contact.delete');
+
+    // BANKS
+
+    Route::get('/banks', [BankController::class, 'index'])->name('banks.index');
+    Route::get('/banks/edit/{bank}', [BankController::class, 'edit'])->name('bank.edit');
+    Route::get('/banks/add', [BankController::class, 'create'])->name('bank.create');
+    Route::delete('/bank/delete/{bank}', [BankController::class, 'destroy'])->name('bank.delete');
+    Route::post('/banks/store', [BankController::class, 'store'])->name('bank.store');
+    Route::put('/banks/update/{bank}', [BankController::class, 'update'])->name('bank.update');
 
 });
 
