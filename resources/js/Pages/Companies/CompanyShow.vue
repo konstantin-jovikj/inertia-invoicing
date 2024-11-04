@@ -75,7 +75,7 @@ const toggleActive = (id) => {
 </script>
 
 <template>
-    <Head title="Companies" />
+    <Head :title="company.name" />
 
     <AuthenticatedLayout>
         <div class="py-12">
