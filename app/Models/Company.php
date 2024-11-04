@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Place;
+use App\Models\Account;
 use App\Models\Contact;
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Model;
@@ -42,5 +43,10 @@ class Company extends Model
     public function contacts()
     {
         return $this->hasMany(Contact::class);
+    }
+
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
     }
 }

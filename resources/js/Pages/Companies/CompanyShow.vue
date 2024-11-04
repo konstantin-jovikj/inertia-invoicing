@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
+import AddAccountIcon from "@/Components/AddAccountIcon.vue";
 
 import { computed, ref, watch, onMounted } from "vue";
 
@@ -259,7 +260,19 @@ console.log(props.company.web);
                             <div
                                 class="w-full p-4 border border-blue-500 rounded md:w-50"
                             >
-                                <h2>Листа на документи</h2>
+                                <Link
+                                    class="hover:text-sky-600 text-slate-300"
+                                    :href="route('account.create', company.id)"
+                                >
+                                    <AddAccountIcon
+                                        v-tippy="{
+                                            content: 'Додај Нова Банкарска Сметка',
+                                            arrow: true,
+                                            theme: 'light',
+                                        }"
+                                    />
+                                </Link>
+                                <h2 class="mt-4">Банкарски Сметки</h2>
                             </div>
                         </div>
                     </div>

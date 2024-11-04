@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Bank;
+use App\Models\Company;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -18,9 +20,13 @@ class AccountController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Company $company)
     {
-        //
+        $banks = Bank::all();
+        return inertia('Accounts/AccountAdd', [
+            'banks' => $banks,
+            'company' => $company,
+        ]);
     }
 
     /**
@@ -28,7 +34,19 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'bank_id' => 'required|exists:banks,id',
+            'is_for_export' => 'boolean',
+            'giro_account' => 'nullable|max:20',
+            'account_no' => 'nullable|max:20',
+            'swift' => 'nullable|max:20',
+            'iban' => 'nullable|max:20',
+        ]);
+
+        $account = Account::create($validatedData);
+        return redirect()->route('companies.index')->with('message', 'Банкарската сметка е успешно додадена.');
     }
 
     /**

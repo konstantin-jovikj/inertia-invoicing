@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Account;
 use Illuminate\Database\Eloquent\Model;
 
 class Bank extends Model
@@ -12,4 +13,9 @@ class Bank extends Model
         'address_cyr',
         'address_lat',
     ];
+
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
 }

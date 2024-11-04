@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactController;
@@ -97,6 +98,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/bank/delete/{bank}', [BankController::class, 'destroy'])->name('bank.delete');
     Route::post('/banks/store', [BankController::class, 'store'])->name('bank.store');
     Route::put('/banks/update/{bank}', [BankController::class, 'update'])->name('bank.update');
+
+    // ACCOUNTS
+
+    Route::get('/accounts/add/{company}', [AccountController::class, 'create'])->name('account.create');
+    Route::post('/accounts/store', [AccountController::class, 'store'])->name('account.store');
+
 
 });
 
