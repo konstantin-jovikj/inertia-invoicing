@@ -57,6 +57,21 @@ const websiteDomain = computed(() => {
     }
 });
 console.log(props.company.web);
+
+
+const toggleActive = (id) => {
+    router.patch(`/activate/account/${id}`, {}, {
+        preserveState: true, // Keeps current component state (like pagination, sorting)
+        onSuccess: (page) => {
+            flashMessage.value = page.props.flash.message;
+        },
+        onError: (errors) => {
+            console.error("Error toggling active status:", errors);
+        }
+    });
+};
+
+
 </script>
 
 <template>
@@ -266,13 +281,120 @@ console.log(props.company.web);
                                 >
                                     <AddAccountIcon
                                         v-tippy="{
-                                            content: 'Додај Нова Банкарска Сметка',
+                                            content:
+                                                'Додај Нова Банкарска Сметка',
                                             arrow: true,
                                             theme: 'light',
                                         }"
                                     />
                                 </Link>
-                                <h2 class="mt-4">Банкарски Сметки</h2>
+                                <h2 class="mt-4 font-bold">Банкарски Сметки</h2>
+                                <hr />
+                                <!-- BANKARSKI SMETKI TABELA -->
+                                <div
+                                    class="container p-2 mx-auto sm:p-4 dark:text-gray-800"
+                                >
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full text-xs">
+                                            <colgroup>
+                                                <col />
+                                                <col />
+                                                <col />
+                                                <col class="w-24" />
+                                            </colgroup>
+                                            <thead class="dark:bg-gray-300">
+                                                <tr class="text-left">
+                                                    <th class="p-3">Банка</th>
+                                                    <th class="p-3">Статус</th>
+                                                    <th class="p-3">Тип</th>
+                                                    <th class="p-3">Акција</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    v-for="account in company.accounts"
+                                                    :key="account.id"
+                                                    class="border-b border-opacity-20 dark:border-gray-300 dark:bg-gray-50"
+                                                >
+                                                    <td class="p-3">
+                                                        <p
+                                                            v-if="
+                                                                account.is_for_export
+                                                            "
+                                                        >
+                                                            {{
+                                                                account.bank
+                                                                    .name_lat
+                                                            }}
+                                                        </p>
+                                                        <p v-else>
+                                                            {{
+                                                                account.bank
+                                                                    .name_cyr
+                                                            }}
+                                                        </p>
+                                                    </td>
+                                                    <td class="p-3">
+                                                        <div
+                                                            class="inline-flex items-center gap-2"
+                                                        >
+                                                            <label
+                                                                class="text-sm cursor-pointer text-slate-600"
+                                                                >Неактивна</label
+                                                            >
+
+                                                            <div
+                                                                class="relative inline-block h-5 w-11"
+                                                            >
+                                                                <input
+                                                                    type="checkbox"
+                                                                    :checked="
+                                                                        account.is_active
+                                                                    "
+                                                                    @change="
+                                                                        toggleActive(
+                                                                            account.id
+                                                                        )
+                                                                    "
+                                                                    class="h-5 transition-colors duration-300 rounded-full appearance-none cursor-pointer peer w-11 bg-slate-100 checked:bg-emerald-700"
+                                                                />
+                                                                <label
+                                                                    class="absolute top-0 left-0 w-5 h-5 transition-transform duration-300 bg-white border rounded-full shadow-sm cursor-pointer border-slate-300 peer-checked:translate-x-6 peer-checked:border-green-800"
+                                                                ></label>
+                                                            </div>
+
+                                                            <label
+                                                            :class="account.is_active ? ' text-green-600 font-bold' : ' text-slate-600'"
+                                                                class="text-sm cursor-pointer"
+                                                                >Активна</label
+                                                            >
+                                                        </div>
+                                                    </td>
+                                                    <td class="p-3">
+                                                        <p
+                                                            class="dark:text-gray-600"
+                                                            v-if="
+                                                                account.is_for_export
+                                                            "
+                                                        >
+                                                            Девизна (извоз)
+                                                        </p>
+                                                        <p
+                                                            class="dark:text-gray-600"
+                                                            v-else
+                                                        >
+                                                            Денарска
+                                                        </p>
+                                                    </td>
+
+                                                    <td class="p-3 text-right">
+                                                        <button>Edit</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

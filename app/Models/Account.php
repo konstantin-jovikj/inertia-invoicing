@@ -12,6 +12,7 @@ class Account extends Model
         'company_id',
         'bank_id',
         'is_for_export',
+        'is_active',
         'giro_account',
         'account_no',
         'swift',

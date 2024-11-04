@@ -105,7 +105,7 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         // Eager load the place and place->country relationship
-        $company->load('place.country', 'contacts', 'accounts');
+        $company->load('place.country', 'contacts', 'accounts.bank');
         //  dd($company);
         return inertia('Companies/CompanyShow', [
             'company' => $company,

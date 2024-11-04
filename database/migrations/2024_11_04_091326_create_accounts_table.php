@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('company_id')->constrained('companies');
             $table->foreignId('bank_id')->constrained('banks');
             $table->boolean('is_for_export')->default(false);
+            $table->boolean('is_active')->default(false);
             $table->string('giro_account')->nullable();
             $table->string('account_no')->nullable();
             $table->string('swift')->nullable();

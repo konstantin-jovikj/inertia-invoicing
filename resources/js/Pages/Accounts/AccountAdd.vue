@@ -16,6 +16,7 @@ const form = useForm({
     company_id: props.company.id,
     bank_id: "",
     is_for_export: false,
+    is_active: false,
     giro_account: "",
     account_no: "",
     swift: "",

@@ -49,6 +49,13 @@ class AccountController extends Controller
         return redirect()->route('companies.index')->with('message', 'Банкарската сметка е успешно додадена.');
     }
 
+    public function toggleActive(Account $account)
+    {
+        // dd($account);
+        $account->is_active = !$account->is_active;
+        $account->save();
+    }
+
     /**
      * Display the specified resource.
      */
