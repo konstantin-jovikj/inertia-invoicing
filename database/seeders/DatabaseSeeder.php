@@ -26,6 +26,15 @@ class DatabaseSeeder extends Seeder
             PlaceSeeder::class,
             CustomerTypeSeeder::class,
             BankSeeder::class,
+            DocumentTypeSeeder::class,
+            IncotermSeeder::class,
+            TaxSeeder::class,
+            CurencySeeder::class,
+            DriverSeeder::class,
+            VehicleSeeder::class,
+            NoteTypeSeeder::class,
+            DeclarationSeeder::class,
+
         ]);
     }
 }
