@@ -4,7 +4,7 @@ import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
 import AddAccountIcon from "@/Components/AddAccountIcon.vue";
-
+import AddContactIcon from "@/Components/AddContactIcon.vue";
 import { computed, ref, watch, onMounted } from "vue";
 
 const props = defineProps({
@@ -72,6 +72,18 @@ const toggleActive = (id) => {
             },
         }
     );
+};
+
+// Delete Account function
+const deleteAccount = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваа банкарска сметка?")) {
+        router.delete("/accounts/delete/" + id, {
+            preserveState: false,
+            onSuccess: () => {
+                flashMessage.value = props.flash.message;
+            },
+        });
+    }
 };
 </script>
 
@@ -166,11 +178,33 @@ const toggleActive = (id) => {
                                     </p>
                                 </div>
                                 <hr class="my-4" />
-                                <h2
-                                    class="px-6 py-2 mb-4 text-lg font-bolder bg-slate-100"
-                                >
-                                    Контакти
-                                </h2>
+                                <div class="flex items-center justify-between px-6 mb-4 bg-slate-100">
+                                    <span
+                                        class="text-lg font-bolder "
+                                    >
+                                        Контакти
+                                    </span>
+                                    <div>
+                                        <Link
+                                                class="px-1 hover:text-orange-600 text-slate-300"
+                                                :href="
+                                                    route(
+                                                        'contacts.create',
+                                                        company.id
+                                                    )
+                                                "
+                                            >
+                                                <AddContactIcon
+                                                    v-tippy="{
+                                                        content:
+                                                            'Додај Контакт',
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"
+                                                />
+                                            </Link>
+                                    </div>
+                                </div>
                                 <div class="px-6">
                                     <!-- <hr class="my-4" /> -->
                                     <ul class="list-disc">
@@ -204,7 +238,7 @@ const toggleActive = (id) => {
                                                         }}</span
                                                     >
                                                 </div>
-                                                <div class="flex justify-end">
+                                                <div class="flex justify-end gap-2">
                                                     <Link
                                                         class="hover:text-green-600 text-slate-300"
                                                         :href="
@@ -393,24 +427,45 @@ const toggleActive = (id) => {
                                                     </td>
 
                                                     <td class="p-3 text-right">
-                                                        <Link
-                                                            class="hover:text-green-600 text-slate-300"
-                                                            :href="
-                                                                route(
-                                                                    'account.edit',
-                                                                    account.id
-                                                                )
-                                                            "
-                                                        >
-                                                            <EditIcon
-                                                                v-tippy="{
-                                                                    content:
-                                                                        'Измени',
-                                                                    arrow: true,
-                                                                    theme: 'light',
-                                                                }"
-                                                            />
-                                                        </Link>
+                                                        <div class="flex gap-2">
+                                                            <Link
+                                                                class="hover:text-green-600 text-slate-300"
+                                                                :href="
+                                                                    route(
+                                                                        'account.edit',
+                                                                        account.id
+                                                                    )
+                                                                "
+                                                            >
+                                                                <EditIcon
+                                                                    v-tippy="{
+                                                                        content:
+                                                                            'Измени',
+                                                                        arrow: true,
+                                                                        theme: 'light',
+                                                                    }"
+                                                                />
+                                                            </Link>
+                                                            <!-- //Delete -->
+                                                            <button
+                                                                class="hover:text-red-700 text-slate-300"
+                                                                @click="
+                                                                    () =>
+                                                                        deleteAccount(
+                                                                            account.id
+                                                                        )
+                                                                "
+                                                            >
+                                                                <DeleteIcon
+                                                                    v-tippy="{
+                                                                        content:
+                                                                            'Избриши Сметка',
+                                                                        arrow: true,
+                                                                        theme: 'light',
+                                                                    }"
+                                                                />
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </tbody>

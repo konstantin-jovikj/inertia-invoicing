@@ -106,6 +106,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/activate/account/{account}', [AccountController::class, 'toggleActive'])->name('toggle.account');
     Route::get('/accounts/edit/{account}', [AccountController::class, 'edit'])->name('account.edit');
     Route::put('/accounts/update/{account}', [AccountController::class, 'update'])->name('account.update');
+    Route::delete('/accounts/delete/{account}', [AccountController::class, 'destroy'])->name('account.delete');
 
 
 });

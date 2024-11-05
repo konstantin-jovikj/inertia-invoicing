@@ -46,7 +46,9 @@ class AccountController extends Controller
         ]);
 
         $account = Account::create($validatedData);
-        return redirect()->route('companies.index')->with('message', 'Банкарската сметка е успешно додадена.');
+        return redirect()->route('company.show',[
+            'company' => $account->company_id,
+        ])->with('message', 'Банкарската сметка е успешно додадена.');
     }
 
     public function toggleActive(Account $account)
@@ -109,6 +111,9 @@ class AccountController extends Controller
      */
     public function destroy(Account $account)
     {
-        //
+        $account->delete();
+        return redirect()->route('company.show',[
+            'company' => $account->company_id,
+        ])->with('message', 'Банкарската сметка е успешно избришана.');
     }
 }
