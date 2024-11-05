@@ -20,12 +20,12 @@ return new class extends Migration
             $table->foreignId('curency_id')->nullable()->constrained('curencies');
             $table->foreignId('incoterm_id')->nullable()->constrained('incoterms');
             $table->foreignId('tax_id')->nullable()->constrained('taxes');
+            $table->foreignId('term_id')->nullable()->constrained('terms');
 
             $table->boolean('is_translation')->default(false);
             $table->boolean('is_for_export')->default(false);
             $table->string('document_no')->nullable();
             $table->dateTime('date')->nullable();
-            $table->string('document_no')->nullable();
             $table->decimal('advance_payment', 14, 2)->nullable();
             $table->decimal('discount', 5, 2)->nullable();
             $table->decimal('total', 14, 2)->nullable();

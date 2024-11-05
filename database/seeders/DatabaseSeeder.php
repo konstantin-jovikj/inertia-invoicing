@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             VehicleSeeder::class,
             NoteTypeSeeder::class,
             DeclarationSeeder::class,
+            TermsSeeder::class,
 
         ]);
     }

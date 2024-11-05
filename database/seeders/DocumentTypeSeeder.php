@@ -26,6 +26,7 @@ class DocumentTypeSeeder extends Seeder
             array('type' => 'Приемница'),
             array('type' => 'Товарен Лист'),
             array('type' => 'Патен Налог'),
+            array('type' => 'Гаранција'),
 
         );
 
