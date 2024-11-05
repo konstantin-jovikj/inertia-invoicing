@@ -58,20 +58,21 @@ const websiteDomain = computed(() => {
 });
 console.log(props.company.web);
 
-
 const toggleActive = (id) => {
-    router.patch(`/activate/account/${id}`, {}, {
-        preserveState: true, // Keeps current component state (like pagination, sorting)
-        onSuccess: (page) => {
-            flashMessage.value = page.props.flash.message;
-        },
-        onError: (errors) => {
-            console.error("Error toggling active status:", errors);
+    router.patch(
+        `/activate/account/${id}`,
+        {},
+        {
+            preserveState: true, // Keeps current component state (like pagination, sorting)
+            onSuccess: (page) => {
+                flashMessage.value = page.props.flash.message;
+            },
+            onError: (errors) => {
+                console.error("Error toggling active status:", errors);
+            },
         }
-    });
+    );
 };
-
-
 </script>
 
 <template>
@@ -364,7 +365,11 @@ const toggleActive = (id) => {
                                                             </div>
 
                                                             <label
-                                                            :class="account.is_active ? ' text-green-600 font-bold' : ' text-slate-600'"
+                                                                :class="
+                                                                    account.is_active
+                                                                        ? ' text-green-600 font-bold'
+                                                                        : ' text-slate-600'
+                                                                "
                                                                 class="text-sm cursor-pointer"
                                                                 >Активна</label
                                                             >
@@ -388,7 +393,24 @@ const toggleActive = (id) => {
                                                     </td>
 
                                                     <td class="p-3 text-right">
-                                                        <button>Edit</button>
+                                                        <Link
+                                                            class="hover:text-green-600 text-slate-300"
+                                                            :href="
+                                                                route(
+                                                                    'account.edit',
+                                                                    account.id
+                                                                )
+                                                            "
+                                                        >
+                                                            <EditIcon
+                                                                v-tippy="{
+                                                                    content:
+                                                                        'Измени',
+                                                                    arrow: true,
+                                                                    theme: 'light',
+                                                                }"
+                                                            />
+                                                        </Link>
                                                     </td>
                                                 </tr>
                                             </tbody>

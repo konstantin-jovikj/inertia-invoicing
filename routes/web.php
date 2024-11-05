@@ -104,6 +104,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/accounts/add/{company}', [AccountController::class, 'create'])->name('account.create');
     Route::post('/accounts/store', [AccountController::class, 'store'])->name('account.store');
     Route::patch('/activate/account/{account}', [AccountController::class, 'toggleActive'])->name('toggle.account');
+    Route::get('/accounts/edit/{account}', [AccountController::class, 'edit'])->name('account.edit');
+    Route::put('/accounts/update/{account}', [AccountController::class, 'update'])->name('account.update');
 
 
 });

@@ -69,7 +69,17 @@ class AccountController extends Controller
      */
     public function edit(Account $account)
     {
-        //
+
+        // dd($account);
+        $banks = Bank::all();
+
+        $account->load('bank', 'company');
+
+
+        return inertia('Accounts/AccountEdit',[
+            'account' => $account,
+            'banks' => $banks,
+        ]);
     }
 
     /**
@@ -77,7 +87,21 @@ class AccountController extends Controller
      */
     public function update(Request $request, Account $account)
     {
-        //
+        $validatedData = $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'bank_id' => 'required|exists:banks,id',
+            'is_for_export' => 'boolean',
+            'is_active' => 'boolean',
+            'giro_account' => 'nullable|max:20',
+            'account_no' => 'nullable|max:20',
+            'swift' => 'nullable|max:20',
+            'iban' => 'nullable|max:20',
+        ]);
+
+        $account->update($validatedData);
+        return redirect()->route('company.show',[
+            'company' => $account->company_id,
+        ])->with('message', 'Банкарската сметка е успешно ажурирана.');
     }
 
     /**
