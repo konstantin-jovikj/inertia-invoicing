@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('is_translation')->default(false);
             $table->boolean('is_for_export')->default(false);
             $table->string('document_no')->nullable();
+            $table->string('drawing_no')->nullable();
             $table->dateTime('date')->nullable();
             $table->decimal('advance_payment', 14, 2)->nullable();
             $table->decimal('discount', 5, 2)->nullable();

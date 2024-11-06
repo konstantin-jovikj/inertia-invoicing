@@ -16,22 +16,14 @@ class PlaceSeeder extends Seeder
         DB::table('places')->delete();
 
         $places = [
-            // Macedonia
-            ['country_id' => '35', 'place' => 'Скопје', 'zip' => '1000'],
-            ['country_id' => '35', 'place' => 'Тетово', 'zip' => '1220'],
-            ['country_id' => '35', 'place' => 'Гостивар', 'zip' => '1230'],
-
-                // Other
-            ['country_id' => '22', 'place' => 'Paris', 'zip' => '1600'],
-            ['country_id' => '24', 'place' => 'Berlin', 'zip' => '10000'],
-                // Italy
+            // Italy
             ['country_id' => '28', 'place' => 'Borgo Val Taro', 'zip' => '43043'],
             ['country_id' => '28', 'place' => 'Pavia', 'zip' => '27100'],
             ['country_id' => '28', 'place' => 'Cadoneghe,Padova', 'zip' => '35010'],
             ['country_id' => '28', 'place' => 'Monteroni D`Arbia (Siena)', 'zip' => '53014'],
             ['country_id' => '28', 'place' => 'Conselve (Padova)', 'zip' => '35026'],
             ['country_id' => '28', 'place' => 'Opera,(Milano)', 'zip' => '20090'],
-            ['country_id' => '28', 'place' => 'Villa Coftese', 'zip' => '20020'],
+            ['country_id' => '28', 'place' => 'Villa Cortese', 'zip' => '20020'],
             ['country_id' => '28', 'place' => 'Castelfranco Veneto (TV)', 'zip' => '31033'],
             ['country_id' => '28', 'place' => 'Suzzara (MN)', 'zip' => '46029'],
             ['country_id' => '28', 'place' => 'Torino', 'zip' => '10141'],
@@ -50,6 +42,15 @@ class PlaceSeeder extends Seeder
             ['country_id' => '28', 'place' => 'Pogliano Milenese', 'zip' => '20010'],
             ['country_id' => '28', 'place' => 'Pieve di Curtarolo', 'zip' => '35010'],
             ['country_id' => '28', 'place' => 'Cadoneghe (PD)', 'zip' => '35010'],
+
+            // Macedonia
+            ['country_id' => '35', 'place' => 'Скопје', 'zip' => '1000'],
+            ['country_id' => '35', 'place' => 'Тетово', 'zip' => '1220'],
+            ['country_id' => '35', 'place' => 'Гостивар', 'zip' => '1230'],
+
+            // Other
+            ['country_id' => '22', 'place' => 'Paris', 'zip' => '1600'],
+            ['country_id' => '24', 'place' => 'Berlin', 'zip' => '10000'],
 
         ];
 

@@ -43,6 +43,7 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <div class="relative flex mt-4 ms-3">
+                                <!-- PODESUVANJA -->
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
@@ -80,14 +81,47 @@ const showingNavigationDropdown = ref(false);
                                             Банки
                                         </DropdownLink>
 
-                                        <hr/>
+                                        <hr />
                                         <DropdownLink
-                                            :href="route('companies.notcustomer.index')"
+                                            :href="
+                                                route(
+                                                    'companies.notcustomer.index'
+                                                )
+                                            "
                                         >
                                             Сопствени Фирми
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
+
+                                <!-- END PODESUVANJA -->
+
+                                <!-- DOKUMENTI -->
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <span class="inline-flex rounded-md">
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
+                                            >
+                                                Документи
+
+                                                <ArrowDown />
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('country.index')"
+                                        >
+                                            Понуди
+                                        </DropdownLink>
+
+                                    </template>
+                                </Dropdown>
+
+                                <!-- END DOKUMENTI -->
 
                                 <!-- //Komintenti (customers) -->
 

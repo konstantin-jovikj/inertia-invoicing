@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
             NoteTypeSeeder::class,
             DeclarationSeeder::class,
             TermsSeeder::class,
+            ManufacturerSeeder::class,
+
 
         ]);
     }

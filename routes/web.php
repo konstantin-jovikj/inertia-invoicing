@@ -109,6 +109,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/accounts/delete/{account}', [AccountController::class, 'destroy'])->name('account.delete');
 
 
+     // OFFERS
+
+
 });
 
 require __DIR__ . '/auth.php';

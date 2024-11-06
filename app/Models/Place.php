@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Company;
 use App\Models\Country;
+use App\Models\Manufacturer;
 use Illuminate\Database\Eloquent\Model;
 
 class Place extends Model
@@ -21,5 +22,10 @@ class Place extends Model
     public function companies()
     {
         return $this->hasMany(Company::class);
+    }
+
+    public function manufacturers()
+    {
+        return $this->hasMany(Manufacturer::class);
     }
 }

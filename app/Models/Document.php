@@ -2,9 +2,80 @@
 
 namespace App\Models;
 
+use App\Models\Tax;
+use App\Models\User;
+use App\Models\Terms;
+use App\Models\Driver;
+use App\Models\Curency;
+use App\Models\Vehicle;
+use App\Models\Incoterm;
+use App\Models\Declaration;
+use App\Models\DocumentNote;
+use App\Models\DocumentType;
 use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
-    //
+    protected $fillable = [
+        'document_type_id',
+        'vehicle_id',
+        'driver_id',
+        'curency_id',
+        'incoterm_id',
+        'tax_id',
+        'term_id',
+        'is_translation',
+        'is_for_export',
+        'document_no',
+        'drawing_no',
+        'date',
+        'advance_payment',
+        'discount',
+        'total',
+        'total_with_tax_and_disclount',
+        'total_volume',
+        'total_weight',
+    ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function documentType(){
+        return $this->belongsTo(DocumentType::class);
+    }
+
+    public function vehicle(){
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function driver(){
+        return $this->belongsTo(Driver::class);
+    }
+
+    public function incoterm(){
+        return $this->belongsTo(Incoterm::class);
+    }
+
+    public function curency(){
+        return $this->belongsTo(Curency::class);
+    }
+
+    public function tax(){
+        return $this->belongsTo(Tax::class);
+    }
+
+    public function term(){
+        return $this->belongsTo(Terms::class);
+    }
+
+    public function documentNotes(){
+        return $this->hasMany(DocumentNote::class);
+    }
+
+    public function declarations()
+    {
+        return $this->belongsToMany(Declaration::class);
+    }
+
 }
