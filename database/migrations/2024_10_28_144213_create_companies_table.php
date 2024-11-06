@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId(column: 'place_id')->constrained('places');
             $table->boolean('is_customer')->default(true);
             $table->string('name');
+            $table->index('name');
             $table->string('address')->nullable();
             $table->string('tax_number')->nullable();
             $table->string('reg_number')->nullable();
