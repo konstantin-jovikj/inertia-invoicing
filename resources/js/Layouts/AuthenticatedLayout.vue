@@ -83,6 +83,12 @@ const showingNavigationDropdown = ref(false);
 
                                         <hr />
                                         <DropdownLink
+                                            :href="route('taxes.index')"
+                                        >
+                                            Стапки на ДДВ
+                                        </DropdownLink>
+                                        <hr />
+                                        <DropdownLink
                                             :href="
                                                 route(
                                                     'companies.notcustomer.index'

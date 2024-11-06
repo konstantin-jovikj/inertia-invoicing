@@ -12,7 +12,10 @@ class TaxController extends Controller
      */
     public function index()
     {
-        //
+        $taxes = Tax::paginate(20);
+        return inertia('Taxes/TaxesIndex',[
+            'taxes' => $taxes,
+        ]);
     }
 
     /**

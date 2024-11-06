@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\TaxController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -109,7 +110,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/accounts/delete/{account}', [AccountController::class, 'destroy'])->name('account.delete');
 
 
-     // OFFERS
+     // TAXES
+
+     Route::get('/taxes', [TaxController::class, 'index'])->name('taxes.index');
 
 
 });
