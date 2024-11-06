@@ -36,6 +36,11 @@ class DatabaseSeeder extends Seeder
             DeclarationSeeder::class,
             TermsSeeder::class,
             ManufacturerSeeder::class,
+            RefrigerantSeeder::class,
+            RegulationSeeder::class,
+            CategorySeeder::class,
+            TemperatureSeeder::class,
+            VoltageSeeder::class,
 
 
         ]);

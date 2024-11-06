@@ -13,7 +13,7 @@ class ManufacturerSeeder extends Seeder
     public function run(): void
     {
         // Delete all existing records
-        Manufacturer::truncate();
+        // Manufacturer::truncate();
 
         // Define the manufacturers to insert
         $manufacturers = [

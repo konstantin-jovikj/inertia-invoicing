@@ -13,7 +13,7 @@ class RefrigerantSeeder extends Seeder
      */
     public function run(): void
     {
-        Refrigerant::truncate();
+        // Refrigerant::truncate();
 
         $refrigerants = [
             [
