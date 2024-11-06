@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ProductModel;
 use Illuminate\Database\Eloquent\Model;
 
 class Refrigerant extends Model
@@ -19,4 +20,9 @@ class Refrigerant extends Model
         'relative_density',
         'other',
     ];
+
+    public function models()
+    {
+        return $this->hasMany(ProductModel::class);
+    }
 }

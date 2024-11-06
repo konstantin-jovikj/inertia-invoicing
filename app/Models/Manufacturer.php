@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Place;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class Manufacturer extends Model
@@ -15,5 +16,9 @@ class Manufacturer extends Model
 
     public function place(){
         return $this->belongsTo(Place::class);
+    }
+
+    public function products(){
+        return $this->hasMany(Product::class);
     }
 }

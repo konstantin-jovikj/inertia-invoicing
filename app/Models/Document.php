@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Terms;
 use App\Models\Driver;
 use App\Models\Curency;
+use App\Models\Product;
 use App\Models\Vehicle;
 use App\Models\Incoterm;
 use App\Models\Declaration;
@@ -76,6 +77,10 @@ class Document extends Model
     public function declarations()
     {
         return $this->belongsToMany(Declaration::class);
+    }
+
+    public function products(){
+        return $this->hasMany(Product::class);
     }
 
 }
