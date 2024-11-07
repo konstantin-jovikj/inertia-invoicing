@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Document;
+use App\Models\DocumentType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -18,9 +22,22 @@ class DocumentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(DocumentType $documentType)
     {
-        //
+
+        $authUser = Auth::user();
+
+        $companies = Company::select('id', 'name', 'is_customer')
+        ->whereIn('is_customer', [true, false])
+        ->get()
+        ->groupBy('is_customer');
+
+    return inertia('Documents/DocumentsAdd', [
+        'authUser' => $authUser,
+        'documentType' => $documentType,
+        'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
+        'clientCompanies' => $companies->get(true, collect()),  // companies where 'is_customer' is true
+    ]);
     }
 
     /**
@@ -28,7 +45,7 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

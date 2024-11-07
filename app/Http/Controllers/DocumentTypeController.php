@@ -12,7 +12,12 @@ class DocumentTypeController extends Controller
      */
     public function index()
     {
-        //
+        $documentTypes = DocumentType::paginate(20);
+        // dd($documentTypes);
+        return inertia('Documents/DocumentTypeSelector',[
+            'documentTypes' => $documentTypes,
+        ]);
+
     }
 
     /**

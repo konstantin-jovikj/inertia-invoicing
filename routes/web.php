@@ -1,21 +1,23 @@
 <?php
 
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\CurencyController;
-use App\Http\Controllers\DriverController;
-use App\Http\Controllers\TaxController;
-use App\Http\Controllers\VehicleController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\TaxController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\DriverController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CurencyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CustomerTypeController;
+use App\Http\Controllers\DocumentTypeController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -144,6 +146,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/vehicles/delete/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.delete');
     Route::get('/vehicles/edit/{vehicle}', [VehicleController::class, 'edit'])->name('vehicles.edit');
     Route::put('/vehicles/update/{vehicle}', [VehicleController::class, 'update'])->name('vehicles.update');
+
+    // DOCUMENT TYPES
+
+    Route::get('/document/types', [DocumentTypeController::class, 'index'])->name('document.type.index');
+
+       // DOCUMENT
+
+    Route::get('/documents/add/{documentType}', [DocumentController::class, 'create'])->name('documents.create');
+    Route::post('/documents/store', [DocumentController::class, 'store'])->name('documents.store');
+
+
 
 
 });

@@ -135,9 +135,9 @@ const showingNavigationDropdown = ref(false);
 
                                     <template #content>
                                         <DropdownLink
-                                            :href="route('country.index')"
+                                            :href="route('document.type.index')"
                                         >
-                                            Понуди
+                                            Нов Документ
                                         </DropdownLink>
 
                                     </template>

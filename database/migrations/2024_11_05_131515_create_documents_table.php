@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('owner_id')->constrained('users');
+            $table->foreignId('client_id')->constrained('users');
             $table->foreignId('document_type_id')->constrained('document_types');
             $table->foreignId('vehicle_id')->nullable()->constrained('vehicles');
             $table->foreignId('driver_id')->nullable()->constrained('drivers');
