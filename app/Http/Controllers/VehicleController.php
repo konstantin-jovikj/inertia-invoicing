@@ -12,7 +12,10 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        //
+        $vehicles = Vehicle::paginate(20);
+        return inertia('Settings/Vehicles/VehiclesIndex', [
+            'vehicles' => $vehicles,
+        ]);
     }
 
     /**
@@ -20,7 +23,7 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Settings/Vehicles/VehiclesAdd');
     }
 
     /**
@@ -28,7 +31,19 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $validated = $request->validate([
+            'model' => 'required|max:15',
+            'type' => 'required|max:15',
+            'register_plate_number' => 'nullable|max:12',
+            'max_weight_loaded' => 'nullable|max:6',
+            'max_weight_empty' => 'nullable|max:6',
+            'payload' => 'nullable|max:6',
+        ]);
+
+        Vehicle::create($validated);
+
+        return redirect()->route('vehicles.index')->with('message', 'Возилото е успешно додаден');
     }
 
     /**
@@ -44,7 +59,9 @@ class VehicleController extends Controller
      */
     public function edit(Vehicle $vehicle)
     {
-        //
+        return inertia('Settings/Vehicles/VehiclesEdit', [
+            'vehicle' => $vehicle,
+        ]);
     }
 
     /**
@@ -52,7 +69,18 @@ class VehicleController extends Controller
      */
     public function update(Request $request, Vehicle $vehicle)
     {
-        //
+        $validated = $request->validate([
+            'model' => 'required|max:15',
+            'type' => 'required|max:15',
+            'register_plate_number' => 'nullable|max:12',
+            'max_weight_loaded' => 'nullable|max:6',
+            'max_weight_empty' => 'nullable|max:6',
+            'payload' => 'nullable|max:6',
+        ]);
+
+        $vehicle->update($validated);
+
+        return redirect()->route('vehicles.index')->with('message', 'Возилото е успешно Ажурирано');
     }
 
     /**
@@ -60,6 +88,7 @@ class VehicleController extends Controller
      */
     public function destroy(Vehicle $vehicle)
     {
-        //
+        $vehicle->delete();
+        return redirect()->route('vehicles.index')->with('message', 'Возилото е успешно избришанo');
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CurencyController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\TaxController;
+use App\Http\Controllers\VehicleController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -134,6 +135,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/drivers/delete/{driver}', [DriverController::class, 'destroy'])->name('drivers.delete');
     Route::get('/drivers/edit/{driver}', [DriverController::class, 'edit'])->name('drivers.edit');
     Route::put('/drivers/update/{driver}', [DriverController::class, 'update'])->name('drivers.update');
+
+    // VEHICLES
+
+    Route::get('/vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
+    Route::get('/vehicles/add', [VehicleController::class, 'create'])->name('vehicles.create');
+    Route::post('/vehicles/store', [VehicleController::class, 'store'])->name('vehicles.store');
+    Route::delete('/vehicles/delete/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.delete');
+    Route::get('/vehicles/edit/{vehicle}', [VehicleController::class, 'edit'])->name('vehicles.edit');
+    Route::put('/vehicles/update/{vehicle}', [VehicleController::class, 'update'])->name('vehicles.update');
 
 
 });

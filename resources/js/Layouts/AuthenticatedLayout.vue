@@ -98,6 +98,11 @@ const showingNavigationDropdown = ref(false);
                                         >
                                            Возачи
                                         </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('vehicles.index')"
+                                        >
+                                           Возила
+                                        </DropdownLink>
                                         <hr />
                                         <DropdownLink
                                             :href="
