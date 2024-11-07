@@ -113,6 +113,10 @@ Route::middleware('auth')->group(function () {
      // TAXES
 
      Route::get('/taxes', [TaxController::class, 'index'])->name('taxes.index');
+     Route::get('/taxes/add', [TaxController::class, 'create'])->name('taxes.create');
+     Route::post('/taxes/store', [TaxController::class, 'store'])->name('taxes.store');
+     Route::delete('/taxes/delete/{tax}', [TaxController::class, 'destroy'])->name('taxes.delete');
+
 
 
 });

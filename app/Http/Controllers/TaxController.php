@@ -13,7 +13,7 @@ class TaxController extends Controller
     public function index()
     {
         $taxes = Tax::paginate(20);
-        return inertia('Taxes/TaxesIndex',[
+        return inertia('Taxes/TaxesIndex', [
             'taxes' => $taxes,
         ]);
     }
@@ -23,7 +23,7 @@ class TaxController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Taxes/TaxesAdd');
     }
 
     /**
@@ -31,7 +31,14 @@ class TaxController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $validated = $request->validate([
+            'tax_rate' => 'required|numeric',
+        ]);
+
+        Tax::create($validated);
+
+        return redirect()->route('taxes.index')->with('message', 'ДДВ Ставката е успешно додадена');
     }
 
     /**
@@ -63,6 +70,7 @@ class TaxController extends Controller
      */
     public function destroy(Tax $tax)
     {
-        //
+        $tax->delete();
+        return redirect()->route('taxes.index')->with('message', 'ДДВ Ставката е успешно избришана');
     }
 }

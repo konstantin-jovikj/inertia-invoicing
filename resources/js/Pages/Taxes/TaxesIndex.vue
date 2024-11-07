@@ -17,14 +17,13 @@ const props = defineProps({
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
 
-
 // Delete bank function
-const deleteBank = (id) => {
-    if (confirm("Дали сигурно сакаш да ја избришеш оваа банка?")) {
-        router.delete("/bank/delete/" + id, {
+const deleteTax = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваа ДДВ Ставка?")) {
+        router.delete("/taxes/delete/" + id, {
             preserveState: false,
             onSuccess: () => {
-                flashMessage.value = props.flash.message;
+                flashMessage.value = pageProps.flash?.message || ""; // Use pageProps.flash
             },
         });
     }
@@ -47,7 +46,7 @@ const getPaginationLabel = (label) => {
 </script>
 
 <template>
-    <Head title="Banks" />
+    <Head title="Tax" />
 
     <AuthenticatedLayout>
         <div class="py-12">
@@ -62,14 +61,18 @@ const getPaginationLabel = (label) => {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
-                            <h2 class="font-bold text-sky-800">Банки</h2>
+                            <h2 class="font-bold text-sky-800">ДДВ Ставки</h2>
                             <div class="flex">
                                 <Link
-                                    href="banks/add"
+                                    v-tippy="{
+                                        content: 'Додај Нова ДДВ Ставка',
+                                        arrow: true,
+                                        theme: 'light',
+                                    }"
+                                    href="taxes/add"
                                     class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
                                     ><AddIcon
                                 /></Link>
-
                             </div>
                         </div>
 
@@ -97,7 +100,6 @@ const getPaginationLabel = (label) => {
                                         Стапка на ДДВ
                                     </th>
 
-
                                     <th
                                         scope="col"
                                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
@@ -122,36 +124,22 @@ const getPaginationLabel = (label) => {
 
                                     <td class="">
                                         <div class="flex gap-2">
-                                            <Link
-                                                class="hover:text-green-600 text-slate-300"
-                                                :href="
-                                                    route(
-                                                        'bank.edit',
-                                                        tax.id
-                                                    )
-                                                "
-                                            >
-                                                <EditIcon v-tippy="{
-                                                        content:
-                                                            'Измени Банка',
-                                                        arrow: true,
-                                                        theme: 'light',
-                                                    }"/>
-                                            </Link>
+
 
                                             <button
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
-                                                    () =>
-                                                        deleteBank(tax.id)
+                                                    () => deleteTax(tax.id)
                                                 "
                                             >
-                                                <DeleteIcon v-tippy="{
+                                                <DeleteIcon
+                                                    v-tippy="{
                                                         content:
-                                                            'Избриши Банка',
+                                                            'Избриши ДДВ Ставка',
                                                         arrow: true,
                                                         theme: 'light',
-                                                    }"/>
+                                                    }"
+                                                />
                                             </button>
                                         </div>
                                     </td>
@@ -161,7 +149,7 @@ const getPaginationLabel = (label) => {
 
                         <!-- Pagination Links -->
                         <div
-                            v-if="banks && banks.links"
+                            v-if="taxes && taxes.links"
                             class="flex flex-col lg:flex-row lg:justify-around"
                         >
                             <div class="mt-2">
@@ -191,6 +179,3 @@ const getPaginationLabel = (label) => {
         </div>
     </AuthenticatedLayout>
 </template>
-
-
-
