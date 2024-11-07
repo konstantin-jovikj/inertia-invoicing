@@ -4,6 +4,8 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CurencyController;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\TaxController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
@@ -110,13 +112,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/accounts/delete/{account}', [AccountController::class, 'destroy'])->name('account.delete');
 
 
-     // TAXES
+    // TAXES
 
-     Route::get('/taxes', [TaxController::class, 'index'])->name('taxes.index');
-     Route::get('/taxes/add', [TaxController::class, 'create'])->name('taxes.create');
-     Route::post('/taxes/store', [TaxController::class, 'store'])->name('taxes.store');
-     Route::delete('/taxes/delete/{tax}', [TaxController::class, 'destroy'])->name('taxes.delete');
+    Route::get('/taxes', [TaxController::class, 'index'])->name('taxes.index');
+    Route::get('/taxes/add', [TaxController::class, 'create'])->name('taxes.create');
+    Route::post('/taxes/store', [TaxController::class, 'store'])->name('taxes.store');
+    Route::delete('/taxes/delete/{tax}', [TaxController::class, 'destroy'])->name('taxes.delete');
 
+    // CURRENCY
+
+    Route::get('/currency', [CurencyController::class, 'index'])->name('currency.index');
+    Route::get('/currency/add', [CurencyController::class, 'create'])->name('currency.create');
+    Route::post('/currency/store', [CurencyController::class, 'store'])->name('currency.store');
+    Route::delete('/currency/delete/{curency}', [CurencyController::class, 'destroy'])->name('currency.delete');
+
+    // DRIVERS
+
+    Route::get('/drivers', [DriverController::class, 'index'])->name('drivers.index');
+    Route::get('/drivers/add', [DriverController::class, 'create'])->name('drivers.create');
+    Route::post('/drivers/store', [DriverController::class, 'store'])->name('drivers.store');
+    Route::delete('/drivers/delete/{curency}', [DriverController::class, 'destroy'])->name('drivers.delete');
 
 
 });

@@ -87,6 +87,17 @@ const showingNavigationDropdown = ref(false);
                                         >
                                             Стапки на ДДВ
                                         </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('currency.index')"
+                                        >
+                                           Валути
+                                        </DropdownLink>
+                                        <hr />
+                                        <DropdownLink
+                                            :href="route('drivers.index')"
+                                        >
+                                           Возачи
+                                        </DropdownLink>
                                         <hr />
                                         <DropdownLink
                                             :href="

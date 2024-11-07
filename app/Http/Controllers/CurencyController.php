@@ -12,7 +12,10 @@ class CurencyController extends Controller
      */
     public function index()
     {
-        //
+        $currencies = Curency::paginate(20);
+        return inertia('Settings/Currency/CurrencyIndex', [
+            'currencies' => $currencies,
+        ]);
     }
 
     /**
@@ -20,7 +23,7 @@ class CurencyController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Settings/Currency/CurrencyAdd');
     }
 
     /**
@@ -28,7 +31,16 @@ class CurencyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $validated = $request->validate([
+            'code' => 'required',
+            'symbol' => 'required',
+            'name' => 'required',
+        ]);
+
+        Curency::create($validated);
+
+        return redirect()->route('currency.index')->with('message', 'Новата Валута е успешно додадена');
     }
 
     /**
@@ -60,6 +72,7 @@ class CurencyController extends Controller
      */
     public function destroy(Curency $curency)
     {
-        //
+        $curency->delete();
+        return redirect()->route('currency.index')->with('message', 'Валутата е успешно избришана');
     }
 }
