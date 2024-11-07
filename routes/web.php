@@ -131,7 +131,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/drivers', [DriverController::class, 'index'])->name('drivers.index');
     Route::get('/drivers/add', [DriverController::class, 'create'])->name('drivers.create');
     Route::post('/drivers/store', [DriverController::class, 'store'])->name('drivers.store');
-    Route::delete('/drivers/delete/{curency}', [DriverController::class, 'destroy'])->name('drivers.delete');
+    Route::delete('/drivers/delete/{driver}', [DriverController::class, 'destroy'])->name('drivers.delete');
+    Route::get('/drivers/edit/{driver}', [DriverController::class, 'edit'])->name('drivers.edit');
+    Route::put('/drivers/update/{driver}', [DriverController::class, 'update'])->name('drivers.update');
 
 
 });

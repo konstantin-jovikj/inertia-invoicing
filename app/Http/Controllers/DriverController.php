@@ -12,7 +12,10 @@ class DriverController extends Controller
      */
     public function index()
     {
-        //
+        $drivers = Driver::paginate(20);
+        return inertia('Settings/Drivers/DriversIndex', [
+            'drivers' => $drivers,
+        ]);
     }
 
     /**
@@ -20,7 +23,7 @@ class DriverController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Settings/Drivers/DriversAdd');
     }
 
     /**
@@ -28,7 +31,17 @@ class DriverController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $validated = $request->validate([
+            'name' => 'required|max:30',
+            'surname' => 'required|max:30',
+            'licence_no' => 'nullable|max:30',
+            'personal_id_no' => 'nullable|max:30',
+        ]);
+
+        Driver::create($validated);
+
+        return redirect()->route('drivers.index')->with('message', 'Возачот е успешно додаден');
     }
 
     /**
@@ -44,7 +57,9 @@ class DriverController extends Controller
      */
     public function edit(Driver $driver)
     {
-        //
+        return inertia('Settings/Drivers/DriverEdit', [
+            'driver' => $driver,
+        ]);
     }
 
     /**
@@ -52,7 +67,17 @@ class DriverController extends Controller
      */
     public function update(Request $request, Driver $driver)
     {
-        //
+        // dd($request->all(), $driver);
+        $validated = $request->validate([
+            'name' => 'required|max:30',
+            'surname' => 'required|max:30',
+            'licence_no' => 'nullable|max:30',
+            'personal_id_no' => 'nullable|max:30',
+        ]);
+
+        $driver->update($validated);
+
+        return redirect()->route('drivers.index')->with('message', 'Возачот е успешно ажуриран');
     }
 
     /**
@@ -60,6 +85,8 @@ class DriverController extends Controller
      */
     public function destroy(Driver $driver)
     {
-        //
+
+        $driver->delete();
+        return redirect()->route('drivers.index')->with('message', 'Возачот е успешно избришан');
     }
 }
