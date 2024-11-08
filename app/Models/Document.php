@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
 use App\Models\Tax;
 use App\Models\User;
 use App\Models\Terms;
@@ -13,10 +16,11 @@ use App\Models\Incoterm;
 use App\Models\Declaration;
 use App\Models\DocumentNote;
 use App\Models\DocumentType;
-use Illuminate\Database\Eloquent\Model;
+
 
 class Document extends Model
 {
+    use HasFactory;
     protected $fillable = [
 'user_id',
         'owner_id',
