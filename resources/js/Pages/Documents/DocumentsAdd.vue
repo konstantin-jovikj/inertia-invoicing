@@ -7,7 +7,7 @@
     import InputLabel from "../../Components/InputLabel.vue";
     import {
         useForm,
-        usePage
+        usePage,
     } from "@inertiajs/vue3";
     import {
         computed,
@@ -31,6 +31,7 @@
 
     const form = useForm({
         user_id: props.authUser.id,
+        document_type_id: props.documentType.id,
         is_for_export: false,
         is_translation: false,
         owner_id: "",
@@ -44,7 +45,16 @@
         document_no: "",
         date: new Date().toISOString().slice(0, 10),
         drawing_no: "",
+        advance_payment: 0,
+        discount: 0,
 
+    });
+
+    // Define computed property to get the currency symbol based on selected currency
+    const selectedCurrencySymbol = computed(() => {
+        // Find the currency object based on curencyId and return the symbol
+        const curency = props.curencies.find(cur => cur.id === form.curency_id);
+        return curency ? curency.symbol : ''; // Return the symbol or an empty string if not found
     });
 
     const submit = () => {
@@ -99,8 +109,7 @@
                                             <div class="py-4 mb-4 border-b border-gray-200 md:col-span-1">
                                                 <InputLabel for="is_translation">Дали е потребен Превод?</InputLabel>
 
-                                                <input type="checkbox" v-model="form.is_translation"
-                                                    id="is_translation"
+                                                <input type="checkbox" v-model="form.is_translation" id="is_translation"
                                                     class="w-8 h-8 mt-1 border rounded bg-gray-50" />
 
                                                 <span
@@ -109,8 +118,8 @@
 
                                             <!-- Document No -->
                                             <div class="py-4 mb-4 border-b border-gray-200 md:col-span-2">
-                                                <InputLabel for="doc_is_for_export">Број на
-                                                    {{ props . documentType . type }}</InputLabel>
+                                                <InputLabel for="document_no">Број на {{ props . documentType . type }}
+                                                </InputLabel>
 
                                                 <TextInput v-model="form.document_no" type="text" id="document_no"
                                                     class="w-full h-10 px-4 mt-1 border rounded bg-gray-50" />
@@ -118,6 +127,7 @@
                                                 <span
                                                     class="text-xs italic text-red-600">{{ form . errors . document_no }}</span>
                                             </div>
+
 
                                             <!-- Drawing_no -->
                                             <div class="py-4 mb-4 border-b border-gray-200 md:col-span-1">
@@ -127,7 +137,7 @@
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50" />
 
                                                 <span
-                                                    class="text-xs italic text-red-600">{{ form.errors.drawing_no }}</span>
+                                                    class="text-xs italic text-red-600">{{ form . errors . drawing_no }}</span>
                                             </div>
                                             <!-- Date -->
                                             <div class="py-4 mb-4 border-b border-gray-200 md:col-span-1">
@@ -137,13 +147,13 @@
                                                     class="w-full h-10 px-4 mt-1 border rounded bg-gray-50" />
 
                                                 <span
-                                                    class="text-xs italic text-red-600">{{ form.errors.date }}</span>
+                                                    class="text-xs italic text-red-600">{{ form . errors . date }}</span>
                                             </div>
 
                                             <!-- Firma Domakin -->
                                             <div class="md:col-span-3">
-                                                <InputLabel for="owner">Избери фирма</InputLabel>
-                                                <select v-model="form.owner_id" id="owner"
+                                                <InputLabel for="owner_id">Избери фирма</InputLabel>
+                                                <select v-model="form.owner_id" id="owner_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
                                                         Фирма...
@@ -154,13 +164,13 @@
                                                     </option>
                                                 </select>
                                                 <span
-                                                    class="text-xs italic text-red-600">{{ form . errors . name }}</span>
+                                                    class="text-xs italic text-red-600">{{ form . errors . owner_id }}</span>
                                             </div>
 
                                             <!-- Firma Klient -->
                                             <div class="md:col-span-3">
-                                                <InputLabel for="client">Избери Клиент</InputLabel>
-                                                <select v-model="form.client_id" id="client"
+                                                <InputLabel for="client_id">Избери Клиент</InputLabel>
+                                                <select v-model="form.client_id" id="client_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
                                                         Клиент ...
@@ -171,13 +181,13 @@
                                                     </option>
                                                 </select>
                                                 <span
-                                                    class="text-xs italic text-red-600">{{ form . errors . name }}</span>
+                                                    class="text-xs italic text-red-600">{{ form . errors . client_id }}</span>
                                             </div>
 
                                             <!-- Valuta -->
                                             <div class="md:col-span-2">
-                                                <InputLabel for="client">Избери Валута</InputLabel>
-                                                <select v-model="form.curency_id" id="client"
+                                                <InputLabel for="curency_id">Избери Валута</InputLabel>
+                                                <select v-model="form.curency_id" id="curency_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
                                                         Валута ...
@@ -188,13 +198,13 @@
                                                     </option>
                                                 </select>
                                                 <span
-                                                    class="text-xs italic text-red-600">{{ form . errors . symbol }}</span>
+                                                    class="text-xs italic text-red-600">{{ form . errors . curency_id }}</span>
                                             </div>
 
                                             <!-- DDV -->
                                             <div class="md:col-span-2">
-                                                <InputLabel for="client">Избери ДДВ Стапка</InputLabel>
-                                                <select v-model="form.tax_id" id="client"
+                                                <InputLabel for="tax_id">Избери ДДВ Стапка</InputLabel>
+                                                <select v-model="form.tax_id" id="tax_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
                                                         ДДВ ...
@@ -205,13 +215,13 @@
                                                     </option>
                                                 </select>
                                                 <span
-                                                    class="text-xs italic text-red-600">{{ form . errors . tax_rate }}</span>
+                                                    class="text-xs italic text-red-600">{{ form . errors . tax_id }}</span>
                                             </div>
 
                                             <!-- Terms -->
                                             <div class="md:col-span-2">
-                                                <InputLabel for="client">Услови за плаќање</InputLabel>
-                                                <select v-model="form.term_id" id="client"
+                                                <InputLabel for="term_id">Услови за плаќање</InputLabel>
+                                                <select v-model="form.term_id" id="term_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
                                                         Услови за плаќање ...
@@ -222,13 +232,13 @@
                                                     </option>
                                                 </select>
                                                 <span
-                                                    class="text-xs italic text-red-600">{{ form . errors . tax_rate }}</span>
+                                                    class="text-xs italic text-red-600">{{ form . errors . term_id }}</span>
                                             </div>
 
                                             <!-- IncoTerms -->
                                             <div class="md:col-span-2">
-                                                <InputLabel for="client">Испорака / Паритет</InputLabel>
-                                                <select v-model="form.incoterm_id" id="client"
+                                                <InputLabel for="incoterm_id">Испорака / Паритет</InputLabel>
+                                                <select v-model="form.incoterm_id" id="incoterm_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
                                                         Incoterms ...
@@ -239,13 +249,13 @@
                                                     </option>
                                                 </select>
                                                 <span
-                                                    class="text-xs italic text-red-600">{{ form . errors . shortcut }}</span>
+                                                    class="text-xs italic text-red-600">{{ form . errors . incoterm_id }}</span>
                                             </div>
 
                                             <!-- Vehicle -->
                                             <div class="md:col-span-2">
-                                                <InputLabel for="client">Избери Возило</InputLabel>
-                                                <select v-model="form.vehicle_id" id="client"
+                                                <InputLabel for="vehicle_id">Избери Возило</InputLabel>
+                                                <select v-model="form.vehicle_id" id="vehicle_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
                                                         Возило ...
@@ -263,8 +273,8 @@
 
                                             <!-- Driver -->
                                             <div class="md:col-span-2">
-                                                <InputLabel for="client">Избери Возач</InputLabel>
-                                                <select v-model="form.driver_id" id="client"
+                                                <InputLabel for="driver_id">Избери Возач</InputLabel>
+                                                <select v-model="form.driver_id" id="driver_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
                                                         Возач ...
@@ -278,10 +288,46 @@
                                                     class="text-xs italic text-red-600">{{ form . errors . driver_id }}</span>
                                             </div>
 
+                                            <!-- Line Break -->
+                                            <div class="md:col-span-6">
+                                                <hr />
+                                            </div>
+
+                                            <!-- Advanced Payment -->
+                                            <div class="py-4 mb-4 border-b border-gray-200 md:col-span-3">
+                                                <InputLabel for="advance_payment">Авансна Уплата</InputLabel>
+                                                <div class="flex items-center gap-2">
+
+                                                    <TextInput v-model="form.advance_payment" type="number"
+                                                        step="0.01" id="advance_payment"
+                                                        class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50" />
+                                                    <span
+                                                        class="text-xl font-bolder">{{ selectedCurrencySymbol }}</span>
+                                                </div>
+
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . advance_payment }}</span>
+                                            </div>
+
+                                            <!-- DIscount -->
+                                            <div class="py-4 mb-4 border-b border-gray-200 md:col-span-3">
+                                                <InputLabel for="discount">Попуст</InputLabel>
+                                                <div class="flex items-center gap-2">
+
+                                                    <TextInput v-model="form.discount" type="number" step="0.01"
+                                                        id="discount"
+                                                        class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50" />
+                                                    <span class="text-xl font-bolder">%</span>
+                                                </div>
+
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . discount }}</span>
+                                            </div>
+
                                             <div class="text-right md:col-span-5">
                                                 <div class="inline-flex items-end">
                                                     <button type="submit"
-                                                        class="px-4 py-2 font-bold text-white rounded bg-sky-500 hover:bg-sky-700">
+                                                        class="px-4 py-2 text-white rounded font-bolder bg-sky-500 hover:bg-sky-700">
                                                         Додај
                                                     </button>
                                                 </div>

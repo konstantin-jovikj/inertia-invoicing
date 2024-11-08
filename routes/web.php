@@ -154,7 +154,7 @@ Route::middleware('auth')->group(function () {
        // DOCUMENT
 
     Route::get('/documents/add/{documentType}', [DocumentController::class, 'create'])->name('documents.create');
-    Route::post('/documents/store', [DocumentController::class, 'store'])->name('documents.store');
+    Route::post('/documents/store', action: [DocumentController::class, 'store'])->name('documents.store');
 
 
 

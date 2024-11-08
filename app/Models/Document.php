@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\Model;
 class Document extends Model
 {
     protected $fillable = [
+'user_id',
+        'owner_id',
+        'client_id',
         'document_type_id',
         'vehicle_id',
         'driver_id',
@@ -28,15 +31,21 @@ class Document extends Model
         'is_translation',
         'is_for_export',
         'document_no',
-        'drawing_no',
         'date',
+        'drawing_no',
         'advance_payment',
         'discount',
         'total',
-        'total_with_tax_and_disclount',
+        'total_with_tax_and_discount',
         'total_volume',
         'total_weight',
     ];
+
+    // protected $casts = [
+    //     'is_translation' => 'boolean',
+    //     'is_for_export' => 'boolean',
+    //     'date' => 'datetime',
+    // ];
 
     public function user(){
         return $this->belongsTo(User::class);

@@ -41,6 +41,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             TemperatureSeeder::class,
             VoltageSeeder::class,
+            CustomerSeeder::class,
+            CompanySeeder::class,
 
 
         ]);

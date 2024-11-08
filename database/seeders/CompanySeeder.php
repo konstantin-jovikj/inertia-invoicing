@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Company;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class CompanySeeder extends Seeder
 {
@@ -12,6 +13,10 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        for ($i = 1; $i <= 2000; $i++) {
+            Company::factory()->create([
+                'customer_id' => $i,
+            ]);
+        }
     }
 }
