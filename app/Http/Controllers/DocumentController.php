@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Driver;
+use App\Models\Incoterm;
+use App\Models\Tax;
 use App\Models\Company;
+use App\Models\Curency;
 use App\Models\Document;
 use App\Models\DocumentType;
+use App\Models\Terms;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +32,12 @@ class DocumentController extends Controller
     {
 
         $authUser = Auth::user();
+        $curencies = Curency::all();
+        $taxes = Tax::all();
+        $terms = Terms::all();
+        $incoterms = Incoterm::all();
+        $vehicles = Vehicle::all();
+        $drivers = Driver::all();
 
         $companies = Company::select('id', 'name', 'is_customer')
         ->whereIn('is_customer', [true, false])
@@ -37,6 +49,12 @@ class DocumentController extends Controller
         'documentType' => $documentType,
         'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
         'clientCompanies' => $companies->get(true, collect()),  // companies where 'is_customer' is true
+        'curencies' => $curencies,
+        'taxes' => $taxes,
+        'terms' => $terms,
+        'incoterms' => $incoterms,
+        'vehicles' => $vehicles,
+        'drivers' => $drivers,
     ]);
     }
 

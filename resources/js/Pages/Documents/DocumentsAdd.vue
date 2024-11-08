@@ -1,33 +1,59 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
-import TextInput from "../../Components/TextInput.vue";
-import InputLabel from "../../Components/InputLabel.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+    import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+    import {
+        Head
+    } from "@inertiajs/vue3";
+    import TextInput from "../../Components/TextInput.vue";
+    import InputLabel from "../../Components/InputLabel.vue";
+    import {
+        useForm,
+        usePage
+    } from "@inertiajs/vue3";
+    import {
+        computed,
+        ref
+    } from "vue";
 
-const props = defineProps({
-    documentType: Object,
-    ownerCompanies: Array,
-    clientCompanies: Array,
-    authUser: Object,
-});
+    const props = defineProps({
+        documentType: Object,
+        ownerCompanies: Array,
+        clientCompanies: Array,
+        authUser: Object,
+        curencies: Array,
+        taxes: Array,
+        terms: Array,
+        incoterms: Array,
+        vehicles: Array,
+        drivers: Array,
+    });
 
-console.log(props.documentType);
+    console.log(props.documentType);
 
-const form = useForm({
-    user_id: props.authUser.id,
-    is_for_export: false,
-    owner_id: "",
-    client_id: "",
-});
+    const form = useForm({
+        user_id: props.authUser.id,
+        is_for_export: false,
+        is_translation: false,
+        owner_id: "",
+        client_id: "",
+        curency_id: "",
+        tax_id: "",
+        term_id: "",
+        incoterm_id: "",
+        vehicle_id: "",
+        driver_id: "",
+        document_no: "",
+        date: new Date().toISOString().slice(0, 10),
+        drawing_no: "",
 
-const submit = () => {
-    console.log(form);
-};
+    });
+
+    const submit = () => {
+        console.log(form);
+    };
 </script>
 
 <template>
+
     <Head title="Taxes" />
 
     <AuthenticatedLayout>
@@ -40,123 +66,222 @@ const submit = () => {
                                 form.post('/documents/store', {
                                     onError: () => form.reset(),
                                 })
-                            "
-                        >
-                            <div
-                                class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
-                            >
-                                <div
-                                    class="grid grid-cols-1 gap-4 text-sm gap-y-2 lg:grid-cols-2"
-                                >
+                            ">
+                            <div class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8">
+                                <div class="grid grid-cols-1 gap-4 text-sm gap-y-2 lg:grid-cols-2">
                                     <div class="text-gray-600">
                                         <p class="text-lg font-medium">
                                             Додај Нова
-                                            {{ props.documentType.type }}
+                                            {{ props . documentType . type }}
                                         </p>
                                         <p>
                                             Внеси податоци за новата
-                                            {{ props.documentType.type }}
+                                            {{ props . documentType . type }}
                                         </p>
                                     </div>
                                     <div class="lg:col-span-2">
-                                        <hr/>
-                                        <div
-                                            class="grid grid-cols-1 gap-4 text-sm gap-y-2 md:grid-cols-6"
-                                        >
+                                        <hr />
+                                        <div class="grid grid-cols-1 gap-4 text-sm gap-y-2 md:grid-cols-6">
                                             <!-- Is For Export -->
-                                            <div class="py-4 mb-4 border-b border-gray-200 md:col-span-6">
-                                                <InputLabel
-                                                    for="doc_is_for_export"
-                                                    >Дали е за
-                                                    Извоз?</InputLabel
-                                                >
+                                            <div class="py-4 mb-4 border-b border-gray-200 md:col-span-1">
+                                                <InputLabel for="doc_is_for_export">Дали е за
+                                                    Извоз?</InputLabel>
 
-                                                <input
-                                                    type="checkbox"
-                                                    v-model="form.is_for_export"
+                                                <input type="checkbox" v-model="form.is_for_export"
                                                     id="doc_is_for_export"
-                                                    class="w-8 h-8 mt-1 border rounded bg-gray-50"
-                                                />
+                                                    class="w-8 h-8 mt-1 border rounded bg-gray-50" />
 
                                                 <span
-                                                    class="text-xs italic text-red-600"
-                                                    >{{
-                                                        form.errors
-                                                            .is_for_export
-                                                    }}</span
-                                                >
+                                                    class="text-xs italic text-red-600">{{ form . errors . is_for_export }}</span>
+                                            </div>
+
+                                            <!-- Is For Translation -->
+                                            <div class="py-4 mb-4 border-b border-gray-200 md:col-span-1">
+                                                <InputLabel for="is_translation">Дали е потребен Превод?</InputLabel>
+
+                                                <input type="checkbox" v-model="form.is_translation"
+                                                    id="is_translation"
+                                                    class="w-8 h-8 mt-1 border rounded bg-gray-50" />
+
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . is_translation }}</span>
+                                            </div>
+
+                                            <!-- Document No -->
+                                            <div class="py-4 mb-4 border-b border-gray-200 md:col-span-2">
+                                                <InputLabel for="doc_is_for_export">Број на
+                                                    {{ props . documentType . type }}</InputLabel>
+
+                                                <TextInput v-model="form.document_no" type="text" id="document_no"
+                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50" />
+
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . document_no }}</span>
+                                            </div>
+
+                                            <!-- Drawing_no -->
+                                            <div class="py-4 mb-4 border-b border-gray-200 md:col-span-1">
+                                                <InputLabel for="drawing_no">Број на Цртеж</InputLabel>
+
+                                                <TextInput v-model="form.drawing_no" type="text" id="drawing_no"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50" />
+
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form.errors.drawing_no }}</span>
+                                            </div>
+                                            <!-- Date -->
+                                            <div class="py-4 mb-4 border-b border-gray-200 md:col-span-1">
+                                                <InputLabel for="doc_is_for_export">Датум</InputLabel>
+
+                                                <TextInput v-model="form.date" type="date" id="date"
+                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50" />
+
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form.errors.date }}</span>
                                             </div>
 
                                             <!-- Firma Domakin -->
                                             <div class="md:col-span-3">
-                                                <InputLabel for="owner"
-                                                    >Одбери фирма</InputLabel
-                                                >
-                                                <select
-                                                    v-model="form.owner_id"
-                                                    id="owner"
-                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
-                                                >
+                                                <InputLabel for="owner">Избери фирма</InputLabel>
+                                                <select v-model="form.owner_id" id="owner"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
-                                                        Избери фирма...
+                                                        Фирма...
                                                     </option>
-                                                    <option
-                                                        v-for="ownerCompany in ownerCompanies"
-                                                        :key="ownerCompany.id"
-                                                        :value="ownerCompany.id"
-                                                    >
-                                                        {{ ownerCompany.name }}
+                                                    <option v-for="ownerCompany in ownerCompanies"
+                                                        :key="ownerCompany.id" :value="ownerCompany.id">
+                                                        {{ ownerCompany . name }}
                                                     </option>
                                                 </select>
                                                 <span
-                                                    class="text-xs italic text-red-600"
-                                                    >{{
-                                                        form.errors.name
-                                                    }}</span
-                                                >
+                                                    class="text-xs italic text-red-600">{{ form . errors . name }}</span>
                                             </div>
 
                                             <!-- Firma Klient -->
                                             <div class="md:col-span-3">
-                                                <InputLabel for="client"
-                                                    >Одбери Клиент</InputLabel
-                                                >
-                                                <select
-                                                    v-model="form.client_id"
-                                                    id="client"
-                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
-                                                >
+                                                <InputLabel for="client">Избери Клиент</InputLabel>
+                                                <select v-model="form.client_id" id="client"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
                                                     <option value="" disabled>
-                                                        Одбери Клиент ...
+                                                        Клиент ...
                                                     </option>
-                                                    <option
-                                                        v-for="clientCompany in clientCompanies"
-                                                        :key="clientCompany.id"
-                                                        :value="
-                                                            clientCompany.id
-                                                        "
-                                                    >
-                                                        {{ clientCompany.name }}
+                                                    <option v-for="clientCompany in clientCompanies"
+                                                        :key="clientCompany.id" :value="clientCompany.id">
+                                                        {{ clientCompany . name }}
                                                     </option>
                                                 </select>
                                                 <span
-                                                    class="text-xs italic text-red-600"
-                                                    >{{
-                                                        form.errors.name
-                                                    }}</span
-                                                >
+                                                    class="text-xs italic text-red-600">{{ form . errors . name }}</span>
                                             </div>
 
-                                            <div
-                                                class="text-right md:col-span-5"
-                                            >
-                                                <div
-                                                    class="inline-flex items-end"
-                                                >
-                                                    <button
-                                                        type="submit"
-                                                        class="px-4 py-2 font-bold text-white rounded bg-sky-500 hover:bg-sky-700"
-                                                    >
+                                            <!-- Valuta -->
+                                            <div class="md:col-span-2">
+                                                <InputLabel for="client">Избери Валута</InputLabel>
+                                                <select v-model="form.curency_id" id="client"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
+                                                    <option value="" disabled>
+                                                        Валута ...
+                                                    </option>
+                                                    <option v-for="curency in curencies" :key="curency.id"
+                                                        :value="curency.id">
+                                                        {{ curency . symbol }}
+                                                    </option>
+                                                </select>
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . symbol }}</span>
+                                            </div>
+
+                                            <!-- DDV -->
+                                            <div class="md:col-span-2">
+                                                <InputLabel for="client">Избери ДДВ Стапка</InputLabel>
+                                                <select v-model="form.tax_id" id="client"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
+                                                    <option value="" disabled>
+                                                        ДДВ ...
+                                                    </option>
+                                                    <option v-for="tax in taxes" :key="tax.id"
+                                                        :value="tax.id">
+                                                        {{ tax . tax_rate }} %
+                                                    </option>
+                                                </select>
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . tax_rate }}</span>
+                                            </div>
+
+                                            <!-- Terms -->
+                                            <div class="md:col-span-2">
+                                                <InputLabel for="client">Услови за плаќање</InputLabel>
+                                                <select v-model="form.term_id" id="client"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
+                                                    <option value="" disabled>
+                                                        Услови за плаќање ...
+                                                    </option>
+                                                    <option v-for="term in terms" :key="term.id"
+                                                        :value="term.id">
+                                                        {{ term . term }}
+                                                    </option>
+                                                </select>
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . tax_rate }}</span>
+                                            </div>
+
+                                            <!-- IncoTerms -->
+                                            <div class="md:col-span-2">
+                                                <InputLabel for="client">Испорака / Паритет</InputLabel>
+                                                <select v-model="form.incoterm_id" id="client"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
+                                                    <option value="" disabled>
+                                                        Incoterms ...
+                                                    </option>
+                                                    <option v-for="incoterm in incoterms" :key="incoterm.id"
+                                                        :value="incoterm.id">
+                                                        {{ incoterm . shortcut }} - {{ incoterm . short_description }}
+                                                    </option>
+                                                </select>
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . shortcut }}</span>
+                                            </div>
+
+                                            <!-- Vehicle -->
+                                            <div class="md:col-span-2">
+                                                <InputLabel for="client">Избери Возило</InputLabel>
+                                                <select v-model="form.vehicle_id" id="client"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
+                                                    <option value="" disabled>
+                                                        Возило ...
+                                                    </option>
+                                                    <option v-for="vehicle in vehicles" :key="vehicle.id"
+                                                        :value="vehicle.id">
+                                                        {{ vehicle . register_plate_number }} - {{ vehicle . model }}
+                                                        -
+                                                        {{ vehicle . type }}
+                                                    </option>
+                                                </select>
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . vehicle_id }}</span>
+                                            </div>
+
+                                            <!-- Driver -->
+                                            <div class="md:col-span-2">
+                                                <InputLabel for="client">Избери Возач</InputLabel>
+                                                <select v-model="form.driver_id" id="client"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50">
+                                                    <option value="" disabled>
+                                                        Возач ...
+                                                    </option>
+                                                    <option v-for="driver in drivers" :key="driver.id"
+                                                        :value="driver.id">
+                                                        {{ driver . name }} {{ driver . surname }}
+                                                    </option>
+                                                </select>
+                                                <span
+                                                    class="text-xs italic text-red-600">{{ form . errors . driver_id }}</span>
+                                            </div>
+
+                                            <div class="text-right md:col-span-5">
+                                                <div class="inline-flex items-end">
+                                                    <button type="submit"
+                                                        class="px-4 py-2 font-bold text-white rounded bg-sky-500 hover:bg-sky-700">
                                                         Додај
                                                     </button>
                                                 </div>
