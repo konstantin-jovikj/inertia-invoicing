@@ -18,6 +18,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CustomerTypeController;
 use App\Http\Controllers\DocumentTypeController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -151,14 +152,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/document/types', [DocumentTypeController::class, 'index'])->name('document.type.index');
 
-       // DOCUMENT
+    // DOCUMENT
 
     Route::get('/documents/add/{documentType}', [DocumentController::class, 'create'])->name('documents.create');
     Route::post('/documents/store', action: [DocumentController::class, 'store'])->name('documents.store');
 
+    // PRODUCT
 
-
-
+    Route::get('/products/add', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/documents/store', action: [DocumentController::class, 'store'])->name('documents.store');
 });
 
 require __DIR__ . '/auth.php';
