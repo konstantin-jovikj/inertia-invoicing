@@ -38,16 +38,29 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // Validation (optional)
+        $validated = $request->validate([
+            'description' => 'nullable|string|max:255',
+            'qty' => 'nullable|numeric|min:1',
+            'single_price' => 'nullable|numeric|min:0',
+        ]);
 
-        // dd($request->all());
+        // Calculate total price
+        $totalPrice = $request->qty * $request->single_price;
+
+        // Create the product
         $product = Product::create([
             'document_id' => $request->document_id,
             'description' => $request->description,
             'qty' => $request->qty,
             'single_price' => $request->single_price,
-            'total_price' => $request->total_price,
+            'total_price' => $totalPrice,
         ]);
+
+        // Return a success response with the created product (optional)
+        // return redirect()->route('products.create')->with('message', 'Product saved successfully!');
     }
+
 
     /**
      * Display the specified resource.

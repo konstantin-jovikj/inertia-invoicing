@@ -11,6 +11,14 @@ const props = defineProps({
     products: Array,
 });
 
+const form = useForm({
+    document_id: props.document.id,
+    description: "",
+    qty: "",
+    single_price: "",
+    total_price: "",
+});
+
 const state = reactive({
     products: [...props.products],
 });
@@ -43,7 +51,9 @@ const saveCell = (row, field, value) => {
     row[field] = value; // Update local data immediately for UX
 
     // Send updated data to the backend using Inertia
-    router.put(`/products/update/${row.id}`, { [field]: value });
+    router.put(`/products/update/${row.id}`, {
+        [field]: value,
+    });
 };
 </script>
 
@@ -120,23 +130,16 @@ const saveCell = (row, field, value) => {
                                                     <tr
                                                         v-for="(
                                                             product, index
-                                                        ) in state.products"
+                                                        ) in products"
                                                         :key="
                                                             product.id || index
                                                         "
                                                     >
-                                                        <td
-                                                            contenteditable
-                                                            @blur="
-                                                                saveCell(
-                                                                    product,
-                                                                    'description',
-                                                                    $event
-                                                                        .target
-                                                                        .innerText
-                                                                )
-                                                            "
-                                                        >
+                                                        <!-- <tr
+                                                        v-for="product in products"
+                                                        :key="product.id"
+                                                    > -->
+                                                        <td>
                                                             {{
                                                                 product.description
                                                             }}
@@ -163,6 +166,47 @@ const saveCell = (row, field, value) => {
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                        </div>
+
+                                        <div>
+                                            <form
+                                                @submit.prevent="
+                                                    form.post(
+                                                        '/products/store',
+                                                        {
+                                                            onSuccess: () => {
+                                                                form.reset();
+                                                            },
+                                                            onError: () =>
+                                                                form.reset(),
+                                                        }
+                                                    )
+                                                "
+                                            >
+                                                <label for=""
+                                                    >Description</label
+                                                >
+                                                <input
+                                                    v-model="form.description"
+                                                    type="text"
+                                                />
+
+                                                <label for="">Q-ty</label>
+                                                <input
+                                                    v-model="form.qty"
+                                                    type="number"
+                                                />
+
+                                                <label for="">Price</label>
+                                                <input
+                                                    v-model="form.single_price"
+                                                    type="number"
+                                                />
+
+                                                <button type="submit">
+                                                    Add
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
