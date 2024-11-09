@@ -159,8 +159,10 @@ Route::middleware('auth')->group(function () {
 
     // PRODUCT
 
-    Route::get('/products/add', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/documents/store', action: [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/products/add/{document}', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
+
+    Route::put('/products/update/{product}', [ProductController::class, 'update'])->name('products.update');
 });
 
 require __DIR__ . '/auth.php';

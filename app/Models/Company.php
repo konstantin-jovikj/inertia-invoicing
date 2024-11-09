@@ -6,6 +6,7 @@ use App\Models\Place;
 use App\Models\Account;
 use App\Models\Contact;
 use App\Models\Customer;
+use App\Models\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -50,5 +51,10 @@ class Company extends Model
     public function accounts()
     {
         return $this->hasMany(Account::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
     }
 }

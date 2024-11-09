@@ -63,7 +63,7 @@ class DocumentController extends Controller
     {
         // dd($request->all());
         $validatedData = $request->validate([
-            'user_id'=> 'required|exists:users,id',
+            'user_id' => 'required|exists:users,id',
             'owner_id' => 'required|exists:companies,id',
             'client_id' => 'required|exists:companies,id',
             'document_type_id' => 'required|exists:document_types,id',
@@ -84,9 +84,11 @@ class DocumentController extends Controller
 
         // dd($validatedData);
 
-        Document::create($validatedData);
+        $document = Document::create($validatedData);
 
-        return redirect()->route('companies.index');
+        return redirect()->route('products.create', [
+            'document' => $document->id,
+        ]);
     }
 
     /**

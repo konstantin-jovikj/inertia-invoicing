@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -18,9 +19,18 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Document $document)
     {
-        //
+
+        $document->load('documentType', 'company');
+        // dd($document->company);
+
+        $products = Product::where('document_id', $document->id)->get();
+
+        return inertia('Products/ProductsAdd', [
+            'document' => $document,
+            'products' => $products,
+        ]);
     }
 
     /**
@@ -28,7 +38,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // dd($request->all());
+        $product = Product::create([
+            'document_id' => $request->document_id,
+            'description' => $request->description,
+            'qty' => $request->qty,
+            'single_price' => $request->single_price,
+            'total_price' => $request->total_price,
+        ]);
     }
 
     /**
@@ -52,7 +70,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        dd($request->all());
+        $product->update([
+            'document_id' => $request->document_id,
+            'description' => $request->description,
+            'qty' => $request->qty,
+            'single_price' => $request->single_price,
+            'total_price' => $request->total_price,
+        ]);
     }
 
     /**

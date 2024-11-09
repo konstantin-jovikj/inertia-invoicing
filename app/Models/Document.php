@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
 use App\Models\Tax;
 use App\Models\User;
+
 use App\Models\Terms;
 use App\Models\Driver;
+use App\Models\Company;
 use App\Models\Curency;
 use App\Models\Product;
 use App\Models\Vehicle;
@@ -16,13 +15,15 @@ use App\Models\Incoterm;
 use App\Models\Declaration;
 use App\Models\DocumentNote;
 use App\Models\DocumentType;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Document extends Model
 {
     use HasFactory;
     protected $fillable = [
-'user_id',
+        'user_id',
         'owner_id',
         'client_id',
         'document_type_id',
@@ -51,39 +52,48 @@ class Document extends Model
     //     'date' => 'datetime',
     // ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function documentType(){
+    public function documentType()
+    {
         return $this->belongsTo(DocumentType::class);
     }
 
-    public function vehicle(){
+    public function vehicle()
+    {
         return $this->belongsTo(Vehicle::class);
     }
 
-    public function driver(){
+    public function driver()
+    {
         return $this->belongsTo(Driver::class);
     }
 
-    public function incoterm(){
+    public function incoterm()
+    {
         return $this->belongsTo(Incoterm::class);
     }
 
-    public function curency(){
+    public function curency()
+    {
         return $this->belongsTo(Curency::class);
     }
 
-    public function tax(){
+    public function tax()
+    {
         return $this->belongsTo(Tax::class);
     }
 
-    public function term(){
+    public function term()
+    {
         return $this->belongsTo(Terms::class);
     }
 
-    public function documentNotes(){
+    public function documentNotes()
+    {
         return $this->hasMany(DocumentNote::class);
     }
 
@@ -92,8 +102,13 @@ class Document extends Model
         return $this->belongsToMany(Declaration::class);
     }
 
-    public function products(){
+    public function products()
+    {
         return $this->hasMany(Product::class);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'client_id');
+    }
 }
