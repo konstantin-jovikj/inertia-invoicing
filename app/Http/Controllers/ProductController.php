@@ -33,6 +33,18 @@ class ProductController extends Controller
         ]);
     }
 
+    public function createModal(Document $document)
+    {
+
+        // dd($document);
+        $document->load('documentType', 'company');
+        // dd($document->company);
+
+        // $products = Product::where('document_id', $document->id)->get();
+
+        return inertia('Products/ProductAddModal');
+    }
+
     /**
      * Store a newly created resource in storage.
      */

@@ -19,6 +19,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@inertiaui/modal-vue": "file:vendor/inertiaui/modal/vue",
         "lodash": "^4.17.21",
         "tippy.js": "^6.3.7",
         "vue-tippy": "^6.5.0",

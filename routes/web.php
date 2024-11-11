@@ -160,6 +160,7 @@ Route::middleware('auth')->group(function () {
     // PRODUCT
 
     Route::get('/products/add/{document}', [ProductController::class, 'create'])->name('products.create');
+    Route::get('/products/add/modal/{document}', [ProductController::class, 'createModal'])->name('products-modal.create');
     Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
 
     Route::put('/products/update/{product}', [ProductController::class, 'update'])->name('products.update');

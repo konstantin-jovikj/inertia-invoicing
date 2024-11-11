@@ -1,10 +1,11 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import TextInput from "../../Components/TextInput.vue";
-import InputLabel from "../../Components/InputLabel.vue";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
+import { ModalLink } from '@inertiaui/modal-vue'
+
+// import {Modal, ModalLink } from "@/Components/ModalLink.vue";
 
 const props = defineProps({
     document: Object,
@@ -47,6 +48,8 @@ const addRow = async () => {
     }
 };
 
+const loading = ref(false);
+
 const saveCell = (row, field, value) => {
     row[field] = value; // Update local data immediately for UX
 
@@ -68,9 +71,7 @@ const saveCell = (row, field, value) => {
                         <div
                             class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
                         >
-                            <div
-                                class="grid grid-cols-1 gap-4 text-sm gap-y-2 lg:grid-cols-3"
-                            >
+                            <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
                                 <div class="text-gray-600">
                                     <p class="text-lg font-medium">
                                         {{ props.document.document_type.type }}
@@ -88,39 +89,49 @@ const saveCell = (row, field, value) => {
                                 </div>
 
                                 <div class="lg:col-span-2">
+                                    <hr class="my-4" />
                                     <div
                                         class="grid grid-cols-1 gap-4 text-sm gap-y-2 md:grid-cols-6"
                                     >
                                         <div class="md:col-span-6">
                                             <p>Produkti</p>
-                                            <button
-                                                class="px-4 py-2 my-2 bg-green-500"
-                                                @click="addRow"
-                                            >
+                                            <!-- <button class="px-4 py-2 my-2 bg-green-500" @click="addRow">
                                                 Add Empty Row
-                                            </button>
+                                            </button> -->
                                             <table
-                                                class="w-full border border-separate border-slate-400"
+                                                class="min-w-full text-sm font-light text-center border-collapse text-surface border-e"
                                             >
-                                                <thead>
+                                                <thead
+                                                    class="font-medium border-b border-neutral-200"
+                                                >
                                                     <tr>
                                                         <th
-                                                            class="border border-slate-300 ..."
+                                                            scope="col"
+                                                            class="px-2 py-1"
+                                                        >
+                                                            Id
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-2 py-1"
                                                         >
                                                             Opis
                                                         </th>
                                                         <th
-                                                            class="border border-slate-300 ..."
+                                                            scope="col"
+                                                            class="px-2 py-1"
                                                         >
                                                             Kol
                                                         </th>
                                                         <th
-                                                            class="border border-slate-300 ..."
+                                                            scope="col"
+                                                            class="px-2 py-1"
                                                         >
                                                             Cena
                                                         </th>
                                                         <th
-                                                            class="border border-slate-300 ..."
+                                                            scope="col"
+                                                            class="px-2 py-1"
                                                         >
                                                             Vk.Cena
                                                         </th>
@@ -128,6 +139,7 @@ const saveCell = (row, field, value) => {
                                                 </thead>
                                                 <tbody>
                                                     <tr
+                                                        class="border-b border-neutral-200 border-e"
                                                         v-for="(
                                                             product, index
                                                         ) in products"
@@ -135,29 +147,32 @@ const saveCell = (row, field, value) => {
                                                             product.id || index
                                                         "
                                                     >
-                                                        <!-- <tr
-                                                        v-for="product in products"
-                                                        :key="product.id"
-                                                    > -->
-                                                        <td>
+                                                        <td
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                        >
+                                                            {{ product.id }}
+                                                        </td>
+                                                        <td
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                        >
                                                             {{
                                                                 product.description
                                                             }}
                                                         </td>
                                                         <td
-                                                            class="py-2 border border-slate-300"
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
                                                         >
                                                             {{ product.qty }}
                                                         </td>
                                                         <td
-                                                            class="py-2 border border-slate-300"
+                                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
                                                             {{
                                                                 product.single_price
                                                             }}
                                                         </td>
                                                         <td
-                                                            class="py-2 border border-slate-300"
+                                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
                                                             {{
                                                                 product.total_price
@@ -169,44 +184,12 @@ const saveCell = (row, field, value) => {
                                         </div>
 
                                         <div>
-                                            <form
-                                                @submit.prevent="
-                                                    form.post(
-                                                        '/products/store',
-                                                        {
-                                                            onSuccess: () => {
-                                                                form.reset();
-                                                            },
-                                                            onError: () =>
-                                                                form.reset(),
-                                                        }
-                                                    )
-                                                "
+                                            <ModalLink
+                                                :href="`/products/add/modal/${props.document.id}`"
+                                                class="px-4 py-2 text-white bg-gray-900 rounded-md"
                                             >
-                                                <label for=""
-                                                    >Description</label
-                                                >
-                                                <input
-                                                    v-model="form.description"
-                                                    type="text"
-                                                />
-
-                                                <label for="">Q-ty</label>
-                                                <input
-                                                    v-model="form.qty"
-                                                    type="number"
-                                                />
-
-                                                <label for="">Price</label>
-                                                <input
-                                                    v-model="form.single_price"
-                                                    type="number"
-                                                />
-
-                                                <button type="submit">
-                                                    Add
-                                                </button>
-                                            </form>
+                                                Додај Производ
+                                            </ModalLink>
                                         </div>
                                     </div>
                                 </div>
