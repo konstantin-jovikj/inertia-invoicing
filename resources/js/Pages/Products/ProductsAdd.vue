@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import { reactive, ref } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
-import { ModalLink } from '@inertiaui/modal-vue'
+import { ModalLink } from "@inertiaui/modal-vue";
 
 // import {Modal, ModalLink } from "@/Components/ModalLink.vue";
 
@@ -22,42 +22,11 @@ const form = useForm({
 
 const state = reactive({
     products: [...props.products],
+    // products: props.products.map(product => ({ ...product, _isNew: false })),
+    document: [...props.products],
 });
 
-const addRow = async () => {
-    const newRow = {
-        document_id: props.document.id,
-        id: null,
-        description: "",
-        qty: "",
-        single_price: "",
-        total_price: "",
-    };
-    state.products.push(newRow);
-
-    try {
-        // Use router.post instead of Inertia.post with async/await
-        const response = await router.post("/products/store", newRow);
-
-        // After creating, update the row with the new ID from the response
-        if (response && response.data) {
-            newRow.id = response.data.id;
-        }
-    } catch (error) {
-        console.error("Error adding row:", error);
-    }
-};
-
-const loading = ref(false);
-
-const saveCell = (row, field, value) => {
-    row[field] = value; // Update local data immediately for UX
-
-    // Send updated data to the backend using Inertia
-    router.put(`/products/update/${row.id}`, {
-        [field]: value,
-    });
-};
+// const loading = ref(false);
 </script>
 
 <template>
@@ -115,28 +84,35 @@ const saveCell = (row, field, value) => {
                                                             scope="col"
                                                             class="px-2 py-1"
                                                         >
-                                                            Opis
+                                                            Опис
                                                         </th>
                                                         <th
                                                             scope="col"
                                                             class="px-2 py-1"
                                                         >
-                                                            Kol
+                                                            Кол
                                                         </th>
                                                         <th
                                                             scope="col"
                                                             class="px-2 py-1"
                                                         >
-                                                            Cena
+                                                            Цена
                                                         </th>
                                                         <th
                                                             scope="col"
                                                             class="px-2 py-1"
                                                         >
-                                                            Vk.Cena
+                                                            Вк.Цена
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-2 py-1"
+                                                        >
+                                                            Акција
                                                         </th>
                                                     </tr>
                                                 </thead>
+
                                                 <tbody>
                                                     <tr
                                                         class="border-b border-neutral-200 border-e"
@@ -177,6 +153,16 @@ const saveCell = (row, field, value) => {
                                                             {{
                                                                 product.total_price
                                                             }}
+                                                        </td>
+                                                        <td
+                                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                                        >
+                                                            <Link
+                                                                class="px-1 rounded-full bg-slate-300"
+                                                                :href="`/documents/add/row/${props.document.id}/${product.id}`"
+                                                            >
+                                                                +
+                                                            </Link>
                                                         </td>
                                                     </tr>
                                                 </tbody>

@@ -156,6 +156,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/documents/add/{documentType}', [DocumentController::class, 'create'])->name('documents.create');
     Route::post('/documents/store', action: [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/documents/add/row/{document}/{product}', [DocumentController::class, 'addEmptyRow'])->name('documents.addrow');
+
 
     // PRODUCT
 
@@ -164,6 +166,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
 
     Route::put('/products/update/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/delete-all/{product}', [ProductController::class, 'destroyAll'])->name('products.delete-all');
+
 });
 
 require __DIR__ . '/auth.php';

@@ -23,6 +23,6 @@
         "lodash": "^4.17.21",
         "tippy.js": "^6.3.7",
         "vue-tippy": "^6.5.0",
-        "vuedraggable": "^2.24.3"
+        "vuedraggable": "^4.1.0"
     }
 }

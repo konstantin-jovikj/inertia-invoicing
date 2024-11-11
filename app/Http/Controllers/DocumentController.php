@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Driver;
-use App\Models\Incoterm;
 use App\Models\Tax;
+use App\Models\Terms;
+use App\Models\Driver;
 use App\Models\Company;
 use App\Models\Curency;
-use App\Models\Document;
-use App\Models\DocumentType;
-use App\Models\Terms;
+use App\Models\Product;
 use App\Models\Vehicle;
+use App\Models\Document;
+use App\Models\Incoterm;
+use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -122,5 +123,12 @@ class DocumentController extends Controller
     public function destroy(Document $document)
     {
         //
+    }
+
+    public function addEmptyRow(Document $document, Product $product)
+    {
+        dd($document, $product);
+        $existingOrder = Product::where('document_id', $document->id )->get();
+        dd($existingOrder);
     }
 }

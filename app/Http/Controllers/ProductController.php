@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Document;
+use Inertia\Inertia;
 use App\Models\Product;
+use App\Models\Document;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -21,7 +22,7 @@ class ProductController extends Controller
      */
     public function create(Document $document)
     {
-
+        // dd($document);
         $document->load('documentType', 'company');
         // dd($document->company);
 
@@ -35,14 +36,15 @@ class ProductController extends Controller
 
     public function createModal(Document $document)
     {
-
         // dd($document);
         $document->load('documentType', 'company');
         // dd($document->company);
 
         // $products = Product::where('document_id', $document->id)->get();
 
-        return inertia('Products/ProductAddModal');
+        return Inertia::modal('Products/ProductAddModal', [
+            'document' => $document,
+        ]);
     }
 
     /**
@@ -57,8 +59,11 @@ class ProductController extends Controller
             'single_price' => 'nullable|numeric|min:0',
         ]);
 
-        // Calculate total price
+        // Calculate total price of product
         $totalPrice = $request->qty * $request->single_price;
+
+        // Find the document using the provided document_id
+        $document = Document::findOrFail($request->document_id);
 
         // Create the product
         $product = Product::create([
@@ -69,10 +74,15 @@ class ProductController extends Controller
             'total_price' => $totalPrice,
         ]);
 
-        // Return a success response with the created product (optional)
-        // return redirect()->route('products.create')->with('message', 'Product saved successfully!');
-    }
+        // Update the document's total
+        $document->total += $totalPrice;
+        $document->save(); // Save the updated document
 
+        // Return a success response with the created product
+        return redirect()
+            ->route('products.create', ['document' => $request->document_id])
+            ->with('message', 'Product saved successfully!');
+    }
 
     /**
      * Display the specified resource.
@@ -111,5 +121,10 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function destroyAll(Product $product)
+    {
+        $product->delete();
     }
 }
