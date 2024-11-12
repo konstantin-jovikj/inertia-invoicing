@@ -23,7 +23,7 @@ class ProductController extends Controller
     public function create(Document $document)
     {
         // dd($document);
-        $document->load('documentType', 'company');
+        $document->load('documentType', 'company', 'curency');
         // dd($document->company);
 
         $products = Product::where('document_id', $document->id)->get();
@@ -97,7 +97,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        dd($product);
     }
 
     /**
@@ -120,11 +120,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
-    }
-
-    public function destroyAll(Product $product)
-    {
         $product->delete();
     }
+
 }

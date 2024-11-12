@@ -156,6 +156,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/documents/add/{documentType}', [DocumentController::class, 'create'])->name('documents.create');
     Route::post('/documents/store', action: [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/document/edit/{document}', [DocumentController::class, 'edit'])->name('document.edit');
+
     Route::get('/documents/add/row/{document}/{product}', [DocumentController::class, 'addEmptyRow'])->name('documents.addrow');
 
 
@@ -166,7 +168,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
 
     Route::put('/products/update/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/delete-all/{product}', [ProductController::class, 'destroyAll'])->name('products.delete-all');
+    Route::delete('/products/delete/{product}', [ProductController::class, 'destroy'])->name('products.delete');
+    Route::get('/products/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
+
 
 });
 

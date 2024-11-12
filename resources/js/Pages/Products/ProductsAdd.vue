@@ -4,6 +4,10 @@ import { Head, Link, router } from "@inertiajs/vue3";
 import { reactive, ref } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ModalLink } from "@inertiaui/modal-vue";
+import DeleteIcon from "@/Components/DeleteIcon.vue";
+import AddContactIcon from "@/Components/AddContactIcon.vue";
+import AddRowIcon from "@/Components/AddRowIcon.vue";
+import EditIcon from "@/Components/EditIcon.vue";
 
 // import {Modal, ModalLink } from "@/Components/ModalLink.vue";
 
@@ -26,6 +30,26 @@ const state = reactive({
     document: [...props.products],
 });
 
+// Delete Product function
+const deleteProduct = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш овој Производ")) {
+        router.delete("/products/delete/" + id, {
+            preserveState: false,
+            onSuccess: () => {
+                flashMessage.value = props.flash.message;
+            },
+        });
+    }
+};
+
+// onMounted(() => {
+//     if (flashMessage.value) {
+//         setTimeout(() => {
+//             flashMessage.value = "";
+//         }, 3000);
+//     }
+// });
+
 // const loading = ref(false);
 </script>
 
@@ -37,9 +61,27 @@ const state = reactive({
             <div class="mx-auto max-w-11/12 sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
+
                         <div
                             class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
                         >
+                        <!-- Izmeni Dokument -->
+                        <div>
+
+                            <ModalLink
+                                class="hover:text-green-600 text-slate-300"
+                                :href="route('document.edit', props.document.id)"
+                            >
+                                <EditIcon
+                                    v-tippy="{
+                                         content: `Измени ${props.document.document_type.type}`,
+                                        arrow: true,
+                                        theme: 'light',
+                                    }"
+                                />
+                            </ModalLink>
+                        </div>
+                        <!-- Izmeni Dokument end-->
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
                                 <div class="text-gray-600">
                                     <p class="text-lg font-medium">
@@ -54,7 +96,18 @@ const state = reactive({
                                     <span class="text-sm font-semibold">
                                         {{ props.document.company.name }}
                                     </span>
-                                    <p>Total: {{ props.document.total }}</p>
+                                    <p>
+                                        Total:
+                                        {{
+                                            new Intl.NumberFormat("en-US", {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2,
+                                            }).format(props.document.total)
+                                        }}
+                                        <span>{{
+                                            props.document.curency.symbol
+                                        }}</span>
+                                    </p>
                                 </div>
 
                                 <div class="lg:col-span-2">
@@ -76,9 +129,15 @@ const state = reactive({
                                                     <tr>
                                                         <th
                                                             scope="col"
-                                                            class="px-2 py-1"
+                                                            class="px-2 py-1 text-gray-400"
                                                         >
                                                             Id
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-2 py-1"
+                                                        >
+                                                            Бр
                                                         </th>
                                                         <th
                                                             scope="col"
@@ -124,10 +183,17 @@ const state = reactive({
                                                         "
                                                     >
                                                         <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                            class="px-1 py-1 text-xs text-left text-gray-300 bg-gray-100 whitespace-nowrap border-e"
                                                         >
                                                             {{ product.id }}
                                                         </td>
+
+                                                        <td
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                        >
+                                                            {{ index + 1 }}
+                                                        </td>
+
                                                         <td
                                                             class="px-2 py-1 text-left whitespace-nowrap border-e"
                                                         >
@@ -144,25 +210,100 @@ const state = reactive({
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
                                                             {{
-                                                                product.single_price
+                                                                new Intl.NumberFormat(
+                                                                    "en-US",
+                                                                    {
+                                                                        minimumFractionDigits: 2,
+                                                                        maximumFractionDigits: 2,
+                                                                    },
+                                                                ).format(
+                                                                    product.single_price,
+                                                                )
+                                                            }}
+                                                            {{
+                                                                props.document
+                                                                    .curency
+                                                                    .symbol
                                                             }}
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
                                                             {{
-                                                                product.total_price
+                                                                new Intl.NumberFormat(
+                                                                    "en-US",
+                                                                    {
+                                                                        minimumFractionDigits: 2,
+                                                                        maximumFractionDigits: 2,
+                                                                    },
+                                                                ).format(
+                                                                    product.total_price,
+                                                                )
+                                                            }}
+                                                            {{
+                                                                props.document
+                                                                    .curency
+                                                                    .symbol
                                                             }}
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
-                                                            <Link
-                                                                class="px-1 rounded-full bg-slate-300"
-                                                                :href="`/documents/add/row/${props.document.id}/${product.id}`"
+                                                            <div
+                                                                class="flex gap-1"
                                                             >
-                                                                +
-                                                            </Link>
+                                                                <Link
+                                                                    class="px-4 hover:text-orange-600 text-slate-300"
+                                                                    :href="`/documents/add/row/${props.document.id}/${product.id}`"
+                                                                >
+                                                                    <AddRowIcon
+                                                                        v-tippy="{
+                                                                            content:
+                                                                                'Додај Празен Ред',
+                                                                            arrow: true,
+                                                                            theme: 'light',
+                                                                        }"
+                                                                    />
+                                                                </Link>
+
+                                                                <Link
+                                                                    class="hover:text-green-600 text-slate-300"
+                                                                    :href="
+                                                                        route(
+                                                                            'product.edit',
+                                                                            product.id,
+                                                                        )
+                                                                    "
+                                                                >
+                                                                    <EditIcon
+                                                                        v-tippy="{
+                                                                            content:
+                                                                                'Измени Производ',
+                                                                            arrow: true,
+                                                                            theme: 'light',
+                                                                        }"
+                                                                    />
+                                                                </Link>
+
+                                                                <button
+                                                                    class="hover:text-red-700 text-slate-300"
+                                                                    @click="
+                                                                        () =>
+                                                                            deleteProduct(
+                                                                                product.id,
+                                                                            )
+                                                                    "
+                                                                >
+                                                                    <DeleteIcon
+                                                                        v-tippy="{
+                                                                            content:
+                                                                                'Избриши Производ',
+                                                                            arrow: true,
+                                                                            theme: 'light',
+                                                                        }"
+                                                                    />
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>

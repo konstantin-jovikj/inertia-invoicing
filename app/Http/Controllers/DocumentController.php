@@ -106,7 +106,34 @@ class DocumentController extends Controller
      */
     public function edit(Document $document)
     {
-        //
+        // dd($document);
+
+        $authUser = Auth::user();
+        $curencies = Curency::all();
+        $taxes = Tax::all();
+        $terms = Terms::all();
+        $incoterms = Incoterm::all();
+        $vehicles = Vehicle::all();
+        $drivers = Driver::all();
+
+        $companies = Company::select('id', 'name', 'is_customer')
+            ->whereIn('is_customer', [true, false])
+            ->get()
+            ->groupBy('is_customer');
+
+        return inertia('Documents/DocumentEditModal', [
+            'document' => $document,
+            'authUser' => $authUser,
+            'documentType' => $document->document_type_id,
+            'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
+            'clientCompanies' => $companies->get(true, collect()), // companies where 'is_customer' is true
+            'curencies' => $curencies,
+            'taxes' => $taxes,
+            'terms' => $terms,
+            'incoterms' => $incoterms,
+            'vehicles' => $vehicles,
+            'drivers' => $drivers,
+        ]);
     }
 
     /**
@@ -127,8 +154,35 @@ class DocumentController extends Controller
 
     public function addEmptyRow(Document $document, Product $product)
     {
-        dd($document, $product);
-        $existingOrder = Product::where('document_id', $document->id )->get();
-        dd($existingOrder);
+        // Retrieve the existing orders for the specified document as a collection
+        $existingOrder = Product::where('document_id', $document->id)->get();
+
+        // Define the empty row with the necessary values
+        $emptyRow = new Product([
+            "id" => $product->id,
+            "document_id" => $document->id,
+            "description" => null,
+            "qty" => null,
+            "single_price" => null,
+            "total_price" => null
+        ]);
+
+        // Insert the empty row at the correct position in the collection
+        $newOrder = $existingOrder->flatMap(function ($order) use ($emptyRow, $product) {
+            return $order->id == $product->id ? collect([$emptyRow, $order]) : collect([$order]);
+        });
+
+        // Delete the existing orders from the database
+        Product::where('document_id', $document->id)->delete();
+
+        // Save each item in the new order collection to the database
+        $newOrder->each(fn($order) => Product::create($order->toArray()));
+
+        // Return the new order collection or a success message, if needed
+        // return $newOrder;
+        return redirect()
+        ->route('products.create', ['document' => $document->id])
+        ->with('message', 'Empty Row inserted successfully!');
     }
+
 }
