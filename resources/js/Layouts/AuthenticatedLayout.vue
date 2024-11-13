@@ -140,7 +140,14 @@ const showingNavigationDropdown = ref(false);
                                             Нов Документ
                                         </DropdownLink>
 
+                                        <DropdownLink
+                                            :href="route('document.index')"
+                                        >
+                                            Листа на Документи
+                                        </DropdownLink>
+
                                     </template>
+
                                 </Dropdown>
 
                                 <!-- END DOKUMENTI -->

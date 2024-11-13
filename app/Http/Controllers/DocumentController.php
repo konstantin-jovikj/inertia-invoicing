@@ -20,10 +20,36 @@ class DocumentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        // dd($request->all());
+        $documentTypes = DocumentType::all(); // Fetch all document types for the dropdown
+        $clients = Company::where('is_customer', true)->get();
+
+        $documents = Document::with('documentType', 'company', 'curency')
+            ->when($request->type, function ($query) use ($request) {
+                // Apply type filter only if 'type' is provided
+                $query->where('document_type_id', $request->type);
+            })
+            ->when($request->year, function ($query) use ($request) {
+                // Apply year filter only if 'year' is provided
+                $query->whereYear('date', $request->year); // Assuming 'created_at' is the date column
+            })
+            ->when($request->client, function ($query) use ($request) {
+                // Apply year filter only if 'year' is provided
+                $query->where('client_id', $request->client); // Assuming 'created_at' is the date column
+            })
+            ->paginate(20)
+            ->withQueryString();  // Retains query parameters (for pagination)
+
+        return inertia('Documents/DocumentsIndex', [
+            'documents' => $documents,
+            'documentTypes' => $documentTypes,
+            'clients' => $clients,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
