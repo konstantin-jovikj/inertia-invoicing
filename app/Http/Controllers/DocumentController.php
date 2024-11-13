@@ -23,7 +23,7 @@ class DocumentController extends Controller
     public function index(Request $request)
     {
 
-        // dd($request->all());
+
         $documentTypes = DocumentType::all(); // Fetch all document types for the dropdown
         $clients = Company::where('is_customer', true)->get();
 
@@ -143,13 +143,15 @@ class DocumentController extends Controller
     {
         // dd($document);
 
-        $authUser = Auth::user();
         $curencies = Curency::all();
         $taxes = Tax::all();
         $terms = Terms::all();
         $incoterms = Incoterm::all();
         $vehicles = Vehicle::all();
         $drivers = Driver::all();
+        $documentTypes = DocumentType::all();
+
+        $document->load('documentType');
 
         $companies = Company::select('id', 'name', 'is_customer')
             ->whereIn('is_customer', [true, false])
@@ -158,8 +160,7 @@ class DocumentController extends Controller
 
         return inertia('Documents/DocumentEditModal', [
             'document' => $document,
-            'authUser' => $authUser,
-            'documentType' => $document->document_type_id,
+            'documentTypes' => $documentTypes,
             'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
             'clientCompanies' => $companies->get(true, collect()), // companies where 'is_customer' is true
             'curencies' => $curencies,

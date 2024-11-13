@@ -4,12 +4,14 @@ import { Head } from "@inertiajs/vue3";
 import TextInput from "../../Components/TextInput.vue";
 import InputLabel from "../../Components/InputLabel.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+import { computed, ref, toRefs } from "vue";
 import { Modal } from "@inertiaui/modal-vue";
 
 
+
 const props = defineProps({
-    documentType: Object,
+    document:Object,
+    documentTypes: Array,
     ownerCompanies: Array,
     clientCompanies: Array,
     authUser: Object,
@@ -21,27 +23,35 @@ const props = defineProps({
     drivers: Array,
 });
 
-console.log(props.documentType);
+const { document } = toRefs(props);
+
+// console.log(props.documentType);
+const date = new Date(document.value.date);
+const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
 
 const form = useForm({
-    user_id: props.authUser.id,
-    document_type_id: props.documentType.id,
-    is_for_export: false,
-    is_translation: false,
-    owner_id: "",
-    client_id: "",
-    curency_id: "",
-    tax_id: "",
-    term_id: "",
-    incoterm_id: "",
-    vehicle_id: "",
-    driver_id: "",
-    document_no: "",
-    date: new Date().toISOString().slice(0, 10),
-    drawing_no: "",
-    advance_payment: 0,
-    discount: 0,
+    user_id: document.value.user_id,
+    document_type_id: document.value.document_type_id,
+    is_for_export:  Boolean(document.value.is_for_export),
+    is_translation:  Boolean(document.value.is_for_export),
+    owner_id: document.value.owner_id,
+    client_id: document.value.client_id,
+    curency_id: document.value.curency_id,
+    tax_id: document.value.tax_id,
+    term_id: document.value.term_id,
+    incoterm_id: document.value.incoterm_id,
+    vehicle_id: document.value.vehicle_id,
+    driver_id: document.value.driver_id,
+    document_no: document.value.document_no,
+    date: new Date(document.value.date).toLocaleDateString('en-CA'),
+    drawing_no: document.value.drawing_no,
+    advance_payment: document.value.advance_payment,
+    discount: document.value.discount,
 });
+
+
+
+console.log(form);
 
 // Define computed property to get the currency symbol based on selected currency
 const selectedCurrencySymbol = computed(() => {
@@ -77,12 +87,12 @@ const submit = () => {
                                 >
                                     <div class="text-gray-600">
                                         <p class="text-lg font-medium">
-                                            Додај Нова
-                                            {{ props.documentType.type }}
+                                            Измени
+                                            {{ props.document.document_type.type }}
                                         </p>
                                         <p>
-                                            Внеси податоци за новата
-                                            {{ props.documentType.type }}
+                                            Ажурирај податоци за
+                                            {{ props.document.document_type.type }}
                                         </p>
                                     </div>
                                     <div class="lg:col-span-2">
@@ -103,7 +113,7 @@ const submit = () => {
                                                 <input
                                                     type="checkbox"
                                                     v-model="form.is_for_export"
-                                                    id="doc_is_for_export"
+                                                    id="is_for_export"
                                                     class="w-8 h-8 mt-1 border rounded bg-gray-50"
                                                 />
 
@@ -149,9 +159,7 @@ const submit = () => {
                                             >
                                                 <InputLabel for="document_no"
                                                     >Број на
-                                                    {{
-                                                        props.documentType.type
-                                                    }}
+                                                    {{ props.document.document_type.type }}
                                                 </InputLabel>
 
                                                 <TextInput
@@ -191,12 +199,14 @@ const submit = () => {
                                                     }}</span
                                                 >
                                             </div>
+
+
                                             <!-- Date -->
                                             <div
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
                                                 <InputLabel
-                                                    for="doc_is_for_export"
+                                                    for="date"
                                                     >Датум</InputLabel
                                                 >
 
