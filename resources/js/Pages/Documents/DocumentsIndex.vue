@@ -21,18 +21,20 @@ const search = ref(props.searchTerm || "");
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
 
-// Generate an array of years from 2000 to 2050
-const years = Array.from({ length: 51 }, (_, i) => 2000 + i);
+// Generate an array of years from 2020 to 2040
+const years = Array.from({ length: 41 }, (_, i) => 2020 + i);
+const exportStates = ["извозни", "домашни"];
 
 const selectedYear = ref(""); // Year selected by the user
 const selectedType = ref(""); // Document type selected by the user
-const selectedClient = ref(""); // Client  selected by the user
+const selectedClient = ref(""); // Client  selected by the user selectedExport
+const selectedExport = ref("");
 
 // Watch the selected year and type, and trigger re-fetch when either changes
 watch(
-    [selectedYear, selectedType, selectedClient],
+    [selectedYear, selectedType, selectedClient, selectedExport],
     debounce((newValues) => {
-        const [newYear, newType, newClient] = newValues;
+        const [newYear, newType, newClient, newExport] = newValues;
 
         // Trigger re-fetch of documents with the selected year and type
         router.get(
@@ -41,12 +43,13 @@ watch(
                 year: newYear,
                 type: newType,
                 client: newClient,
+                export: newExport,
             },
             {
                 preserveState: true,
             },
         );
-    }, 500),
+    }, 200),
 );
 
 // Delete bank function
@@ -94,17 +97,37 @@ const getPaginationLabel = (label) => {
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
                             <h2 class="font-bold text-sky-800">Документи</h2>
-                            <div class="flex gap-2">
-                                <!-- <Link
-                                    href="banks/add"
-                                    class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
-                                    ><AddIcon
-                                /></Link>
-                                <TextInput
-                                    placeholder="Барај ..."
-                                    v-model="search"
-                                    type="search"
-                                /> -->
+                            <div class="flex gap-4">
+                                <!-- Check if for Export -->
+                                <!-- <div class="flex items-center gap-4">
+                                    <InputLabel for="doc_is_for_export"
+                                        >Извоз?</InputLabel
+                                    >
+                                    <input
+                                        type="checkbox"
+                                        v-model="selectedExport"
+                                        id="doc_is_for_export"
+                                        class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                    />
+                                </div> -->
+
+
+                                <!-- Export Selection Dropdown -->
+                                <select
+                                    v-model="selectedExport"
+                                    as="select"
+                                    id="client"
+                                    class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
+                                >
+                                    <option value="" selected>Извоз...</option>
+                                    <option
+                                        v-for="exportState in exportStates"
+                                        :key="exportState"
+                                        :value="exportState"
+                                    >
+                                        {{ exportState }}
+                                    </option>
+                                </select>
 
                                 <!-- Client Selection Dropdown -->
                                 <select
@@ -113,9 +136,7 @@ const getPaginationLabel = (label) => {
                                     id="client"
                                     class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
                                 >
-                                    <option value=""  selected>
-                                        Клиент...
-                                    </option>
+                                    <option value="" selected>Клиент...</option>
                                     <option
                                         v-for="client in clients"
                                         :key="client"
@@ -132,9 +153,7 @@ const getPaginationLabel = (label) => {
                                     id="year"
                                     class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
                                 >
-                                    <option value="" selected>
-                                        Година...
-                                    </option>
+                                    <option value="" selected>Година...</option>
                                     <option
                                         v-for="year in years"
                                         :key="year"
@@ -148,9 +167,9 @@ const getPaginationLabel = (label) => {
                                     v-model="selectedType"
                                     as="select"
                                     id="type"
-                                    class=" h-10 px-8 mt-1 text-xs border rounded bg-gray-50 w-[150px]"
+                                    class="h-10 px-8 mt-1 text-xs border rounded bg-gray-50 w-[150px]"
                                 >
-                                    <option value=""  selected>
+                                    <option value="" selected>
                                         Тип на Документ...
                                     </option>
                                     <option
@@ -240,7 +259,7 @@ const getPaginationLabel = (label) => {
                                     </td>
                                     <td class="">
                                         {{ document.document_type.type }}
-                                        <span class="text-red-600">
+                                        <span class="text-gray-400">
                                             {{
                                                 document.is_for_export
                                                     ? "-за извоз"
@@ -260,7 +279,9 @@ const getPaginationLabel = (label) => {
                                     </td>
 
                                     <td class="px-8 text-right">
-                                        <span class="pr-8">
+                                        <span
+                                            class="pr-8 font-bold text-red-600"
+                                        >
                                             {{
                                                 new Intl.NumberFormat("en-US", {
                                                     minimumFractionDigits: 2,
@@ -290,7 +311,7 @@ const getPaginationLabel = (label) => {
                                             >
                                                 <EditIcon
                                                     v-tippy="{
-                                                        content: 'Измени Банка',
+                                                        content: `Измени ${document.document_type.type}`,
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"

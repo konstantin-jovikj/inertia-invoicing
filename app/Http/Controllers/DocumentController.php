@@ -34,11 +34,20 @@ class DocumentController extends Controller
             })
             ->when($request->year, function ($query) use ($request) {
                 // Apply year filter only if 'year' is provided
-                $query->whereYear('date', $request->year); // Assuming 'created_at' is the date column
+                $query->whereYear('date', $request->year);
             })
             ->when($request->client, function ($query) use ($request) {
                 // Apply year filter only if 'year' is provided
-                $query->where('client_id', $request->client); // Assuming 'created_at' is the date column
+                $query->where('client_id', $request->client);
+            })
+            ->when($request->export, function ($query) use ($request) {
+                // Apply filter for 'is_for_export' if 'export' checkbox is checked
+                if ($request->export == 'извозни') {
+                    $query->where('is_for_export', true);
+                } elseif ($request->export == 'домашни') {
+                    // If export is 'false', ensure only documents with is_for_export = false are shown
+                    $query->where('is_for_export', false);
+                }
             })
             ->paginate(20)
             ->withQueryString();  // Retains query parameters (for pagination)
