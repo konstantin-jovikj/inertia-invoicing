@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Manufacturer;
+use App\Models\ProductModel;
+use App\Models\Voltage;
 use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Document;
@@ -38,12 +42,21 @@ class ProductController extends Controller
     {
         // dd($document);
         $document->load('documentType', 'company');
+        $manufacturers = Manufacturer::all();
+        $voltages = Voltage::all();
+        $categories = Category::all();
+        $models = ProductModel::all();
         // dd($document->company);
 
         // $products = Product::where('document_id', $document->id)->get();
 
         return Inertia::modal('Products/ProductAddModal', [
             'document' => $document,
+            'manufacturers' => $manufacturers,
+            'voltages' => $voltages,
+            'categories' => $categories,
+            'models' => $models,
+
         ]);
     }
 

@@ -12,6 +12,7 @@ class ProductModel extends Model
         'category_id',
         'refrigerant_id',
         'model',
+        'model_en',
     ];
 
     public function category()
