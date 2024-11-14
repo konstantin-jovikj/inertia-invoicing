@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tax;
+use Inertia\Inertia;
 use App\Models\Terms;
 use App\Models\Driver;
 use App\Models\Company;
@@ -113,6 +114,7 @@ class DocumentController extends Controller
             'is_translation' => 'boolean',
             'is_for_export' => 'boolean',
             'document_no' => 'required|max:255',
+            'drawing_no' => 'nullable|max:255',
             'date' => 'nullable|date',
             'advance_payment' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
@@ -177,7 +179,35 @@ class DocumentController extends Controller
      */
     public function update(Request $request, Document $document)
     {
-        //
+            //    dd($request->all(),$document );
+               $validatedData = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'owner_id' => 'required|exists:companies,id',
+                'client_id' => 'required|exists:companies,id',
+                'document_type_id' => 'required|exists:document_types,id',
+                'vehicle_id' => 'nullable|exists:vehicles,id',
+                'driver_id' => 'nullable|exists:drivers,id',
+                'curency_id' => 'nullable|exists:curencies,id',
+                'incoterm_id' => 'nullable|exists:incoterms,id',
+                'tax_id' => 'nullable|exists:taxes,id',
+                'term_id' => 'nullable|exists:terms,id',
+                'is_translation' => 'boolean',
+                'is_for_export' => 'boolean',
+                'document_no' => 'required|max:255',
+                'drawing_no' => 'nullable|max:255',
+                'date' => 'nullable|date',
+                'advance_payment' => 'nullable|numeric',
+                'discount' => 'nullable|numeric',
+            ]);
+            // $validatedData['user_id'] = auth()->user()->id;
+
+            // dd($validatedData);
+
+            $document->update($validatedData);
+
+            return Inertia::location(route('products.create', [
+                'document' => $document->id,
+            ]));
     }
 
     /**
@@ -185,7 +215,8 @@ class DocumentController extends Controller
      */
     public function destroy(Document $document)
     {
-        //
+        $document->delete();
+        return redirect()->route('document.index')->with('message', 'Документот е успешно избришан.');
     }
 
     public function addEmptyRow(Document $document, Product $product)

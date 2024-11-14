@@ -52,10 +52,10 @@ watch(
     }, 200),
 );
 
-// Delete bank function
-const deleteBank = (id) => {
-    if (confirm("Дали сигурно сакаш да ја избришеш оваа банка?")) {
-        router.delete("/bank/delete/" + id, {
+// Delete document function
+const deleteDocument = (id) => {
+    if (confirm("Дали сигурно сакаш да го избришеш овој документ?")) {
+        router.delete("/document/delete/" + id, {
             preserveState: false,
             onSuccess: () => {
                 flashMessage.value = props.flash.message;
@@ -98,19 +98,6 @@ const getPaginationLabel = (label) => {
                         <div class="flex justify-between mb-4">
                             <h2 class="font-bold text-sky-800">Документи</h2>
                             <div class="flex gap-4">
-                                <!-- Check if for Export -->
-                                <!-- <div class="flex items-center gap-4">
-                                    <InputLabel for="doc_is_for_export"
-                                        >Извоз?</InputLabel
-                                    >
-                                    <input
-                                        type="checkbox"
-                                        v-model="selectedExport"
-                                        id="doc_is_for_export"
-                                        class="w-8 h-8 mt-1 border rounded bg-gray-50"
-                                    />
-                                </div> -->
-
 
                                 <!-- Export Selection Dropdown -->
                                 <select
@@ -278,9 +265,9 @@ const getPaginationLabel = (label) => {
                                         }}
                                     </td>
 
-                                    <td class="px-8 text-right">
+                                    <td class="px-2 text-right">
                                         <span
-                                            class="pr-8 font-bold text-red-600"
+                                            class="pr-2 font-bold text-red-600"
                                         >
                                             {{
                                                 new Intl.NumberFormat("en-US", {
@@ -289,7 +276,7 @@ const getPaginationLabel = (label) => {
                                                 }).format(document.total)
                                             }}
                                         </span>
-                                        <span class="px-2">
+                                        <span class="px-1 text-left">
                                             {{
                                                 document.curency_id
                                                     ? document.curency.symbol
@@ -304,7 +291,7 @@ const getPaginationLabel = (label) => {
                                                 class="hover:text-green-600 text-slate-300"
                                                 :href="
                                                     route(
-                                                        'bank.edit',
+                                                        'products.create',
                                                         document.id,
                                                     )
                                                 "
@@ -322,7 +309,7 @@ const getPaginationLabel = (label) => {
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
-                                                        deleteBank(document.id)
+                                                    deleteDocument(document.id)
                                                 "
                                             >
                                                 <DeleteIcon

@@ -158,6 +158,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/documents/add/{documentType}', [DocumentController::class, 'create'])->name('documents.create');
     Route::post('/documents/store', action: [DocumentController::class, 'store'])->name('documents.store');
     Route::get('/document/edit/{document}', [DocumentController::class, 'edit'])->name('document.edit');
+    Route::put('/document/update/{document}', [DocumentController::class, 'update'])->name('document.update');
+    Route::delete('/document/delete/{document}', [DocumentController::class, 'destroy'])->name('document.delete');
+
 
     Route::get('/documents/add/row/{document}/{product}', [DocumentController::class, 'addEmptyRow'])->name('documents.addrow');
 

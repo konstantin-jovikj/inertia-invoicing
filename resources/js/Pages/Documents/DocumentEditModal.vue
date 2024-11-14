@@ -33,7 +33,7 @@ const form = useForm({
     user_id: document.value.user_id,
     document_type_id: document.value.document_type_id,
     is_for_export:  Boolean(document.value.is_for_export),
-    is_translation:  Boolean(document.value.is_for_export),
+    is_translation:  Boolean(document.value.is_translation),
     owner_id: document.value.owner_id,
     client_id: document.value.client_id,
     curency_id: document.value.curency_id,
@@ -74,7 +74,7 @@ const submit = () => {
                     <div class="p-6 text-gray-900">
                         <form
                             @submit.prevent="
-                                form.post('/documents/store', {
+                                form.put('/document/update/' + document.id, {
                                     onError: () => form.reset(),
                                 })
                             "
