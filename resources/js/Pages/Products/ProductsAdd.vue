@@ -61,27 +61,30 @@ const deleteProduct = (id) => {
             <div class="mx-auto max-w-11/12 sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-
                         <div
                             class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
                         >
-                        <!-- Izmeni Dokument -->
-                        <div>
-
-                            <ModalLink
-                                class="hover:text-green-600 text-slate-300"
-                                :href="route('document.edit', props.document.id)"
-                            >
-                                <EditIcon
-                                    v-tippy="{
-                                         content: `Измени ${props.document.document_type.type}`,
-                                        arrow: true,
-                                        theme: 'light',
-                                    }"
-                                />
-                            </ModalLink>
-                        </div>
-                        <!-- Izmeni Dokument end-->
+                            <!-- Izmeni Dokument -->
+                            <div>
+                                <ModalLink
+                                    class="hover:text-green-600 text-slate-300"
+                                    :href="
+                                        route(
+                                            'document.edit',
+                                            props.document.id,
+                                        )
+                                    "
+                                >
+                                    <EditIcon
+                                        v-tippy="{
+                                            content: `Измени ${props.document.document_type.type}`,
+                                            arrow: true,
+                                            theme: 'light',
+                                        }"
+                                    />
+                                </ModalLink>
+                            </div>
+                            <!-- Izmeni Dokument end-->
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
                                 <div class="text-gray-600">
                                     <p class="text-lg font-medium">
@@ -104,9 +107,9 @@ const deleteProduct = (id) => {
                                                 maximumFractionDigits: 2,
                                             }).format(props.document.total)
                                         }}
-                                        <span>{{
+                                        <!-- <span>{{
                                             props.document.curency.symbol
-                                        }}</span>
+                                        }}</span> -->
                                     </p>
                                 </div>
 
