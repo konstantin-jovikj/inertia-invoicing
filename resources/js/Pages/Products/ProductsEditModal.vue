@@ -427,7 +427,7 @@ const filteredModels = computed(() => {
                 class="px-4 py-2 text-white rounded-md bg-slate-900"
                 type="submit"
             >
-                Додај
+                Ажурирај
             </button>
         </form>
     </Modal>
