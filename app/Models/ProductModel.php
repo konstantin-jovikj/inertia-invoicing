@@ -10,7 +10,7 @@ class ProductModel extends Model
 {
     protected $fillable = [
         'category_id',
-        'refrigerant_id',
+        // 'refrigerant_id',
         'model',
         'model_en',
     ];
@@ -20,8 +20,8 @@ class ProductModel extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function refrigerant()
-    {
-        return $this->belongsTo(Refrigerant::class);
-    }
+    // public function refrigerant()
+    // {
+    //     return $this->belongsTo(Refrigerant::class);
+    // }
 }

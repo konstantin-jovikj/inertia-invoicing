@@ -269,7 +269,7 @@ const deleteProduct = (id) => {
                                                                     />
                                                                 </Link>
 
-                                                                <Link
+                                                                <ModalLink
                                                                     class="hover:text-green-600 text-slate-300"
                                                                     :href="
                                                                         route(
@@ -286,7 +286,7 @@ const deleteProduct = (id) => {
                                                                             theme: 'light',
                                                                         }"
                                                                     />
-                                                                </Link>
+                                                                </ModalLink>
 
                                                                 <button
                                                                     class="hover:text-red-700 text-slate-300"

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('product_models', function (Blueprint $table) {
             $table->id();
             $table->foreignId(column: 'category_id')->nullable()->constrained('categories');
-            $table->foreignId(column: 'refrigerant_id')->nullable()->constrained('refrigerants');
             $table->string('model')->nullable();
             $table->string('model_en')->nullable();
             $table->timestamps();

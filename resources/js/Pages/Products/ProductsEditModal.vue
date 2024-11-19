@@ -6,7 +6,7 @@ import { useForm } from "@inertiajs/vue3";
 import { Modal } from "@inertiaui/modal-vue";
 
 const props = defineProps({
-    document: Object,
+    product: Object,
     manufacturers: Array,
     voltages: Array,
     categories: Array,
@@ -16,27 +16,29 @@ const props = defineProps({
 });
 
 const form = useForm({
-    document_id: props.document.id,
-    product_code: "",
-    serial_no: "",
-    manufacturer_id: "",
-    description: "",
-    qty: "",
-    single_price: "",
-    total_price: "",
-    length: "",
-    width: "",
-    height: "",
-    weight: "",
-    voltage_id: "",
-    current: "",
-    power: "",
-    category_id: "",
-    model_id: "",
-    refrigerant_id: "",
-    temperature_id: "",
-    hfc_qty: "",
+    document_id: props.product?.document_id || "",
+    product_code: props.product?.product_code || "",
+    serial_no: props.product?.serial_no || "",
+    manufacturer_id: props.product?.manufacturer_id || "",
+    description: props.product?.description || "",
+    qty: props.product?.qty || "",
+    single_price: props.product?.single_price || "",
+    total_price: props.product?.total_price || "",
+    length: props.product?.length || "",
+    width: props.product?.width || "",
+    height: props.product?.height || "",
+    weight: props.product?.weight || "",
+    voltage_id: props.product?.voltage_id || "",
+    current: props.product?.current || "",
+    power: props.product?.power || "",
+    category_id: props.product?.category_id || null,
+    model_id: props.product?.model_id || "",
+    refrigerant_id: props.product?.refrigerant_id || "",
+    temperature_id: props.product?.temperature_id || "",
+    hfc_qty: props.product?.hfc_qty || "",
 });
+
+
 
 // Use `props.models` directly or assign it to a reactive ref
 const models = ref(props.models);

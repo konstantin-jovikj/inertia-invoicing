@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Voltage;
 use App\Models\Category;
 use App\Models\Document;
+use App\Models\Refrigerant;
 use App\Models\Temperature;
 use App\Models\Manufacturer;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ class Product extends Model
 {
     protected $fillable = [
         'temperature_id',
+        'refrigerant_id',
         'voltage_id',
         'manufacturer_id',
         'category_id',
@@ -60,5 +62,10 @@ class Product extends Model
     public function categories()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function refrigerant()
+    {
+        return $this->belongsTo(Refrigerant::class);
     }
 }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId(column: 'model_id')->nullable()->constrained('product_models');
             $table->foreignId(column: 'refrigerant_id')->nullable()->constrained('refrigerants');
 
+
             $table->string('product_code')->nullable();
             $table->string('serial_no')->nullable();
             $table->string('description')->nullable();

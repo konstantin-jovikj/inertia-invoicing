@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Product;
 use App\Models\ProductModel;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,8 +22,8 @@ class Refrigerant extends Model
         'other',
     ];
 
-    public function models()
+    public function products()
     {
-        return $this->hasMany(ProductModel::class);
+        return $this->hasMany(Product::class);
     }
 }
