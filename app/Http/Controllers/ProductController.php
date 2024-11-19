@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Manufacturer;
 use App\Models\ProductModel;
+use App\Models\Refrigerant;
 use App\Models\Voltage;
 use Inertia\Inertia;
 use App\Models\Product;
@@ -46,6 +47,7 @@ class ProductController extends Controller
         $voltages = Voltage::all();
         $categories = Category::all();
         $models = ProductModel::all();
+        $refrigerants = Refrigerant::all();
         // dd($document->company);
 
         // $products = Product::where('document_id', $document->id)->get();
@@ -56,6 +58,7 @@ class ProductController extends Controller
             'voltages' => $voltages,
             'categories' => $categories,
             'models' => $models,
+            'refrigerants' => $refrigerants,
 
         ]);
     }

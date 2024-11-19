@@ -11,6 +11,7 @@ const props = defineProps({
     voltages: Array,
     categories: Array,
     models: Array,
+    refrigerants: Array,
 });
 
 const form = useForm({
@@ -36,6 +37,7 @@ const form = useForm({
 
 // Use `props.models` directly or assign it to a reactive ref
 const models = ref(props.models);
+const refrigerants = ref(props.refrigerants);
 
 const modalRef = ref(null);
 
@@ -52,6 +54,31 @@ const filteredModels = computed(() => {
     }
     return models.value.filter((model) => model.category_id === form.category_id);
 });
+
+const filteredRefrigerants = computed(() => {
+    if (!form.model_id) {
+        return [];
+    }
+
+    // Find the selected model
+    const selectedModel = models.value.find((model) => model.id === form.model_id);
+
+    // If the model has a refrigerant_id, return that refrigerant
+    if (selectedModel && selectedModel.refrigerant_id) {
+        return refrigerants.value.filter(
+            (refrigerant) => refrigerant.id === selectedModel.refrigerant_id
+        );
+    }
+
+    // If no refrigerant_id is associated, return an empty array
+    return [];
+});
+
+
+
+
+
+
 </script>
 <template>
     <Modal ref="modalRef" max-width="5xl">
@@ -343,18 +370,26 @@ const filteredModels = computed(() => {
                 </div>
 
                 <div class="w-full lg:w-1/3">
-                    <InputLabel for="power">Фреон</InputLabel>
+                    <InputLabel for="refrigerant_id">Фреон</InputLabel>
 
-                    <TextInput
-                        v-model="form.power"
-                        type="number"
-                        id="power"
-                        step="0.01"
-                        class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
-                    />
+                    <select
+                        v-model="form.refrigerant_id"
+                        id="refrigerant_id "
+                        class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
+
+                    >
+                        <option value="">Фреон...</option>
+                        <option
+                            v-for="refrigerant in filteredRefrigerants"
+                            :key="refrigerant.id"
+                            :value="refrigerant.id"
+                        >
+                            {{ refrigerant.short_name }}
+                        </option>
+                    </select>
 
                     <span class="text-xs italic text-red-600">{{
-                        form.errors.power
+                        form.errors.refrigerant_id
                     }}</span>
                 </div>
             </div>
