@@ -29,7 +29,7 @@ class ProductController extends Controller
     public function create(Document $document)
     {
         // dd($document);
-        $document->load('documentType', 'company', 'curency');
+        $document->load('documentType', 'company', 'curency', 'tax');
         // dd($document->company);
 
         $products = Product::where('document_id', $document->id)->get();
@@ -101,8 +101,6 @@ class ProductController extends Controller
         // Calculate total weight of product
         $productTotalWeight = $request->qty * $request->weight;
 
-        // Find the document using the provided document_id
-        $document = Document::findOrFail($request->document_id);
 
         // Create the product
         $product = Product::create([
@@ -131,15 +129,21 @@ class ProductController extends Controller
         ]);
 
         // Calculate CO2 impact of product
-        if($request->hfc_qty){
+        if ($request->hfc_qty) {
             $product->co2 = $request->hfc_qty * $product->refrigerant->gwp;
             $product->save();
         }
+        // Find the document using the provided document_id
+        $document = Document::findOrFail($request->document_id);
+        $document->load('tax');
 
         // Update the document's total
         $document->total += $totalPrice;
         $document->total_volume += $productTotalVolume;
         $document->total_weight += $productTotalWeight;
+        $document->discount_amount = ($document->total * ($document->discount / 100));
+        $document->tax_amount = $document->total * ($document->tax->tax_rate / 100);
+
 
         $document->save(); // Save the updated document
 
@@ -218,22 +222,25 @@ class ProductController extends Controller
         // Calculate total weight of product
         $productTotalWeight = $request->qty * $request->weight;
 
-        // Find the document using the provided document_id
-        $document = Document::findOrFail($product->document_id);
+
 
         // Create the product
-        $product ->update($validated);
+        $product->update($validated);
 
         // Calculate CO2 impact of product
-        if($request->hfc_qty){
+        if ($request->hfc_qty) {
             $product->co2 = $request->hfc_qty * $product->refrigerant->gwp;
             $product->save();
         }
 
+        // Find the document using the provided document_id
+        $document = Document::findOrFail($product->document_id);
+        $document->load('tax');
         // Update the document's total
         $document->total += $totalPrice;
         $document->total_volume += $productTotalVolume;
         $document->total_weight += $productTotalWeight;
+
 
         $document->save(); // Save the updated document
 

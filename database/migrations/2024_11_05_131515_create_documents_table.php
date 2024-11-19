@@ -34,6 +34,8 @@ return new class extends Migration
             $table->decimal('advance_payment', 14, 2)->nullable();
             $table->decimal('discount', 5, 2)->nullable();
             $table->decimal('total', 14, 2)->nullable();
+            $table->decimal('tax_amount', 14, 2)->nullable();
+            $table->decimal('discount_amount', 14, 2)->nullable();
             $table->decimal('total_with_tax_and_disclount', 14, 2)->nullable();
             $table->decimal('total_volume', 8, 2)->nullable();
             $table->decimal('total_weight', 7, 2)->nullable();

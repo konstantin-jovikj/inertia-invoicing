@@ -44,6 +44,8 @@ class Document extends Model
         'total_with_tax_and_discount',
         'total_volume',
         'total_weight',
+        'tax_amount',
+        'discount_amount',
     ];
 
     // protected $casts = [
