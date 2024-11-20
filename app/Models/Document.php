@@ -46,6 +46,9 @@ class Document extends Model
         'total_weight',
         'tax_amount',
         'discount_amount',
+        'grand_total',
+        'advanced_payment_base',
+        'advanced_payment_tax',
     ];
 
     // protected $casts = [

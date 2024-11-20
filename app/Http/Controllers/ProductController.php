@@ -43,7 +43,7 @@ class ProductController extends Controller
     public function createModal(Document $document)
     {
         // dd($document);
-        $document->load('documentType', 'company');
+        $document->load('documentType', 'company', 'tax');
         $manufacturers = Manufacturer::all();
         $voltages = Voltage::all();
         $categories = Category::all();
@@ -135,15 +135,18 @@ class ProductController extends Controller
         }
         // Find the document using the provided document_id
         $document = Document::findOrFail($request->document_id);
-        $document->load('tax');
 
         // Update the document's total
         $document->total += $totalPrice;
         $document->total_volume += $productTotalVolume;
         $document->total_weight += $productTotalWeight;
-        $document->discount_amount = ($document->total * ($document->discount / 100));
+        $document->discount_amount = $document->total * ($document->discount / 100);
         $document->tax_amount = $document->total * ($document->tax->tax_rate / 100);
+        $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
 
+        $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
+        $document->advanced_payment_base = $document->grand_total/(1+$document->tax->tax_rate / 100);
+        $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
 
         $document->save(); // Save the updated document
 
@@ -255,7 +258,36 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+        
+        $document = Document::findOrFail($product->document_id);
+
+                // Calculate total price of product
+                $totalPrice = $product->qty * $product->single_price;
+                // Calculate total volume of product
+                $productTotalVolume = $product->qty * (($product->length * $product->width * $product->height) / 1000000);
+                // Calculate total weight of product
+                $productTotalWeight = $product->qty * $product->weight;
+
+                // Find the document using the provided document_id
+
+                // Update the document's total
+                $document->total -= $totalPrice;
+                $document->total_volume -= $productTotalVolume;
+                $document->total_weight -= $productTotalWeight;
+                $document->discount_amount = $document->total * ($document->discount / 100);
+                $document->tax_amount = $document->total * ($document->tax->tax_rate / 100);
+                $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
+        
+                $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
+                $document->advanced_payment_base = $document->grand_total/(1+$document->tax->tax_rate / 100);
+                $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
+
+                $product->delete();
+                $document->save(); // Save the updated document
+
+        return Inertia::location(route('products.create', [
+            'document' => $product->document_id,
+        ]));
     }
 
 }

@@ -24,15 +24,6 @@ const props = defineProps({
 const page = usePage(); // This gives you access to all shared props
 const flashMessage = ref(page.props.flash?.message || ""); // Access flash message from shared props
 
-// Form for adding products
-const form = useForm({
-    document_id: props.document.id,
-    description: "",
-    qty: "",
-    single_price: "",
-    total_price: "",
-});
-
 // State for managing products
 const state = reactive({
     products: [...props.products],
@@ -123,111 +114,6 @@ onMounted(() => {
                                         </span>
                                     </div>
                                     <!-- <hr /> -->
-                                    <div>
-                                        <table
-                                            class="font-light text-center border-collapse w-[350px] text-sm text-surface border-e mt-4"
-                                        >
-                                            <tr
-                                                class="border-t border-b border-indigo-300 border-e border-s"
-                                            >
-                                                <th class="border-indigo-300 bg-indigo-50 border-e">
-                                                    <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
-                                                        Основица
-                                                    </span>
-                                                   </th>
-                                                <td class="text-lg font-bold text-right text-indigo-600">
-                                                    {{
-                                                        new Intl.NumberFormat(
-                                                            "en-US",
-                                                            {
-                                                                minimumFractionDigits: 2,
-                                                                maximumFractionDigits: 2,
-                                                            },
-                                                        ).format(
-                                                            props.document
-                                                                .total,
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td class="text-lg font-bold text-right text-indigo-600 pe-4">
-                                                    {{
-                                                        props.document.curency
-                                                            .symbol
-                                                    }}
-                                                </td>
-                                            </tr>
-
-                                            <!-- DISCOUNT -->
-
-                                            <tr
-                                                  v-if="props.document.discount !== null && props.document.discount > 0"
-                                                class="border-t border-b border-indigo-300 border-e border-s"
-                                            >
-                                                <th class="border-indigo-300 bg-indigo-50 border-e">
-                                                    <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
-                                                        Попуст {{ props.document.discount }} %
-                                                    </span>
-                                                   </th>
-                                                <td class="text-lg font-bold text-right text-indigo-600">
-                                                    {{
-                                                        new Intl.NumberFormat(
-                                                            "en-US",
-                                                            {
-                                                                minimumFractionDigits: 2,
-                                                                maximumFractionDigits: 2,
-                                                            },
-                                                        ).format(
-                                                            props.document
-                                                                .discount_amount,
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td class="text-lg font-bold text-right text-indigo-600 pe-4">
-                                                    {{
-                                                        props.document.curency
-                                                            .symbol
-                                                    }}
-                                                </td>
-                                            </tr>
-
-                                            <!-- DDV -->
-
-                                            <tr
-                                             v-if="props.document.tax.tax_rate != 0"
-                                                class="border-t border-b border-indigo-300 border-e border-s"
-                                            >
-                                                <th class="border-indigo-300 bg-indigo-50 border-e">
-                                                    <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
-                                                        ДДВ {{ props.document.tax.tax_rate }} %
-                                                    </span>
-                                                   </th>
-                                                <td class="text-lg font-bold text-right text-indigo-600">
-                                                    {{
-                                                        new Intl.NumberFormat(
-                                                            "en-US",
-                                                            {
-                                                                minimumFractionDigits: 2,
-                                                                maximumFractionDigits: 2,
-                                                            },
-                                                        ).format(
-                                                            props.document
-                                                                .tax_amount,
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td class="text-lg font-bold text-right text-indigo-600 pe-4">
-                                                    {{
-                                                        props.document.curency
-                                                            .symbol
-                                                    }}
-                                                </td>
-                                            </tr>
-
-
-
-                                        </table>
-
-                                    </div>
                                 </div>
 
                                 <div class="lg:col-span-2">
@@ -428,15 +314,380 @@ onMounted(() => {
                                             </table>
                                         </div>
 
-                                        <div>
+                                        <div class="mt-4">
                                             <ModalLink
                                                 :href="`/products/add/modal/${props.document.id}`"
-                                                class="px-4 py-2 text-white bg-gray-900 rounded-md"
+                                                class="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-900"
                                             >
                                                 Додај Производ
                                             </ModalLink>
                                         </div>
                                     </div>
+                                </div>
+
+                                <!-- CALCULATED FIELDS -->
+                                <div class="flex justify-end">
+                                    <table
+                                        class="font-light text-center border-collapse w-[400px] text-sm text-surface border-e mt-4"
+                                    >
+                                        <tr
+                                            class="border-t border-b border-indigo-300 border-e border-s"
+                                        >
+                                            <th
+                                                class="border-indigo-300 bg-indigo-50 border-e"
+                                            >
+                                                <span
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md"
+                                                >
+                                                    Основица
+                                                </span>
+                                            </th>
+                                            <td
+                                                class="text-lg font-bold text-right text-indigo-600"
+                                            >
+                                                {{
+                                                    new Intl.NumberFormat(
+                                                        "en-US",
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        },
+                                                    ).format(
+                                                        props.document.total,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
+                                            >
+                                                {{
+                                                    props.document.curency
+                                                        .symbol
+                                                }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- DISCOUNT -->
+
+                                        <tr
+                                            v-if="
+                                                props.document.discount !==
+                                                    null &&
+                                                props.document.discount > 0
+                                            "
+                                            class="border-t border-b border-indigo-300 border-e border-s"
+                                        >
+                                            <th
+                                                class="border-indigo-300 bg-indigo-50 border-e"
+                                            >
+                                                <span
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md"
+                                                >
+                                                    Попуст
+                                                    {{
+                                                        props.document.discount
+                                                    }}
+                                                    %
+                                                </span>
+                                            </th>
+                                            <td
+                                                class="text-lg font-bold text-right text-indigo-600"
+                                            >
+                                                {{
+                                                    new Intl.NumberFormat(
+                                                        "en-US",
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        },
+                                                    ).format(
+                                                        props.document
+                                                            .discount_amount,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
+                                            >
+                                                {{
+                                                    props.document.curency
+                                                        .symbol
+                                                }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- DDV -->
+
+                                        <tr
+                                            v-if="
+                                                props.document.tax.tax_rate != 0
+                                            "
+                                            class="border-t border-b border-indigo-300 border-e border-s"
+                                        >
+                                            <th
+                                                class="border-indigo-300 bg-indigo-50 border-e"
+                                            >
+                                                <span
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md"
+                                                >
+                                                    ДДВ
+                                                    {{
+                                                        props.document.tax
+                                                            .tax_rate
+                                                    }}
+                                                    %
+                                                </span>
+                                            </th>
+                                            <td
+                                                class="text-lg font-bold text-right text-indigo-600"
+                                            >
+                                                {{
+                                                    new Intl.NumberFormat(
+                                                        "en-US",
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        },
+                                                    ).format(
+                                                        props.document
+                                                            .tax_amount,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
+                                            >
+                                                {{
+                                                    props.document.curency
+                                                        .symbol
+                                                }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- Document Grand Total -->
+
+                                        <tr
+                                            class="border-t border-b border-indigo-300 border-e border-s"
+                                        >
+                                            <th
+                                                class="border-indigo-300 bg-pink-50 border-e"
+                                            >
+                                                <span
+                                                    class="italic font-normal text-right text-pink-600 pe-4 text-md"
+                                                >
+                                                    Вкупно со ДДВ
+                                                </span>
+                                            </th>
+                                            <td
+                                                class="text-lg font-bold text-right text-pink-600"
+                                            >
+                                                {{
+                                                    new Intl.NumberFormat(
+                                                        "en-US",
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        },
+                                                    ).format(
+                                                        props.document
+                                                            .total_with_tax_and_discount,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="text-lg font-bold text-right text-pink-600 pe-4"
+                                            >
+                                                {{
+                                                    props.document.curency
+                                                        .symbol
+                                                }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- AVANS -->
+
+                                        <tr
+                                            v-if="
+                                                props.document
+                                                    .advance_payment !== null &&
+                                                props.document.advance_payment >
+                                                    0
+                                            "
+                                            class="border-t border-b border-indigo-300 border-e border-s"
+                                        >
+                                            <th
+                                                class="border-indigo-300 bg-teal-50 border-e"
+                                            >
+                                                <span
+                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
+                                                >
+                                                    Аванс
+                                                </span>
+                                            </th>
+                                            <td
+                                                class="text-lg font-bold text-right text-teal-600"
+                                            >
+                                                {{
+                                                    new Intl.NumberFormat(
+                                                        "en-US",
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        },
+                                                    ).format(
+                                                        props.document
+                                                            .advance_payment,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="text-lg font-bold text-right text-teal-600 pe-4"
+                                            >
+                                                {{
+                                                    props.document.curency
+                                                        .symbol
+                                                }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- Preostanata Osnovica -->
+
+                                        <tr
+                                            v-if="
+                                                props.document
+                                                    .advance_payment !== null &&
+                                                props.document.advance_payment >
+                                                    0
+                                            "
+                                            class="border-t border-b border-indigo-300 border-e border-s"
+                                        >
+                                            <th
+                                                class="border-indigo-300 bg-teal-50 border-e"
+                                            >
+                                                <span
+                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
+                                                >
+                                                    Преостаната Основица
+                                                </span>
+                                            </th>
+                                            <td
+                                                class="text-lg font-bold text-right text-teal-600"
+                                            >
+                                                {{
+                                                    new Intl.NumberFormat(
+                                                        "en-US",
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        },
+                                                    ).format(
+                                                        props.document
+                                                            .advanced_payment_base,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="text-lg font-bold text-right text-teal-600 pe-4"
+                                            >
+                                                {{
+                                                    props.document.curency
+                                                        .symbol
+                                                }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- Preostanatо ДДВ -->
+
+                                        <tr
+                                            v-if="
+                                                props.document
+                                                    .advance_payment !== null &&
+                                                props.document.advance_payment >
+                                                    0
+                                            "
+                                            class="border-t border-b border-indigo-300 border-e border-s"
+                                        >
+                                            <th
+                                                class="border-indigo-300 bg-teal-50 border-e"
+                                            >
+                                                <span
+                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
+                                                >
+                                                    Преостанатo ДДВ
+                                                </span>
+                                            </th>
+                                            <td
+                                                class="text-lg font-bold text-right text-teal-600"
+                                            >
+                                                {{
+                                                    new Intl.NumberFormat(
+                                                        "en-US",
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        },
+                                                    ).format(
+                                                        props.document
+                                                            .advanced_payment_tax,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="text-lg font-bold text-right text-teal-600 pe-4"
+                                            >
+                                                {{
+                                                    props.document.curency
+                                                        .symbol
+                                                }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- VKUPNO ZA NAPLATA -->
+
+                                        <tr
+                                            v-if="
+                                                props.document
+                                                    .advance_payment !== null &&
+                                                props.document.advance_payment >
+                                                    0
+                                            "
+                                            class="border-t border-b-4 border-b-red-500 border-indigo-300 border-e border-s"
+                                        >
+                                            <th
+                                                class="border-indigo-300 bg-red-100 border-e"
+                                            >
+                                                <span
+                                                    class="font-medium text-right text-red-600 pe-4 text-md"
+                                                >
+                                                    Вк.Преостанато со ДДВ
+                                                </span>
+                                            </th>
+                                            <td
+                                                class="text-lg font-bold text-right text-red-600 bg-red-100"
+                                            >
+                                                {{
+                                                    new Intl.NumberFormat(
+                                                        "en-US",
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        },
+                                                    ).format(
+                                                        props.document
+                                                            .grand_total,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="text-lg font-bold text-right text-red-600 pe-4 bg-red-100"
+                                            >
+                                                {{
+                                                    props.document.curency
+                                                        .symbol
+                                                }}
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>

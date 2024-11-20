@@ -213,13 +213,26 @@ class DocumentController extends Controller
 
         // Recalculate fields
         $discountAmount = $document->total * ($discountRate / 100);
-        $taxAmount = $document->total * ($taxRate / 100);
+
+
+        $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
+        $docTotal = $document->total - $discountAmount + $taxAmount;
+        $docGrandTotal = $docTotal - $validatedData['advance_payment'];
+        $docAdvancedBase = $docGrandTotal/(1+($taxRate / 100));
+        $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
+        // dd($validatedData['advance_payment']);
 
         // Merge recalculated fields with validated data
         $document->update(array_merge($validatedData, [
             'discount_amount' => $discountAmount,
             'tax_amount' => $taxAmount,
+            'total_with_tax_and_discount' => $docTotal,
+            'grand_total' => $docGrandTotal,
+            'advanced_payment_tax' => $docAdvancedTax,
+            'advanced_payment_base' => $docAdvancedBase,
         ]));
+
+        // dd($document);
 
         // Redirect to products creation page
         return Inertia::location(route('products.create', [
@@ -237,6 +250,9 @@ class DocumentController extends Controller
         $document->delete();
         return redirect()->route('document.index')->with('message', 'Документот е успешно избришан.');
     }
+
+
+
 
     public function addEmptyRow(Document $document, Product $product)
     {
