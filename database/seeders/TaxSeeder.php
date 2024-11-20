@@ -16,6 +16,7 @@ class TaxSeeder extends Seeder
         DB::table('taxes')->delete();
 
         $taxes = [
+            ['tax_rate' => 0.00],
             ['tax_rate' => 5.00],
             ['tax_rate' => 18.00],
         ];

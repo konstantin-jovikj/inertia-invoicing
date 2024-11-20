@@ -160,7 +160,7 @@ onMounted(() => {
                                             <!-- DISCOUNT -->
 
                                             <tr
-                                                v-if="props.document.discount"
+                                                  v-if="props.document.discount !== null && props.document.discount > 0"
                                                 class="border-t border-b border-indigo-300 border-e border-s"
                                             >
                                                 <th class="border-indigo-300 bg-indigo-50 border-e">
@@ -193,6 +193,7 @@ onMounted(() => {
                                             <!-- DDV -->
 
                                             <tr
+                                             v-if="props.document.tax.tax_rate != 0"
                                                 class="border-t border-b border-indigo-300 border-e border-s"
                                             >
                                                 <th class="border-indigo-300 bg-indigo-50 border-e">

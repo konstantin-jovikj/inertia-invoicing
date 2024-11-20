@@ -153,7 +153,7 @@ class DocumentController extends Controller
         $drivers = Driver::all();
         $documentTypes = DocumentType::all();
 
-        $document->load('documentType');
+        $document->load('documentType', 'tax');
 
         $companies = Company::select('id', 'name', 'is_customer')
             ->whereIn('is_customer', [true, false])
@@ -179,36 +179,55 @@ class DocumentController extends Controller
      */
     public function update(Request $request, Document $document)
     {
-            //    dd($request->all(),$document );
-               $validatedData = $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'owner_id' => 'required|exists:companies,id',
-                'client_id' => 'required|exists:companies,id',
-                'document_type_id' => 'required|exists:document_types,id',
-                'vehicle_id' => 'nullable|exists:vehicles,id',
-                'driver_id' => 'nullable|exists:drivers,id',
-                'curency_id' => 'nullable|exists:curencies,id',
-                'incoterm_id' => 'nullable|exists:incoterms,id',
-                'tax_id' => 'nullable|exists:taxes,id',
-                'term_id' => 'nullable|exists:terms,id',
-                'is_translation' => 'boolean',
-                'is_for_export' => 'boolean',
-                'document_no' => 'required|max:255',
-                'drawing_no' => 'nullable|max:255',
-                'date' => 'nullable|date',
-                'advance_payment' => 'nullable|numeric',
-                'discount' => 'nullable|numeric',
-            ]);
-            // $validatedData['user_id'] = auth()->user()->id;
+        // Validate all fields coming from the user
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'owner_id' => 'required|exists:companies,id',
+            'client_id' => 'required|exists:companies,id',
+            'document_type_id' => 'required|exists:document_types,id',
+            'vehicle_id' => 'nullable|exists:vehicles,id',
+            'driver_id' => 'nullable|exists:drivers,id',
+            'curency_id' => 'nullable|exists:curencies,id',
+            'incoterm_id' => 'nullable|exists:incoterms,id',
+            'tax_id' => 'nullable|exists:taxes,id',
+            'term_id' => 'nullable|exists:terms,id',
+            'is_translation' => 'boolean',
+            'is_for_export' => 'boolean',
+            'document_no' => 'required|max:255',
+            'drawing_no' => 'nullable|max:255',
+            'date' => 'nullable|date',
+            'advance_payment' => 'nullable|numeric',
+            'discount' => 'nullable|numeric|min:0|max:100', // Ensure discount is a percentage
+        ]);
 
-            // dd($validatedData);
+        // Refresh the document's tax relationship to get the latest tax_rate
+        if ($validatedData['tax_id']) {
+            $tax = Tax::find($validatedData['tax_id']); // Fetch the updated tax from the database
+            $taxRate = $tax ? $tax->tax_rate : 0; // Handle null gracefully
+        } else {
+            $taxRate = 0; // No tax ID provided
+        }
 
-            $document->update($validatedData);
+        // Use the provided discount or fallback to the current document discount
+        $discountRate = $validatedData['discount'] ?? $document->discount;
 
-            return Inertia::location(route('products.create', [
-                'document' => $document->id,
-            ]));
+        // Recalculate fields
+        $discountAmount = $document->total * ($discountRate / 100);
+        $taxAmount = $document->total * ($taxRate / 100);
+
+        // Merge recalculated fields with validated data
+        $document->update(array_merge($validatedData, [
+            'discount_amount' => $discountAmount,
+            'tax_amount' => $taxAmount,
+        ]));
+
+        // Redirect to products creation page
+        return Inertia::location(route('products.create', [
+            'document' => $document->id,
+        ]));
     }
+
+
 
     /**
      * Remove the specified resource from storage.
