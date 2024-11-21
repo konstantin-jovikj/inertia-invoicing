@@ -41,7 +41,6 @@ const form = useForm({
 // Use `props.models` directly or assign it to a reactive ref
 const models = ref(props.models);
 
-
 const modalRef = ref(null);
 
 const closeModal = () => {
@@ -55,11 +54,10 @@ const filteredModels = computed(() => {
     if (form.category_id == null) {
         return [];
     }
-    return models.value.filter((model) => model.category_id === form.category_id);
+    return models.value.filter(
+        (model) => model.category_id === form.category_id,
+    );
 });
-
-
-
 </script>
 <template>
     <Modal ref="modalRef" max-width="5xl">
@@ -350,8 +348,6 @@ const filteredModels = computed(() => {
                     }}</span>
                 </div>
 
-
-
                 <div class="w-full lg:w-1/3">
                     <InputLabel for="temperature_id ">Температура</InputLabel>
 
@@ -378,7 +374,6 @@ const filteredModels = computed(() => {
 
             <!-- Refrigerant + Refrigerant Quantity -->
             <div class="flex flex-col w-full gap-2 py-2 mb-2 lg:flex-row">
-
                 <div class="w-full lg:w-1/2">
                     <InputLabel for="refrigerant_id">Фреон</InputLabel>
 
@@ -386,7 +381,6 @@ const filteredModels = computed(() => {
                         v-model="form.refrigerant_id"
                         id="refrigerant_id "
                         class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
-
                     >
                         <option value="">Фреон...</option>
                         <option

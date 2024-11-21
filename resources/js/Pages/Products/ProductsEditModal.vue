@@ -67,7 +67,7 @@ const filteredModels = computed(() => {
     <Modal ref="modalRef" max-width="5xl">
         <form
             @submit.prevent="
-                form.post('/products/store', {
+                form.put('/products/update/' + props.product.id, {
                     onSuccess: () => {
                         form.reset();
                         closeModal();
