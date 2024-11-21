@@ -314,7 +314,7 @@ const submit = () => {
                                                     id="tax_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
-                                                    <option value="" disabled>
+                                                    <option value="0">
                                                         ДДВ ...
                                                     </option>
                                                     <option

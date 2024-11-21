@@ -17,6 +17,7 @@ class ManufacturerSeeder extends Seeder
 
         // Define the manufacturers to insert
         $manufacturers = [
+            ['place_id' => 28, 'address' => 'Brakja Ginovski bb', 'name' => 'FRIGOSAN DOO'],
             ['place_id' => 1, 'address' => 'Via S.Domenico no.2', 'name' => 'Aexperial S-A.S'],
             ['place_id' => 2, 'address' => 'Via Olevano no.59', 'name' => 'Agrindustria-plast SRL'],
             ['place_id' => 3, 'address' => 'Via G.B. Tiepolo no.3/B', 'name' => 'Arris Catering Equipment S.r.L'],

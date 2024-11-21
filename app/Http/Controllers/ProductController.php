@@ -33,6 +33,7 @@ class ProductController extends Controller
         // dd($document->company);
 
         $products = Product::where('document_id', $document->id)->get();
+        $products->load('manufacturers.place.country');
 
         return inertia('Products/ProductsAdd', [
             'document' => $document,

@@ -56,7 +56,7 @@ class Product extends Model
 
     public function manufacturers()
     {
-        return $this->belongsTo(Manufacturer::class);
+        return $this->belongsTo(Manufacturer::class, 'manufacturer_id');
     }
 
     public function categories()

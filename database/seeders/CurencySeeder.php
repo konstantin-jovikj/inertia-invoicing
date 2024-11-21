@@ -16,9 +16,9 @@ class CurencySeeder extends Seeder
         DB::table('curencies')->delete();
 
         $curencies = [
+            ['code' => 'MKD', 'symbol' => 'ден', 'name' => 'Macedonian Denar'],
             ['code' => 'EUR', 'symbol' => '€', 'name' => 'Euro'],
             ['code' => 'USD', 'symbol' => '$', 'name' => 'Dollar'],
-            ['code' => 'MKD', 'symbol' => 'ден', 'name' => 'Macedonian Denar'],
         ];
         DB::table('curencies')->insert($curencies);
     }

@@ -85,13 +85,6 @@
         </main>
 
     </div>
-    {{-- <h1 class="text-red-500">Гаранција</h1>
-    <p>{{ $product->description}}</p>
-    <p>{{ $client->name}}</p>
-    <p>{{ $owner->name}}</p>
-
-    <img src="{{ asset('storage/' . $owner->logo) }}" alt="Logo"> --}}
-
 </body>
 
 </html>

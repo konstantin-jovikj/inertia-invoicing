@@ -100,6 +100,12 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+
+        $request->merge([
+            'tax_id' => $request->tax_id ?? 1,
+            'curency_id' => $request->tax_id ?? 1,
+        ]);
+
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'owner_id' => 'required|exists:companies,id',
@@ -107,9 +113,9 @@ class DocumentController extends Controller
             'document_type_id' => 'required|exists:document_types,id',
             'vehicle_id' => 'nullable|exists:vehicles,id',
             'driver_id' => 'nullable|exists:drivers,id',
-            'curency_id' => 'nullable|exists:curencies,id',
+            'curency_id' => 'exists:curencies,id',
             'incoterm_id' => 'nullable|exists:incoterms,id',
-            'tax_id' => 'nullable|exists:taxes,id',
+            'tax_id' => 'exists:taxes,id',
             'term_id' => 'nullable|exists:terms,id',
             'is_translation' => 'boolean',
             'is_for_export' => 'boolean',

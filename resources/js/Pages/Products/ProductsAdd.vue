@@ -12,7 +12,7 @@ import { onMounted } from "vue";
 import { debounce } from "lodash";
 import { Tippy } from "vue-tippy";
 import WarrantyIcon from "@/Components/WarrantyIcon.vue";
-
+import PrintIcon from "@/Components/PrintIcon.vue";
 // import {Modal, ModalLink } from "@/Components/ModalLink.vue";
 
 // Props from the parent
@@ -21,6 +21,7 @@ const props = defineProps({
     products: Array,
 });
 
+console.log(props.products);
 // Accessing Inertia's page props
 const page = usePage(); // This gives you access to all shared props
 const flashMessage = ref(page.props.flash?.message || ""); // Access flash message from shared props
@@ -171,7 +172,7 @@ function convertToMacedonianWords(number) {
                             class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
                         >
                             <!-- Izmeni Dokument -->
-                            <div>
+                            <div class="flex gap-2">
                                 <ModalLink
                                     class="hover:text-green-600 text-slate-300"
                                     :href="
@@ -189,6 +190,20 @@ function convertToMacedonianWords(number) {
                                         }"
                                     />
                                 </ModalLink>
+
+                                <a
+                                    class="px-4 hover:text-sky-600 text-slate-300"
+                                    :href="`/document/print/${props.document.id}`"
+                                    target="_blank"
+                                >
+                                    <PrintIcon
+                                        v-tippy="{
+                                            content: `Принтај ${props.document.document_type.type}`,
+                                            arrow: true,
+                                            theme: 'light',
+                                        }"
+                                    />
+                                </a>
                             </div>
                             <!-- Izmeni Dokument end-->
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
@@ -311,6 +326,66 @@ function convertToMacedonianWords(number) {
                                                             {{
                                                                 product.description
                                                             }}
+                                                            -
+                                                            {{
+                                                                new Intl.NumberFormat(
+                                                                    "en-US",
+                                                                    {
+                                                                        minimumFractionDigits: 0,
+                                                                        maximumFractionDigits: 2,
+                                                                    },
+                                                                ).format(
+                                                                    product.length,
+                                                                )
+                                                            }}
+                                                            x
+                                                            {{
+                                                                new Intl.NumberFormat(
+                                                                    "en-US",
+                                                                    {
+                                                                        minimumFractionDigits: 0,
+                                                                        maximumFractionDigits: 2,
+                                                                    },
+                                                                ).format(
+                                                                    product.width,
+                                                                )
+                                                            }}
+                                                            x
+                                                            {{
+                                                                new Intl.NumberFormat(
+                                                                    "en-US",
+                                                                    {
+                                                                        minimumFractionDigits: 0,
+                                                                        maximumFractionDigits: 2,
+                                                                    },
+                                                                ).format(
+                                                                    product.height,
+                                                                )
+                                                            }}
+                                                            -
+                                                            <span
+                                                                class="font-bold text-green-900"
+                                                                v-if="
+                                                                    product.manufacturers
+                                                                "
+                                                                >{{
+                                                                    product
+                                                                        .manufacturers
+                                                                        .name
+                                                                }}</span
+                                                            >
+                                                            -
+                                                            <span
+                                                                class="text-blue-800"
+                                                            >
+                                                                {{
+                                                                    product
+                                                                        .manufacturers
+                                                                        .place
+                                                                        .country
+                                                                        .name
+                                                                }}
+                                                            </span>
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-left whitespace-nowrap border-e"
@@ -418,7 +493,7 @@ function convertToMacedonianWords(number) {
 
                                                                 <a
                                                                     class="px-4 hover:text-green-600 text-slate-300"
-                                                                     :href="`/product/warranty/${product.id}`"
+                                                                    :href="`/product/warranty/${product.id}`"
                                                                     target="_blank"
                                                                 >
                                                                     <WarrantyIcon
@@ -543,6 +618,7 @@ function convertToMacedonianWords(number) {
 
                                         <tr
                                             v-if="
+                                                props.document.tax &&
                                                 props.document.tax.tax_rate != 0
                                             "
                                             class="border-t border-b border-indigo-300 border-e border-s"

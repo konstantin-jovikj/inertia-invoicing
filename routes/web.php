@@ -180,6 +180,7 @@ Route::middleware('auth')->group(function () {
     // PDF
 
     Route::get('/product/warranty/{product}', [PDFController::class, 'createWarranty'])->name('warranty');
+    Route::get('/document/print/{document}', [PDFController::class, 'printDocument'])->name('print.document');
 
 });
 

@@ -143,40 +143,8 @@ const filteredModels = computed(() => {
                 }}</span>
             </div>
 
-            <!-- Quantity  + Single Price -->
-            <div class="flex flex-col w-full gap-2 py-2 mb-2 lg:flex-row">
-                <div class="w-full lg:w-1/2">
-                    <InputLabel for="qty">Количина </InputLabel>
-
-                    <TextInput
-                        v-model="form.qty"
-                        type="number"
-                        id="qty"
-                        class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
-                    />
-
-                    <span class="text-xs italic text-red-600">{{
-                        form.errors.qty
-                    }}</span>
-                </div>
-                <div class="w-full lg:w-1/2">
-                    <InputLabel for="single_price">Цена </InputLabel>
-
-                    <TextInput
-                        v-model="form.single_price"
-                        type="number"
-                        id="single_price"
-                        class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
-                    />
-
-                    <span class="text-xs italic text-red-600">{{
-                        form.errors.single_price
-                    }}</span>
-                </div>
-            </div>
-
-            <!-- Length + Width + Height + Weight-->
-            <div class="flex flex-col w-full gap-2 py-2 mb-2 lg:flex-row">
+                        <!-- Length + Width + Height + Weight-->
+                        <div class="flex flex-col w-full gap-2 py-2 mb-2 lg:flex-row">
                 <div class="w-full lg:w-1/4">
                     <InputLabel for="qty">Должина(cm)</InputLabel>
 
@@ -242,6 +210,40 @@ const filteredModels = computed(() => {
                     }}</span>
                 </div>
             </div>
+
+            <!-- Quantity  + Single Price -->
+            <div class="flex flex-col w-full gap-2 py-2 mb-2 lg:flex-row">
+                <div class="w-full lg:w-1/2">
+                    <InputLabel for="qty">Количина </InputLabel>
+
+                    <TextInput
+                        v-model="form.qty"
+                        type="number"
+                        id="qty"
+                        class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                    />
+
+                    <span class="text-xs italic text-red-600">{{
+                        form.errors.qty
+                    }}</span>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <InputLabel for="single_price">Цена </InputLabel>
+
+                    <TextInput
+                        v-model="form.single_price"
+                        type="number"
+                        id="single_price"
+                        class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                    />
+
+                    <span class="text-xs italic text-red-600">{{
+                        form.errors.single_price
+                    }}</span>
+                </div>
+            </div>
+
+
 
             <!-- Voltage + Curent + Power -->
             <div class="flex flex-col w-full gap-2 py-2 mb-2 lg:flex-row">
