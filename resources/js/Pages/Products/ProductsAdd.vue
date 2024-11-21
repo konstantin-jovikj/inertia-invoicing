@@ -11,6 +11,7 @@ import EditIcon from "@/Components/EditIcon.vue";
 import { onMounted } from "vue";
 import { debounce } from "lodash";
 import { Tippy } from "vue-tippy";
+import WarrantyIcon from "@/Components/WarrantyIcon.vue";
 
 // import {Modal, ModalLink } from "@/Components/ModalLink.vue";
 
@@ -50,6 +51,112 @@ onMounted(() => {
         }, 3000);
     }
 });
+
+function convertToMacedonianWords(number) {
+    if (number == null || isNaN(number)) {
+        return "Непозната сума"; // "Unknown amount" in Macedonian
+    }
+
+    const ones = [
+        "",
+        "еден",
+        "два",
+        "три",
+        "четири",
+        "пет",
+        "шест",
+        "седум",
+        "осум",
+        "девет",
+    ];
+    const tens = [
+        "",
+        "десет",
+        "дваесет",
+        "триесет",
+        "четириесет",
+        "педесет",
+        "шеесет",
+        "седумдесет",
+        "осумдесет",
+        "деведесет",
+    ];
+    const teens = [
+        "единаесет",
+        "дванаесет",
+        "тринаесет",
+        "четиринаесет",
+        "петнаесет",
+        "шеснаесет",
+        "седумнаесет",
+        "осумнаесет",
+        "деветнаесет",
+    ];
+    const thousands = ["", "илјада", "милиони", "милијарди"];
+
+    function numberToWords(n) {
+        if (n === 0) return "нула";
+
+        let words = "";
+        let groupIndex = 0;
+
+        while (n > 0) {
+            const group = n % 1000;
+            if (group > 0) {
+                let groupWords = "";
+
+                const hundreds = Math.floor(group / 100);
+                const remainder = group % 100;
+
+                if (hundreds > 0) {
+                    groupWords += `${ones[hundreds]} сто `;
+                }
+
+                if (remainder > 10 && remainder < 20) {
+                    groupWords += `${teens[remainder - 11]} `;
+                } else {
+                    const tensValue = Math.floor(remainder / 10);
+                    const onesValue = remainder % 10;
+
+                    if (tensValue > 0) {
+                        groupWords += `${tens[tensValue]} `;
+                    }
+
+                    if (onesValue > 0) {
+                        groupWords += `${ones[onesValue]} `;
+                    }
+                }
+
+                if (groupIndex > 0) {
+                    groupWords += `${thousands[groupIndex]} `;
+                }
+
+                words = `${groupWords}${words}`.trim();
+            }
+
+            n = Math.floor(n / 1000);
+            groupIndex++;
+        }
+
+        return words.trim();
+    }
+
+    // Split the number into integer and decimal parts
+    const [integerPart, decimalPart] = number.toString().split(".");
+
+    // Convert integer part
+    let result = numberToWords(parseInt(integerPart, 10));
+
+    // Convert decimal part (if exists)
+    if (decimalPart > 0) {
+        result += ` запирка ${decimalPart
+            .split("")
+            .map((digit) => ones[parseInt(digit, 10)])
+            .join(" ")}`;
+    }
+
+    return result;
+}
 </script>
 
 <template>
@@ -253,6 +360,7 @@ onMounted(() => {
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
+                                                            <div></div>
                                                             <div
                                                                 class="flex gap-1"
                                                             >
@@ -307,6 +415,21 @@ onMounted(() => {
                                                                         }"
                                                                     />
                                                                 </button>
+
+                                                                <a
+                                                                    class="px-4 hover:text-green-600 text-slate-300"
+                                                                     :href="`/product/warranty/${product.id}`"
+                                                                    target="_blank"
+                                                                >
+                                                                    <WarrantyIcon
+                                                                        v-tippy="{
+                                                                            content:
+                                                                                'Гаранција',
+                                                                            arrow: true,
+                                                                            theme: 'light',
+                                                                        }"
+                                                                    />
+                                                                </a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -689,6 +812,16 @@ onMounted(() => {
                                         </tr>
                                     </table>
                                 </div>
+                            </div>
+                            <!-- WORDS -->
+                            <div class="text-xs text-purple-400 italic">
+                                {{
+                                    convertToMacedonianWords(
+                                        props.document
+                                            .total_with_tax_and_discount ?? 0,
+                                    )
+                                }}
+                                {{ props.document.curency.symbol }}
                             </div>
                         </div>
                     </div>

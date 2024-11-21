@@ -21,6 +21,7 @@
     "dependencies": {
         "@inertiaui/modal-vue": "file:vendor/inertiaui/modal/vue",
         "lodash": "^4.17.21",
+        "puppeteer": "^23.9.0",
         "tippy.js": "^6.3.7",
         "vue-tippy": "^6.5.0",
         "vuedraggable": "^4.1.0"

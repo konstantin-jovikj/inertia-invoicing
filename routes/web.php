@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PDFController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -175,6 +176,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/products/delete/{product}', [ProductController::class, 'destroy'])->name('products.delete');
     Route::get('/products/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
 
+
+    // PDF
+
+    Route::get('/product/warranty/{product}', [PDFController::class, 'createWarranty'])->name('warranty');
 
 });
 
