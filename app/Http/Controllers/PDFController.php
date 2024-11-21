@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Document;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Spatie\LaravelPdf\PdfBuilder;
@@ -14,9 +15,12 @@ class PDFController extends Controller
 {
     public function createWarranty(Product $product)
     {
-        $document = $product->document_id;
+        $documentId = $product->document_id;
+
         $ownerId = $product->document->owner_id;
         $clientId = $product->document->client_id;
+
+        $document = Document::findOrFail($documentId);
         $owner = Company::findOrFail($ownerId);
         $client = Company::findOrFail($clientId);
 
