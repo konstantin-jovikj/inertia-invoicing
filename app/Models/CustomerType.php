@@ -9,4 +9,9 @@ class CustomerType extends Model
     protected $fillable = [
         'type',
     ];
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }

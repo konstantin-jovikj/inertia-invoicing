@@ -322,6 +322,7 @@ function convertToMacedonianWords(number) {
 
                                                         <td
                                                             class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                           
                                                         >
                                                             {{
                                                                 product.description
@@ -365,9 +366,7 @@ function convertToMacedonianWords(number) {
                                                             -
                                                             <span
                                                                 class="font-bold text-green-900"
-                                                                v-if="
-                                                                    product.manufacturers
-                                                                "
+                                                                v-if="product.manufacturer_id"
                                                                 >{{
                                                                     product
                                                                         .manufacturers
@@ -376,7 +375,8 @@ function convertToMacedonianWords(number) {
                                                             >
                                                             -
                                                             <span
-                                                                class="text-blue-800"
+                                                                class="text-blue-800" 
+                                                                v-if="product.manufacturer_id"                                                         
                                                             >
                                                                 {{
                                                                     product

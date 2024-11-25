@@ -8,6 +8,9 @@ import { debounce } from "lodash";
 import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
 import AddIcon from "../../Components/AddIcon.vue";
+import { latinToCyrillic } from "@/helpers/latinToCyrillic"; // Adjust the path if needed
+
+
 
 const props = defineProps({
     documentTypes: Object,
@@ -63,18 +66,6 @@ const getPaginationLabel = (label) => {
                             <h2 class="font-bold text-sky-800">
                                 Видови на Документи
                             </h2>
-                            <!-- <div class="flex">
-                                <Link
-                                    v-tippy="{
-                                        content: 'Додај Нова ДДВ Ставка',
-                                        arrow: true,
-                                        theme: 'light',
-                                    }"
-                                    href="taxes/add"
-                                    class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
-                                    ><AddIcon
-                                /></Link>
-                            </div> -->
                         </div>
 
                         <table
@@ -123,7 +114,7 @@ const getPaginationLabel = (label) => {
                                     <td class="">
                                         {{ documentTypes.from + index }} {{}}
                                     </td>
-                                    <td class="">{{ documentType.type }}</td>
+                                    <td class="">{{ latinToCyrillic(documentType.type) }}</td>
 
                                     <td class="">
                                         <div class="flex gap-2">
@@ -131,7 +122,7 @@ const getPaginationLabel = (label) => {
                                                 v-tippy="{
                                                     content:
                                                         'Додај Нова ' +
-                                                        documentType.type,
+                                                        latinToCyrillic(documentType.type),
                                                     arrow: true,
                                                     theme: 'light',
                                                 }"

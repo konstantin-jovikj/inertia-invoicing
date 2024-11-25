@@ -35,17 +35,23 @@ class PDFController extends Controller
     {
         // dd($document->products);
         $ownerId = $document->owner_id;
+        $clientId = $document->client_id;
+        $client = Company::findOrFail($clientId);
         $owner = Company::findOrFail($ownerId);
 
         $owner->load('accounts.bank');
+        $client->load('accounts.bank', 'customer.customerType');
         $document->load('documentType');
 
         $convertedOwner = latinToCyrillic($owner->name);
         $convertedAddress = latinToCyrillic($owner->address);
         $convertedPlace = latinToCyrillic($owner->place->place);
+        $convertedPlaceClient = latinToCyrillic($client->place->place);
         $convertedCountry = latinToCyrillic($owner->place->country->name);
+        $convertedCountryClient = latinToCyrillic($client->place->country->name);
         $convertedDocumentName = latinToCyrillic($document->documentType->type);
-        return pdf()->view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName'))->name('doc.pdf');
+        $convertedCountryClient = latinToCyrillic($client->place->country->name);
+        return pdf()->view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient'))->name('doc.pdf');
     }
 
 }

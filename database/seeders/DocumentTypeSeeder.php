@@ -16,17 +16,17 @@ class DocumentTypeSeeder extends Seeder
         DB::table('document_types')->delete();
 
         $document_types = array(
-            array('type' => 'Понуда'),
-            array('type' => 'Про-Фактура'),
-            array('type' => 'Фактура'),
-            array('type' => 'Авансна Фактура'),
-            array('type' => 'Испратница'),
-            array('type' => 'Пакинг-Листа'),
-            array('type' => 'Каса Прими'),
-            array('type' => 'Приемница'),
-            array('type' => 'Товарен Лист'),
-            array('type' => 'Патен Налог'),
-            array('type' => 'Гаранција'),
+            array('type' => 'Offer'),
+            array('type' => 'Proforma-Invoice'),
+            array('type' => 'Invoice'),
+            array('type' => 'Avansna Faktura'),
+            array('type' => 'Ispratnica'),
+            array('type' => 'Packing-List'),
+            array('type' => 'Kasa-Primi'),
+            array('type' => 'Priemnica'),
+            array('type' => 'Tovaren List'),
+            array('type' => 'Paten Nalog'),
+            array('type' => 'Warranty'),
 
         );
 

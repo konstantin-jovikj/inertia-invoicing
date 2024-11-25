@@ -72,13 +72,94 @@
         </div>
     </header>
     <main>
-        <div class="border-t-2 border-sky-700 mt-2">
-            @if (!$document->is_for_export)
-                <p class="text-sm">{{ $document->documentType->type }}</p>
-            @else
-            <p class="text-sm">{{ $document->documentType->type }}</p>
-                <p class="text-sm">{{ $convertedDocumentName }}</p>
+        <div class="border-y-2 border-sky-700 mt-2 pb-1 font-bold flex flex-row justify-around">
+            <div>
+                @if (!$document->is_for_export)
+                    <span class="text-sm">{{ $convertedDocumentName }} Бр: </span>
+                    <span class="text-lg">{{ $document->document_no }} </span>
+                @else
+                    <span class="text-sm">{{ $convertedDocumentName }} / {{ $document->documentType->type }} No:
+                    </span>
+                    <span class="text-lg">{{ $document->document_no }} </span>
+                @endif
+            </div>
+
+            <div>
+                @if (!$document->is_for_export)
+                    <span class="text-sm">Датум: {{ date('d-m-Y', strtotime($document->date)) }}</span>
+                @else
+                    <span class="text-sm">Date: {{ date('d-m-Y', strtotime($document->date)) }} </span>
+                @endif
+            </div>
+        </div>
+
+        <div class="border-b border-gray-300 pb-1 ">
+
+            {{-- Pravno Lice --}}
+            @if ($client->customer->customerType->id !== 1)
+                @if (!$document->is_for_export)
+                    <div>
+                        <span class="text-sm"><span class="text-xs text-gray-500">Фирма:
+                            </span>{{ $client->name }}</span>
+                    @else
+                        <span class="text-sm"><span class="text-xs text-gray-500">Company: </span> {{ $client->name }}
+                        </span>
+                    </div>
+                @endif
             @endif
+
+            {{-- Fizicko Lice --}}
+            @if ($client->customer->customerType->id == 1)
+                @if (!$document->is_for_export)
+                    <div>
+                        <span class="text-sm"><span class="text-xs text-gray-500">Име и Презиме:
+                            </span>{{ $client->name }}</span>
+                    @else
+                        <span class="text-sm"><span class="text-xs text-gray-500">First and Last Name: </span>
+                            {{ $client->name }}
+                        </span>
+                    </div>
+                @endif
+            @endif
+        </div>
+        </div>
+        <div class="border-b border-gray-300  flex w-full gap-2 ">
+            <div class="w-[33%] border-x border-gray-300">
+                @if ($document->is_for_export)
+                    <p class="text-sm"><span class="text-xs text-gray-500">Address:
+                        </span>{{ $client->address }}</p>
+                    <p class="text-sm ms-11">{{ $client->place->zip }} - {{ $client->place->place }}</p>
+                    <p class="text-sm ms-11">{{ $client->place->country->name }}</p>
+                @else
+                    <p class="text-sm"><span class="text-xs text-gray-500">Адреса:
+                        </span>{{ $client->address }}</p>
+                    <p class="text-sm ms-11">{{ $client->place->zip }} - {{ $client->place->place }}</p>
+                    <p class="text-sm ms-11">{{ $convertedCountryClient }}</p>
+                @endif
+            </div>
+            <div class="w-[33%]  border-gray-300">
+                @if ($document->is_for_export)
+                    <p class="text-sm"><span class="text-xs text-gray-500">Delivery:
+                        </span></p>
+                    <p class="text-sm ms-11">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</p>
+                @else
+                    <p class="text-sm"><span class="text-xs text-gray-500">Испорака:
+                        </span>{{ $client->address }}</p>
+                        <p class="text-sm ms-11">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</p>
+                @endif
+            </div>
+
+            <div class="w-[33%] border-x border-gray-300">
+                @if ($document->is_for_export)
+                    <p class="text-sm"><span class="text-xs text-gray-500">Delivery:
+                        </span></p>
+                    <p class="text-sm ms-11">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</p>
+                @else
+                    <p class="text-sm"><span class="text-xs text-gray-500">Испорака:
+                        </span>{{ $client->address }}</p>
+                        <p class="text-sm ms-11">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</p>
+                @endif
+            </div>
 
         </div>
     </main>

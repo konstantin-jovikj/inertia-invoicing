@@ -8,10 +8,11 @@ if (!function_exists('latinToCyrillic')) {
             'Kj' => 'Ќ',
             'KJ' => 'Ќ',
             'R.N.Macedonia' => 'Р.С.Македонија',
-            'Понуда' => 'Offer',
-            'Про-Фактура' => 'Proforma-Invoice',
-            'Фактура' => 'Invoice',
-            'Пакинг-Листа' => 'Packing-List',
+            'Offer' => 'Понуда',
+            'Proforma-Invoice' => 'Про-Фактура',
+            'Invoice' => 'Фактура',
+            'Packing-List' => 'Пакинг-Листа',
+            'Warranty' => 'Гаранција',
         ];
 
         foreach ($multiCharMap as $latin => $cyrillic) {
