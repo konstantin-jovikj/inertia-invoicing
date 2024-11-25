@@ -21,7 +21,7 @@ class DocumentTypeSeeder extends Seeder
             array('type' => 'Фактура'),
             array('type' => 'Авансна Фактура'),
             array('type' => 'Испратница'),
-            array('type' => 'Пакинг Листа'),
+            array('type' => 'Пакинг-Листа'),
             array('type' => 'Каса Прими'),
             array('type' => 'Приемница'),
             array('type' => 'Товарен Лист'),

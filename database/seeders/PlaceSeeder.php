@@ -44,9 +44,9 @@ class PlaceSeeder extends Seeder
             ['country_id' => '28', 'place' => 'Cadoneghe (PD)', 'zip' => '35010'],
 
             // Macedonia
-            ['country_id' => '35', 'place' => 'Скопје', 'zip' => '1000'],
-            ['country_id' => '35', 'place' => 'Тетово', 'zip' => '1220'],
-            ['country_id' => '35', 'place' => 'Гостивар', 'zip' => '1230'],
+            ['country_id' => '34', 'place' => 'Скопје', 'zip' => '1000'],
+            ['country_id' => '34', 'place' => 'Тетово', 'zip' => '1220'],
+            ['country_id' => '34', 'place' => 'Gostivar', 'zip' => '1230'],
 
             // Other
             ['country_id' => '22', 'place' => 'Paris', 'zip' => '1600'],
