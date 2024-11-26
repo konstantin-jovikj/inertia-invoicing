@@ -21,6 +21,7 @@
                 @endif
             </div>
         </div>
+        <p class="text-small font-bold web">{{ $owner->web }}</p>
     </div>
     <div class="image-wrapper ">
         <img class="image-width" src="{{ $cert }}" alt="Cert">
@@ -28,7 +29,7 @@
     <div class="image-wrapper bank">
         <div id="bank_account">
             @if ($document->is_for_export)
-                <div class="flex flex-col">
+                <div class="">
                     @foreach ($owner->accounts as $account)
                         @if ($account->is_for_export)
                             <p class="text-medium font-bold">{{ $account->bank->name_lat }}</p>
@@ -41,14 +42,15 @@
             @endif
 
             @if (!$document->is_for_export)
-                <div class="flex flex-col">
+                <div class="">
                     @foreach ($owner->accounts as $account)
                         @if (!$account->is_for_export)
                             <p class="text-medium font-bold">{{ $account->bank->name_cyr }}</p>
                             <p class="text-medium">Жиро Сметка:{{ $account->giro_account }}</p>
                         @endif
                     @endforeach
-                    <p class="text-medium">Даночен Број:{{ $owner->tax_number }}</p>
+                    <hr class="line">
+                    <p class="text-medium font-bold">Даночен Број:{{ $owner->tax_number }}</p>
                 </div>
             @endif
         </div>
@@ -57,8 +59,24 @@
 </div>
 
 <style>
+    .web{
+        margin-top: 5px;
+        text-align: center;
+    }
+
+    p{
+        padding: 5px;
+        margin: 0;
+    }
+
+    .line p{
+        padding: 0;
+        margin: 0;
+    }
+
     .bank{
         padding-left: 15px;
+        line-height: 10px;
     }
     .flex-col{
         flex-direction: column;
@@ -75,6 +93,8 @@
         font-size: 9px;
         line-height: 5px;
         text-align: left;
+        padding: 3px;
+        margin: 0;
 
     }
 
@@ -107,7 +127,7 @@
         line-height: 20px;
         font-size: 9px;
         z-index: 1000;
-        padding-top: 10px;
+        padding-top: 20px;
         padding-left: 40px;
     }
 

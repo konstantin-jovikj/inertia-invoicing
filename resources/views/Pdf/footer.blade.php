@@ -1,7 +1,11 @@
 @pageBreak
 <div class="footer my-10 ">
-    Page @pageNumber of @totalPages
-   
+    @if ($document->is_for_export)
+        Page @pageNumber of @totalPages
+    @else
+        Страница @pageNumber од @totalPages
+    @endif
+
 </div>
 
 <style>

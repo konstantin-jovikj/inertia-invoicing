@@ -45,6 +45,8 @@ class PDFController extends Controller
         $client->load('accounts.bank', 'customer.customerType');
         $document->load('documentType');
 
+        // $products = Product::where('document_id', $document->id)->get();
+
         $convertedOwner = latinToCyrillic($owner->name);
         $convertedAddress = latinToCyrillic($owner->address);
         $convertedPlace = latinToCyrillic($owner->place->place);
@@ -53,14 +55,6 @@ class PDFController extends Controller
         $convertedCountryClient = latinToCyrillic($client->place->country->name);
         $convertedDocumentName = latinToCyrillic($document->documentType->type);
         $convertedCountryClient = latinToCyrillic($client->place->country->name);
-
-        // return pdf()->view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient'))
-        // ->footerView('Pdf.footer')
-        // ->name('doc.pdf');
-
-        // $logo = public_path('storage/' . $owner->logo);
-        
-        // dd($logo);
 
         return Pdf::view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient'))
                 ->withBrowsershot(function (Browsershot $browsershot) {
@@ -86,7 +80,9 @@ class PDFController extends Controller
 
                     
                 ])
-                ->footerView('Pdf.footer')
+                ->footerView('Pdf.footer',[
+                    'document' => $document,
+                ])
                 ->format(Format::A4)
                 ->name('invoice.pdf');
 
