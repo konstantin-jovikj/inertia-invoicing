@@ -124,6 +124,7 @@ class DocumentController extends Controller
             'date' => 'nullable|date',
             'advance_payment' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
+            'delivery' => 'nullable|max:255',
         ]);
         // $validatedData['user_id'] = auth()->user()->id;
 
@@ -204,6 +205,7 @@ class DocumentController extends Controller
             'date' => 'nullable|date',
             'advance_payment' => 'nullable|numeric',
             'discount' => 'nullable|numeric|min:0|max:100', // Ensure discount is a percentage
+            'delivery' => 'nullable|max:255',
         ]);
 
         // Refresh the document's tax relationship to get the latest tax_rate

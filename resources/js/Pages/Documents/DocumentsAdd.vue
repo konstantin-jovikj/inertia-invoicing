@@ -39,6 +39,7 @@ const form = useForm({
     drawing_no: "",
     advance_payment: 0,
     discount: 0,
+    delivery: "",
 });
 
 // Define computed property to get the currency symbol based on selected currency
@@ -397,8 +398,31 @@ const submit = () => {
                                                 >
                                             </div>
 
+                                            <!-- Delivery -->
+                                            <div
+                                                class=" mb-4  border-gray-200 md:col-span-2"
+                                            >
+                                                <InputLabel for="drawing_no"
+                                                    >Испорака</InputLabel
+                                                >
+
+                                                <TextInput
+                                                    v-model="form.delivery"
+                                                    type="text"
+                                                    id="delivery"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                />
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.delivery
+                                                    }}</span
+                                                >
+                                            </div>
+
                                             <!-- Vehicle -->
-                                            <div class="md:col-span-2">
+                                            <div class="md:col-span-1">
                                                 <InputLabel for="vehicle_id"
                                                     >Избери Возило</InputLabel
                                                 >
@@ -432,7 +456,7 @@ const submit = () => {
                                             </div>
 
                                             <!-- Driver -->
-                                            <div class="md:col-span-2">
+                                            <div class="md:col-span-1">
                                                 <InputLabel for="driver_id"
                                                     >Избери Возач</InputLabel
                                                 >

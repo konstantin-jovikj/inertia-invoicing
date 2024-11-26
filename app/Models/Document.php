@@ -49,6 +49,7 @@ class Document extends Model
         'grand_total',
         'advanced_payment_base',
         'advanced_payment_tax',
+        'delivery',
     ];
 
     // protected $casts = [

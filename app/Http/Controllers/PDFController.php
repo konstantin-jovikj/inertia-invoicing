@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\Document;
 use App\Models\Product;
+use App\Models\Document;
 use Illuminate\Http\Request;
 use Spatie\LaravelPdf\PdfBuilder;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\Browsershot\Browsershot;
+use Spatie\LaravelPdf\Enums\Format;
 use function Spatie\LaravelPdf\Support\pdf;
+
 
 class PDFController extends Controller
 {
@@ -51,7 +53,43 @@ class PDFController extends Controller
         $convertedCountryClient = latinToCyrillic($client->place->country->name);
         $convertedDocumentName = latinToCyrillic($document->documentType->type);
         $convertedCountryClient = latinToCyrillic($client->place->country->name);
-        return pdf()->view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient'))->name('doc.pdf');
-    }
 
+        // return pdf()->view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient'))
+        // ->footerView('Pdf.footer')
+        // ->name('doc.pdf');
+
+        // $logo = public_path('storage/' . $owner->logo);
+        
+        // dd($logo);
+
+        return Pdf::view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient'))
+                ->withBrowsershot(function (Browsershot $browsershot) {
+                    $browsershot->transparentBackground();
+                    $browsershot->writeOptionsToFile();
+                    
+                })
+                ->margins(35,0,14,0)
+                ->headerView('Pdf.header', 
+                [
+                    'owner' => $owner,
+                    'convertedOwner' => $convertedOwner,
+                    'document' => $document,
+                    'convertedAddress' => $convertedAddress,
+                    'convertedPlace' => $convertedPlace,
+                    'convertedCountry' => $convertedCountry,
+                    'convertedDocumentName' => $convertedDocumentName,
+                    'client' => $client,
+                    'convertedPlaceClient' => $convertedPlaceClient,
+                    'convertedCountryClient' => $convertedCountryClient,
+                    'logo' => 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->logo))),
+                    'cert' => 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->cert))),
+
+                    
+                ])
+                ->footerView('Pdf.footer')
+                ->format(Format::A4)
+                ->name('invoice.pdf');
+
+
+    }
 }

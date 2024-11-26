@@ -10,9 +10,9 @@
 
 </head>
 
-<body class="w-11/12 m-auto py-4 px-4">
+<body class="w-11/12 m-auto py-t px-4 pb-20">
     {{-- <h1 class="text-xl text-purple-800 font-bold">Document</h1> --}}
-    <header class="w-full flex gap-8">
+    {{-- <header class="w-full flex gap-8">
         <div>
             <div class="w-[230px]">
                 <img src="{{ asset('storage/' . $owner->logo) }}" alt="Logo">
@@ -70,7 +70,7 @@
             </div>
 
         </div>
-    </header>
+    </header> --}}
     <main>
         <div class="border-y-2 border-sky-700 mt-2 pb-1 font-bold flex flex-row justify-around">
             <div>
@@ -99,11 +99,11 @@
             @if ($client->customer->customerType->id !== 1)
                 @if (!$document->is_for_export)
                     <div>
-                        <span class="text-sm"><span class="text-xs text-gray-500">Фирма:
-                            </span>{{ $client->name }}</span>
+                        <span class="text-xs text-gray-600 italic">Фирма:</span>
+                        <span class="text-sm font-bold">{{ $client->name }}</span>
                     @else
-                        <span class="text-sm"><span class="text-xs text-gray-500">Company: </span> {{ $client->name }}
-                        </span>
+                        <span class="text-xs text-gray-600 italic">Company: </span>
+                        <span class="text-sm font-bold"> {{ $client->name }}</span>
                     </div>
                 @endif
             @endif
@@ -112,10 +112,10 @@
             @if ($client->customer->customerType->id == 1)
                 @if (!$document->is_for_export)
                     <div>
-                        <span class="text-sm"><span class="text-xs text-gray-500">Име и Презиме:
+                        <span class="text-sm"><span class="text-xs text-gray-600 italic">Име и Презиме:
                             </span>{{ $client->name }}</span>
                     @else
-                        <span class="text-sm"><span class="text-xs text-gray-500">First and Last Name: </span>
+                        <span class="text-sm"><span class="text-xs text-gray-600 italic">First and Last Name: </span>
                             {{ $client->name }}
                         </span>
                     </div>
@@ -123,44 +123,95 @@
             @endif
         </div>
         </div>
-        <div class="border-b border-gray-300  flex w-full gap-2 ">
-            <div class="w-[33%] border-x border-gray-300">
+        <div class="border-b border-gray-300   w-full  ">
+            <div class="">
                 @if ($document->is_for_export)
-                    <p class="text-sm"><span class="text-xs text-gray-500">Address:
-                        </span>{{ $client->address }}</p>
-                    <p class="text-sm ms-11">{{ $client->place->zip }} - {{ $client->place->place }}</p>
-                    <p class="text-sm ms-11">{{ $client->place->country->name }}</p>
+                    <span class="text-sm"><span class="text-xs text-gray-600 italic">Address:
+                        </span>{{ $client->address }}</span>
+                    <span class="text-sm ">-{{ $client->place->zip }} - {{ $client->place->place }}</span>
+                    <span class="text-sm ">-{{ $client->place->country->name }}</span>
                 @else
-                    <p class="text-sm"><span class="text-xs text-gray-500">Адреса:
-                        </span>{{ $client->address }}</p>
-                    <p class="text-sm ms-11">{{ $client->place->zip }} - {{ $client->place->place }}</p>
-                    <p class="text-sm ms-11">{{ $convertedCountryClient }}</p>
+                    <span class="text-sm"><span class="text-xs text-gray-600 italic">Адреса:
+                        </span>{{ $client->address }}</span>
+                    <span class="text-sm ">{{ $client->place->zip }} - {{ $client->place->place }}</span>
+                    <span class="text-sm ">{{ $client->place->country->name }}</span>
                 @endif
             </div>
-            <div class="w-[33%]  border-gray-300">
+        </div>
+        <div class="border-b border-gray-300   w-full  ">
+            <div class="">
                 @if ($document->is_for_export)
-                    <p class="text-sm"><span class="text-xs text-gray-500">Delivery:
-                        </span></p>
-                    <p class="text-sm ms-11">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</p>
-                @else
-                    <p class="text-sm"><span class="text-xs text-gray-500">Испорака:
-                        </span>{{ $client->address }}</p>
-                        <p class="text-sm ms-11">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</p>
+                    <span class="text-sm"><span class="text-xs text-gray-600 italic">Paritet / Delivery / INCOTERMS:
+                        </span></span>
+                    <span class="text-sm ">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</span>
                 @endif
             </div>
+        </div>
+        <div class="border-b border-gray-300   w-full  ">
+            <div class="">
+                @if ($document->is_for_export)
+                    <span class="text-sm"><span class="text-xs text-gray-600 italic">Isporaka:
+                        </span></span>
+                    <span class="text-sm ">{{ $document->delivery }}</span>
+                @else
+                    <span class="text-xs text-gray-600 italic">Испорака:</span>
+                    <span class="text-sm">{{ $document->delivery }}</span>
+                @endif
+            </div>
+        </div>
 
-            <div class="w-[33%] border-x border-gray-300">
+        <div class="border-b border-gray-300   w-full flex ">
+            <div class="w-[25%] border-e">
                 @if ($document->is_for_export)
-                    <p class="text-sm"><span class="text-xs text-gray-500">Delivery:
-                        </span></p>
-                    <p class="text-sm ms-11">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</p>
+                    <span class="text-sm"><span class="text-xs text-gray-600 italic">Currency:
+                        </span></span>
+                    <span class="text-sm ">{{ $document->curency->symbol }} - {{ $document->curency->code }}</span>
                 @else
-                    <p class="text-sm"><span class="text-xs text-gray-500">Испорака:
-                        </span>{{ $client->address }}</p>
-                        <p class="text-sm ms-11">{{ $document->incoterm->shortcut }} {{ $client->place->place }}</p>
+                    <span class="text-xs text-gray-600 italic">Валута:</span>
+                    <span class="text-sm">{{ $document->curency->symbol }} - {{ $document->curency->code }}</span>
                 @endif
             </div>
+            <div class="w-[25%] border-e">
+                @if ($document->is_for_export)
+                    <span class="text-sm"><span class="text-xs text-gray-600 italic">Bruto/Netto Kg:
+                        </span></span>
+                    <span class="text-sm ">{{ $document->total_weight }} Kg</span>
+                @else
+                    <span class="text-xs text-gray-600 italic ps-1">Маса / Тежина:</span>
+                    <span class="text-sm">{{ $document->total_weight }} Kg</span>
+                @endif
+            </div>
+        </div>
+        </div>
 
+
+        {{-- PRODUCTS TABLE --}}
+        <div>
+            <div class="w-full">
+                <table class="table-auto w-full border-collapse border border-gray-300 text-xs">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <th class="border border-gray-300 px-2 py-1 text-left leading-none">Column 1</th>
+                      <th class="border border-gray-300 px-2 py-1 text-left leading-none">Column 2</th>
+                      <th class="border border-gray-300 px-2 py-1 text-left leading-none">Column 3</th>
+                      <th class="border border-gray-300 px-2 py-1 text-left leading-none">Column 4</th>
+                      <th class="border border-gray-300 px-2 py-1 text-left leading-none">Column 5</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for ($i = 1; $i <= 100; $i++)                       
+                    <tr class="bg-white">
+                        <td class="border border-gray-300 px-2 py-1 leading-none">{{$i}}</td>
+                        <td class="border border-gray-300 px-2 py-1 leading-none">Data 2</td>
+                        <td class="border border-gray-300 px-2 py-1 leading-none">Data 3</td>
+                        <td class="border border-gray-300 px-2 py-1 leading-none">Data 4</td>
+                        <td class="border border-gray-300 px-2 py-1 leading-none">Data 5</td>
+                    </tr>
+                    @endfor
+                  </tbody>
+                </table>
+              </div>
+              
         </div>
     </main>
 </body>
