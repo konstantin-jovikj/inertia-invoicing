@@ -137,12 +137,36 @@ class ProductController extends Controller
         // Find the document using the provided document_id
         $document = Document::findOrFail($request->document_id);
 
+        // Reset document
+
+        $document->total = 0;
+        $document->total_volume = 0;
+        $document->total_weight = 0;
+        $document->discount_amount = 0;
+        $document->tax_amount = 0;
+        $document->total_with_tax_and_discount = 0;
+
+        $document->grand_total = 0;
+        $document->advanced_payment_base = 0;
+        $document->advanced_payment_tax = 0;
+
+
+
         // Update the document's total
-        $document->total += $totalPrice;
-        $document->total_volume += $productTotalVolume;
-        $document->total_weight += $productTotalWeight;
+        $docProducts = Product::where('document_id', $document->id)->get();
+        foreach ($docProducts as $docProduct){
+            $document->total += $docProduct->total_price;
+            $document->total_volume += $docProduct->product_total_volume;
+            $document->total_weight += $docProduct->product_total_weight;
+        }
+
+
+        // $document->total += $totalPrice;
+        // $document->total_volume += $productTotalVolume;
+        // $document->total_weight += $productTotalWeight;
         $document->discount_amount = $document->total * ($document->discount / 100);
-        $document->tax_amount = $document->total * ($document->tax->tax_rate / 100);
+        $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+
         $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
 
         $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
@@ -275,12 +299,22 @@ class ProductController extends Controller
         $document->advanced_payment_base = 0;
         $document->advanced_payment_tax = 0;
 
+        $docProducts = Product::where('document_id', $document->id)->get();
+        foreach ($docProducts as $docProduct){
+            $document->total += $docProduct->total_price;
+            $document->total_volume += $docProduct->product_total_volume;
+            $document->total_weight += $docProduct->product_total_weight;
+        }
+
         // Update the document's total
-        $document->total += $totalPrice;
-        $document->total_volume += $productTotalVolume;
-        $document->total_weight += $productTotalWeight;
+        // $document->total += $totalPrice;
+        // $document->total_volume += $productTotalVolume;
+        // $document->total_weight += $productTotalWeight;
         $document->discount_amount = $document->total * ($document->discount / 100);
-        $document->tax_amount = $document->total * ($document->tax->tax_rate / 100);
+        $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+
+        // dd($document->total, $document->discount_amount, $document->tax->tax_rate);
+
         $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
 
         $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
