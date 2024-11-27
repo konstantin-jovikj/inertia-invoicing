@@ -321,71 +321,91 @@ function convertToMacedonianWords(number) {
                                                         </td>
 
                                                         <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
-                                                           
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e flex"
                                                         >
                                                             {{
                                                                 product.description
                                                             }}
-                                                            -
-                                                            {{
-                                                                new Intl.NumberFormat(
-                                                                    "en-US",
-                                                                    {
-                                                                        minimumFractionDigits: 0,
-                                                                        maximumFractionDigits: 2,
-                                                                    },
-                                                                ).format(
-                                                                    product.length,
-                                                                )
-                                                            }}
-                                                            x
-                                                            {{
-                                                                new Intl.NumberFormat(
-                                                                    "en-US",
-                                                                    {
-                                                                        minimumFractionDigits: 0,
-                                                                        maximumFractionDigits: 2,
-                                                                    },
-                                                                ).format(
-                                                                    product.width,
-                                                                )
-                                                            }}
-                                                            x
-                                                            {{
-                                                                new Intl.NumberFormat(
-                                                                    "en-US",
-                                                                    {
-                                                                        minimumFractionDigits: 0,
-                                                                        maximumFractionDigits: 2,
-                                                                    },
-                                                                ).format(
-                                                                    product.height,
-                                                                )
-                                                            }}
-                                                            -
-                                                            <span
-                                                                class="font-bold text-green-900"
-                                                                v-if="product.manufacturer_id"
-                                                                >{{
-                                                                    product
-                                                                        .manufacturers
-                                                                        .name
-                                                                }}</span
+                                                            <div
+                                                                v-if="
+                                                                    product.length
+                                                                "
                                                             >
-                                                            -
-                                                            <span
-                                                                class="text-blue-800" 
-                                                                v-if="product.manufacturer_id"                                                         
+                                                                 <span> - </span> {{
+                                                                    new Intl.NumberFormat(
+                                                                        "en-US",
+                                                                        {
+                                                                            minimumFractionDigits: 0,
+                                                                            maximumFractionDigits: 2,
+                                                                        },
+                                                                    ).format(
+                                                                        product.length,
+                                                                    )
+                                                                }}
+                                                                x
+                                                            </div>
+                                                            <div
+                                                                v-if="
+                                                                    product.width
+                                                                "
                                                             >
                                                                 {{
-                                                                    product
-                                                                        .manufacturers
-                                                                        .place
-                                                                        .country
-                                                                        .name
+                                                                    new Intl.NumberFormat(
+                                                                        "en-US",
+                                                                        {
+                                                                            minimumFractionDigits: 0,
+                                                                            maximumFractionDigits: 2,
+                                                                        },
+                                                                    ).format(
+                                                                        product.width,
+                                                                    )
                                                                 }}
-                                                            </span>
+                                                                x
+                                                            </div>
+                                                            <div
+                                                                v-if="
+                                                                    product.height
+                                                                "
+                                                            >
+                                                                {{
+                                                                    new Intl.NumberFormat(
+                                                                        "en-US",
+                                                                        {
+                                                                            minimumFractionDigits: 0,
+                                                                            maximumFractionDigits: 2,
+                                                                        },
+                                                                    ).format(
+                                                                        product.height,
+                                                                    )
+                                                                }}
+                                                            </div>
+                                                            <div
+                                                                v-if="
+                                                                    product.manufacturer_id
+                                                                "
+                                                            >
+                                                                -
+                                                                <span
+                                                                    class="font-bold text-green-900"
+                                                                    >{{
+                                                                        product
+                                                                            .manufacturers
+                                                                            .name
+                                                                    }}</span
+                                                                >
+                                                                -
+                                                                <span
+                                                                    class="text-blue-800"
+                                                                >
+                                                                    {{
+                                                                        product
+                                                                            .manufacturers
+                                                                            .place
+                                                                            .country
+                                                                            .name
+                                                                    }}
+                                                                </span>
+                                                            </div>
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-left whitespace-nowrap border-e"
