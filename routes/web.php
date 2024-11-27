@@ -165,6 +165,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/documents/add/row/{document}/{product}', [DocumentController::class, 'addEmptyRow'])->name('documents.addrow');
 
+    // CONVERT DOCUMENTS
+    Route::post('/convert/document/{document}/{documentTypeNew}', action: [DocumentController::class, 'convert'])->name('documents.convert');
 
     // PRODUCTS
 

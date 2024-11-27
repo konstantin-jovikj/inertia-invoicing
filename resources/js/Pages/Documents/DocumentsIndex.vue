@@ -9,6 +9,8 @@ import DeleteIcon from "../../Components/DeleteIcon.vue";
 import AddIcon from "../../Components/AddIcon.vue";
 import TextInput from "../../Components/TextInput.vue";
 import InputLabel from "../../Components/InputLabel.vue";
+import { useForm } from "@inertiajs/vue3";
+import { latinToCyrillic } from "@/helpers/latinToCyrillic";
 
 const props = defineProps({
     documents: Object,
@@ -16,6 +18,17 @@ const props = defineProps({
     searchTerm: String,
     clients: Array,
 });
+
+const form = useForm({
+    desired_document_id: "",
+});
+
+// onMounted(() => {
+//     documents.value.data.forEach((doc) => {
+//         doc.desiredDocumentId = ''; // Initialize the desiredDocumentId
+//     });
+// });
+
 // const search = ref(props.searchTerm);
 const search = ref(props.searchTerm || "");
 const { props: pageProps } = usePage();
@@ -98,7 +111,6 @@ const getPaginationLabel = (label) => {
                         <div class="flex justify-between mb-4">
                             <h2 class="font-bold text-sky-800">Документи</h2>
                             <div class="flex gap-4">
-
                                 <!-- Export Selection Dropdown -->
                                 <select
                                     v-model="selectedExport"
@@ -164,7 +176,7 @@ const getPaginationLabel = (label) => {
                                         :key="type.id"
                                         :value="type.id"
                                     >
-                                        {{ type.type }}
+                                        {{ latinToCyrillic(type.type) }}
                                     </option>
                                 </select>
                             </div>
@@ -245,7 +257,7 @@ const getPaginationLabel = (label) => {
                                         {{ document.document_no }}
                                     </td>
                                     <td class="">
-                                        {{ document.document_type.type }}
+                                        {{ latinToCyrillic(document.document_type.type) }}
                                         <span class="text-gray-400">
                                             {{
                                                 document.is_for_export
@@ -288,7 +300,7 @@ const getPaginationLabel = (label) => {
                                     <td class="px-4">
                                         <div class="flex gap-2">
                                             <Link
-                                                class="hover:text-green-600 text-slate-300"
+                                                class="hover:text-green-600 text-slate-300 content-center"
                                                 :href="
                                                     route(
                                                         'products.create',
@@ -309,7 +321,9 @@ const getPaginationLabel = (label) => {
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
-                                                    deleteDocument(document.id)
+                                                        deleteDocument(
+                                                            document.id,
+                                                        )
                                                 "
                                             >
                                                 <DeleteIcon
@@ -321,6 +335,60 @@ const getPaginationLabel = (label) => {
                                                     }"
                                                 />
                                             </button>
+
+                                            <!-- Copy To Actions -->
+
+                                            <div class="w-full lg:w-1/2">
+                                                <form
+                                                    class="flex gap-2"
+                                                    @submit.prevent="
+                                                        form.post(
+                                                            `/convert/document/${document.id}/${document.desiredDocumentId}`,
+                                                            {
+                                                                onError: () =>
+                                                                    form.reset(),
+                                                            },
+                                                        )
+                                                    "
+                                                >
+                                                    <select
+                                                     v-model="document.desiredDocumentId"
+                                                        id="convert"
+                                                        class="w-full h-6 m-0 py-0 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                    >
+                                                        <option
+                                                            value=""
+                                                            disabled
+                                                        >
+                                                            Направи...
+                                                        </option>
+                                                        <option
+                                                            v-for="documentType in documentTypes"
+                                                            :key="
+                                                                documentType.id
+                                                            "
+                                                            :value="
+                                                                documentType.id
+                                                            "
+                                                        >
+                                                        {{ latinToCyrillic(documentType.type) }}
+                                                        </option>
+                                                    </select>
+                                                    <button
+                                                    :disabled="!document.desiredDocumentId"
+                                                        class="px-2 py-1 text-white rounded-md bg-slate-600 hover:bg-slate-800"
+                                                        type="submit"
+                                                    >
+                                                        <span
+                                                            v-if="
+                                                                form.processing
+                                                            "
+                                                            >Loading...</span
+                                                        >
+                                                        Napravi
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

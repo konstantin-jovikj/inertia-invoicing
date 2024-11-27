@@ -21,12 +21,12 @@ class DocumentTypeSeeder extends Seeder
             array('type' => 'Invoice'),
             array('type' => 'Avansna Faktura'),
             array('type' => 'Ispratnica'),
-            array('type' => 'Packing-List'),
+            // array('type' => 'Packing-List'),
             array('type' => 'Kasa-Primi'),
             array('type' => 'Priemnica'),
             array('type' => 'Tovaren List'),
             array('type' => 'Paten Nalog'),
-            array('type' => 'Warranty'),
+            // array('type' => 'Warranty'),
 
         );
 

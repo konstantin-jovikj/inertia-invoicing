@@ -295,4 +295,76 @@ class DocumentController extends Controller
         ->with('message', 'Empty Row inserted successfully!');
     }
 
+    public function convert(Document $document, DocumentType $documentTypeNew){
+        // dd($document, $documentTypeNew);
+
+        $products = Product::where('document_id', $document->id)->get();
+
+
+        $documentData = ([
+            'user_id' => $document->user_id,
+            'owner_id' => $document->owner_id,
+            'client_id'=> $document->client_id,
+            'document_type_id' => $documentTypeNew->id,
+            'vehicle_id'=> $document->vehicle_id,
+            'driver_id'=> $document->driver_id,
+            'curency_id'=> $document->curency_id,
+            'incoterm_id'=> $document->incoterm_id,
+            'tax_id'=> $document->tax_id,
+            'term_id'=> $document->term_id,
+            'is_translation'=> $document->is_translation,
+            'is_for_export'=> $document->is_for_export,
+            'document_no'=> $document->document_no,
+            'date'=> $document->date,
+            'drawing_no'=> $document->drawing_no,
+            'advance_payment'=> $document->advance_payment,
+            'discount'=> $document->discount,
+            'total'=> $document->total,
+            'total_with_tax_and_discount'=> $document->total_with_tax_and_discount,
+            'total_volume'=> $document->total_volume,
+            'total_weight'=> $document->total_weight,
+            'tax_amount'=> $document->tax_amount,
+            'discount_amount'=> $document->discount_amount,
+            'grand_total'=> $document->grand_total,
+            'advanced_payment_base'=> $document->advanced_payment_base,
+            'advanced_payment_tax'=> $document->advanced_payment_tax,
+            'delivery'=> $document->delivery,
+        ]);
+
+        $convertedDocument = Document::create($documentData);
+
+        foreach($products as $product){
+            $productData = ([
+                'temperature_id' => $product->temperature_id,
+                'refrigerant_id'=> $product->refrigerant_id,
+                'voltage_id'=> $product->voltage_id,
+                'manufacturer_id'=> $product->manufacturer_id,
+                'category_id'=> $product->category_id,
+                'document_id'=> $convertedDocument->id,
+                'model_id'=> $product->model_id,
+                'product_code'=> $product->product_code,
+                'serial_no'=> $product->serial_no,
+                'description'=> $product->description,
+                'length'=> $product->length,
+                'width'=> $product->width,
+                'height'=> $product->height,
+                'weight'=> $product->weight,
+                'qty'=> $product->qty,
+                'single_price'=> $product->single_price,
+                'total_price'=> $product->total_price,
+                'product_total_volume'=> $product->product_total_volume,
+                'product_total_weight'=> $product->product_total_weight,
+                'hfc_qty'=> $product->hfc_qty,
+                'co2'=> $product->co2,
+                'power'=> $product->power,
+                'current'=> $product->current,
+            ]);
+
+            $convertedDocumentProducts = Product::create($productData);
+
+        }
+
+        return redirect()->route('document.index');
+    }
+
 }

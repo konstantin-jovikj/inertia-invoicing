@@ -43,7 +43,7 @@ const websiteDomain = computed(() => {
         const url = new URL(
             props.company.web.startsWith("http")
                 ? props.company.web
-                : `http://${props.company.web}`
+                : `http://${props.company.web}`,
         );
         return {
             href: url.href, // Complete URL with protocol
@@ -70,7 +70,7 @@ const toggleActive = (id) => {
             onError: (errors) => {
                 console.error("Error toggling active status:", errors);
             },
-        }
+        },
     );
 };
 
@@ -100,7 +100,9 @@ const deleteAccount = (id) => {
                 >
                     {{ flashMessage }}
                 </div>
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div
+                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg border-red-600 border-2"
+                >
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
                             <h2 class="px-6 text-sky-800">
@@ -119,7 +121,7 @@ const deleteAccount = (id) => {
                                             :href="
                                                 route(
                                                     'company.edit',
-                                                    company.id
+                                                    company.id,
                                                 )
                                             "
                                         >
@@ -178,31 +180,30 @@ const deleteAccount = (id) => {
                                     </p>
                                 </div>
                                 <hr class="my-4" />
-                                <div class="flex items-center justify-between px-6 mb-4 bg-slate-100">
-                                    <span
-                                        class="text-lg font-bolder "
-                                    >
+                                <div
+                                    class="flex items-center justify-between px-6 mb-4 bg-slate-100"
+                                >
+                                    <span class="text-lg font-bolder">
                                         Контакти
                                     </span>
                                     <div>
                                         <Link
-                                                class="px-1 hover:text-orange-600 text-slate-300"
-                                                :href="
-                                                    route(
-                                                        'contacts.create',
-                                                        company.id
-                                                    )
-                                                "
-                                            >
-                                                <AddContactIcon
-                                                    v-tippy="{
-                                                        content:
-                                                            'Додај Контакт',
-                                                        arrow: true,
-                                                        theme: 'light',
-                                                    }"
-                                                />
-                                            </Link>
+                                            class="px-1 hover:text-orange-600 text-slate-300"
+                                            :href="
+                                                route(
+                                                    'contacts.create',
+                                                    company.id,
+                                                )
+                                            "
+                                        >
+                                            <AddContactIcon
+                                                v-tippy="{
+                                                    content: 'Додај Контакт',
+                                                    arrow: true,
+                                                    theme: 'light',
+                                                }"
+                                            />
+                                        </Link>
                                     </div>
                                 </div>
                                 <div class="px-6">
@@ -238,13 +239,15 @@ const deleteAccount = (id) => {
                                                         }}</span
                                                     >
                                                 </div>
-                                                <div class="flex justify-end gap-2">
+                                                <div
+                                                    class="flex justify-end gap-2"
+                                                >
                                                     <Link
                                                         class="hover:text-green-600 text-slate-300"
                                                         :href="
                                                             route(
                                                                 'contact.edit',
-                                                                contact.id
+                                                                contact.id,
                                                             )
                                                         "
                                                     >
@@ -263,7 +266,7 @@ const deleteAccount = (id) => {
                                                         @click="
                                                             () =>
                                                                 deleteContact(
-                                                                    contact.id
+                                                                    contact.id,
                                                                 )
                                                         "
                                                     >
@@ -388,7 +391,7 @@ const deleteAccount = (id) => {
                                                                     "
                                                                     @change="
                                                                         toggleActive(
-                                                                            account.id
+                                                                            account.id,
                                                                         )
                                                                     "
                                                                     class="h-5 transition-colors duration-300 rounded-full appearance-none cursor-pointer peer w-11 bg-slate-100 checked:bg-emerald-700"
@@ -433,7 +436,7 @@ const deleteAccount = (id) => {
                                                                 :href="
                                                                     route(
                                                                         'account.edit',
-                                                                        account.id
+                                                                        account.id,
                                                                     )
                                                                 "
                                                             >
@@ -452,7 +455,7 @@ const deleteAccount = (id) => {
                                                                 @click="
                                                                     () =>
                                                                         deleteAccount(
-                                                                            account.id
+                                                                            account.id,
                                                                         )
                                                                 "
                                                             >
@@ -473,6 +476,57 @@ const deleteAccount = (id) => {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="flex justify-between mb-4">
+                            <h2 class="p-6 text-sky-800">Документи</h2>
+                        </div>
+                        <div
+                            class="w-full p-4 border border-blue-500 rounded md:w-50"
+                        >
+                            <table
+                                class="min-w-full text-sm font-light text-center border-collapse text-surface border-e"
+                            >
+                                <thead
+                                    class="font-medium border-b border-neutral-200"
+                                >
+                                    <tr>
+                                        <th
+                                            scope="col"
+                                            class="px-2 py-1 text-gray-400"
+                                        >
+                                            Id
+                                        </th>
+                                        <th scope="col" class="px-2 py-1">
+                                            Бр
+                                        </th>
+                                        <th scope="col" class="px-2 py-1">
+                                            Опис
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr
+                                        class="border-b border-neutral-200 border-e"
+                                    >
+                                        <td
+                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                        >
+                                            1
+                                        </td>
+                                        <td
+                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                        >
+                                            2
+                                        </td>
+                                        <td
+                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                        >
+                                            3
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
