@@ -17,15 +17,15 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => 1,
-            'customer_id' => null, // We'll handle this in the seeder to make it autoincrement
-            'place_id' => $this->faker->numberBetween(1, 24),
-            'is_customer' => 1,
-            'name' => $this->faker->company,
-            'address' => $this->faker->address,
-            'tax_number' => $this->faker->unique()->numerify('MK########'),
-            'reg_number' => $this->faker->unique()->numerify('#####'),
-            'web' => $this->faker->url,
+            // 'user_id' => 1,
+            // 'customer_id' => null, // We'll handle this in the seeder to make it autoincrement
+            // 'place_id' => $this->faker->numberBetween(1, 24),
+            // 'is_customer' => 1,
+            // 'name' => $this->faker->company,
+            // 'address' => $this->faker->address,
+            // 'tax_number' => $this->faker->unique()->numerify('MK########'),
+            // 'reg_number' => $this->faker->unique()->numerify('#####'),
+            // 'web' => $this->faker->url,
         ];
     }
 }

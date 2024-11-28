@@ -25,6 +25,10 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('cert')->nullable();
             $table->string('web')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->text('notes')->nullable();
+            $table->string('mobile')->nullable();
 
 
             $table->timestamps();

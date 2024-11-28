@@ -42,8 +42,8 @@ class DatabaseSeeder extends Seeder
             TemperatureSeeder::class,
             VoltageSeeder::class,
             UserSeeder::class,
-            CustomerSeeder::class,
-            CompanySeeder::class,
+            // CustomerSeeder::class,
+            // CompanySeeder::class,
             ProductModelSeeder::class,
 
 

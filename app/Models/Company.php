@@ -25,6 +25,10 @@ class Company extends Model
         'is_customer',
         'address',
         'web',
+        'email',
+        'phone',
+        'notes',
+        'mobile',
 
     ];
 
