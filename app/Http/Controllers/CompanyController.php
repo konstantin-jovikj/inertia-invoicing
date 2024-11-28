@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Place;
 use App\Models\Company;
 use App\Models\Customer;
+use App\Models\Document;
+use Illuminate\Support\Arr;
+use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Arr;
 
 class CompanyController extends Controller
 {
@@ -102,13 +104,40 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Company $company)
+    public function show(Company $company, Request $request)
     {
+        $documentTypes = DocumentType::all(); // Fetch all document types for the dropdown
+        $clients = Company::where('is_customer', true)->get();
+
+        $documents = Document::with('documentType', 'company', 'curency')
+            ->when($request->type, function ($query) use ($request) {
+                // Apply type filter only if 'type' is provided
+                $query->where('document_type_id', $request->type);
+            })
+            ->when($request->year, function ($query) use ($request) {
+                // Apply year filter only if 'year' is provided
+                $query->whereYear('date', $request->year);
+            })
+            ->where('client_id', $company->id)
+            ->when($request->export, function ($query) use ($request) {
+                // Apply filter for 'is_for_export' if 'export' checkbox is checked
+                if ($request->export == 'извозни') {
+                    $query->where('is_for_export', true);
+                } elseif ($request->export == 'домашни') {
+                    // If export is 'false', ensure only documents with is_for_export = false are shown
+                    $query->where('is_for_export', false);
+                }
+            })
+            ->paginate(20)
+            ->withQueryString(); 
         // Eager load the place and place->country relationship
         $company->load('place.country', 'contacts', 'accounts.bank');
         //  dd($company);
         return inertia('Companies/CompanyShow', [
             'company' => $company,
+             'documents' => $documents,
+            'documentTypes' => $documentTypes,
+            'clients' => $clients,
         ]);
     }
 

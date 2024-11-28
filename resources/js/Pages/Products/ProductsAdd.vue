@@ -229,11 +229,28 @@ function convertToMacedonianWords(number) {
                                         <span class="italic text-md"
                                             >Kлиент:
                                         </span>
-                                        <span
+                                        <!-- <span
+                                            class="text-lg font-bold text-black"
+                                        >
+                                            {{ props.document.company.name }}
+                                        </span> -->
+
+                                        <Link
+                                                class="hover:text-green-600 text-slate-300 content-center"
+                                                :href="
+                                                    route(
+                                                        'company.show',
+                                                        props.document.company.id,
+                                                    )
+                                                "
+                                                
+                                            ><span
                                             class="text-lg font-bold text-black"
                                         >
                                             {{ props.document.company.name }}
                                         </span>
+                                                
+                                            </Link>
                                     </div>
                                     <!-- <hr /> -->
                                 </div>

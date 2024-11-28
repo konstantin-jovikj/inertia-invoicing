@@ -6,10 +6,31 @@ import DeleteIcon from "../../Components/DeleteIcon.vue";
 import AddAccountIcon from "@/Components/AddAccountIcon.vue";
 import AddContactIcon from "@/Components/AddContactIcon.vue";
 import { computed, ref, watch, onMounted } from "vue";
+import { latinToCyrillic } from "@/helpers/latinToCyrillic";
+import { useForm } from "@inertiajs/vue3";
+import { debounce } from "lodash";
+import { Bar } from "vue-chartjs";
+import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+} from "chart.js";
 
 const props = defineProps({
     company: Object,
     searchTerm: String,
+    documents: Object,
+    documentTypes: Array,
+    searchTerm: String,
+    clients: Array,
+});
+
+const form = useForm({
+    desired_document_id: "",
 });
 
 const companyContacts = props.company.contacts;
@@ -85,6 +106,98 @@ const deleteAccount = (id) => {
         });
     }
 };
+
+const getPaginationLabel = (label) => {
+    // Handle special cases for prev/next arrows
+    if (label === "&laquo; Previous") return "<<";
+    if (label === "Next &raquo;") return ">>";
+    return label;
+};
+
+// const search = ref(props.searchTerm);
+const search = ref(props.searchTerm || "");
+
+// Generate an array of years from 2020 to 2040
+const years = Array.from({ length: 31 }, (_, i) => 2020 + i);
+const exportStates = ["извозни", "домашни"];
+
+const selectedYear = ref(""); // Year selected by the user
+const selectedType = ref(""); // Document type selected by the user
+// Client  selected by the user selectedExport
+const selectedExport = ref("");
+
+// Watch the selected year and type, and trigger re-fetch when either changes
+watch(
+    [selectedYear, selectedType, selectedExport],
+    debounce((newValues) => {
+        const [newYear, newType, newExport] = newValues;
+        const companyId = props.company.id;
+        // Trigger re-fetch of documents with the selected year and type
+        router.get(
+            `/companies/show/${companyId}`,
+            {
+                year: newYear,
+                type: newType,
+                export: newExport,
+            },
+            {
+                preserveState: true,
+            },
+        );
+    }, 200),
+);
+
+// CHARTS
+
+// Register Chart.js components
+ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+);
+
+// Compute dataset data
+const datasetData = computed(() => {
+  return years.map(year => {
+    // Count documents of type "Invoice" for the specific year
+    return props.documents.data.filter(
+      document =>
+        document.document_type?.type === "Invoice" &&
+        new Date(document.date).getFullYear() === year
+    ).length;
+  });
+});
+
+// Define chart data
+const chartData = ref({
+  labels: years, // Use the years array for labels
+  datasets: [
+    {
+      label: "Фактури на Годишно Ниво",
+      data: datasetData.value,
+      backgroundColor: "rgba(75, 192, 192, 0.6)", // Example bar color
+      borderColor: "rgba(75, 192, 192, 1)", // Example border color
+      borderWidth: 1
+    }
+  ]
+});
+
+// Chart options
+const chartOptions = ref({
+  responsive: true,
+  scales: {
+    y: {
+      beginAtZero: true
+    }
+  }
+});
+
+// const chartOptions = ref({
+//     responsive: true,
+// });
 </script>
 
 <template>
@@ -100,11 +213,335 @@ const deleteAccount = (id) => {
                 >
                     {{ flashMessage }}
                 </div>
-                <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg border-red-600 border-2"
-                >
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <div class="flex justify-between mb-4">
+                        <div
+                            class="w-full p-4 border-t-4 border-emerald-600 rounded md:w-50 mb-4"
+                        >
+                            <div class="flex justify-between mb-4">
+                                <h2 class="text-sky-800">Документи</h2>
+                                <div class="flex gap-4">
+                                    <!-- Export Selection Dropdown -->
+                                    <select
+                                        v-model="selectedExport"
+                                        as="select"
+                                        id="client"
+                                        class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
+                                    >
+                                        <option value="" selected>
+                                            Извоз...
+                                        </option>
+                                        <option
+                                            v-for="exportState in exportStates"
+                                            :key="exportState"
+                                            :value="exportState"
+                                        >
+                                            {{ exportState }}
+                                        </option>
+                                    </select>
+
+                                    <!-- Client Selection Dropdown -->
+                                    <!-- <select
+                                    v-model="selectedClient"
+                                    as="select"
+                                    id="client"
+                                    class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
+                                >
+                                    <option value="" selected>Клиент...</option>
+                                    <option
+                                        v-for="client in clients"
+                                        :key="client"
+                                        :value="client.id"
+                                    >
+                                        {{ client.name }}
+                                    </option>
+                                </select> -->
+
+                                    <!-- Year Selection Dropdown -->
+                                    <select
+                                        v-model="selectedYear"
+                                        as="select"
+                                        id="year"
+                                        class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
+                                    >
+                                        <option value="" selected>
+                                            Година...
+                                        </option>
+                                        <option
+                                            v-for="year in years"
+                                            :key="year"
+                                            :value="year"
+                                        >
+                                            {{ year }}
+                                        </option>
+                                    </select>
+
+                                    <select
+                                        v-model="selectedType"
+                                        as="select"
+                                        id="type"
+                                        class="h-10 px-8 mt-1 text-xs border rounded bg-gray-50 w-[150px]"
+                                    >
+                                        <option value="" selected>
+                                            Тип на Документ...
+                                        </option>
+                                        <option
+                                            v-for="type in documentTypes"
+                                            :key="type.id"
+                                            :value="type.id"
+                                        >
+                                            {{ latinToCyrillic(type.type) }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table
+                            class="min-w-full divide-y divide-gray-200 shadow table-auto sm:rounded-lg"
+                        >
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
+                                        index
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
+                                        Бр
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
+                                        Бр на Документ
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
+                                        Тип на Документ
+                                    </th>
+
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
+                                        Датум
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-center text-white uppercase bg-sky-700"
+                                    >
+                                        Износ
+                                    </th>
+
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    >
+                                        Акција
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody
+                                class="text-xs bg-white divide-y divide-gray-200"
+                            >
+                                <tr
+                                    class="hover:bg-slate-100"
+                                    v-for="(document, index) in documents.data"
+                                    :key="document.id"
+                                >
+                                    <td class="text-xs text-slate-300">
+                                        {{ document.id }} {{}}
+                                    </td>
+                                    <td class="">
+                                        {{ documents.from + index }}
+                                    </td>
+                                    <td class="">
+                                        {{ document.document_no }}
+                                    </td>
+                                    <td class="">
+                                        {{
+                                            latinToCyrillic(
+                                                document.document_type.type,
+                                            )
+                                        }}
+                                        <span class="text-gray-400">
+                                            {{
+                                                document.is_for_export
+                                                    ? "-за извоз"
+                                                    : ""
+                                            }}
+                                        </span>
+                                    </td>
+
+                                    <td class="">
+                                        {{
+                                            new Date(
+                                                document.date,
+                                            ).toLocaleDateString("en-GB")
+                                        }}
+                                    </td>
+
+                                    <td class="px-2 text-right">
+                                        <span
+                                            class="pr-2 font-bold text-red-600"
+                                        >
+                                            {{
+                                                new Intl.NumberFormat("en-US", {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2,
+                                                }).format(document.total)
+                                            }}
+                                        </span>
+                                        <span class="px-1 text-left">
+                                            {{
+                                                document.curency_id
+                                                    ? document.curency.symbol
+                                                    : ""
+                                            }}
+                                        </span>
+                                    </td>
+
+                                    <td class="px-4">
+                                        <div class="flex gap-2">
+                                            <Link
+                                                class="hover:text-green-600 text-slate-300 content-center"
+                                                :href="
+                                                    route(
+                                                        'products.create',
+                                                        document.id,
+                                                    )
+                                                "
+                                            >
+                                                <EditIcon
+                                                    v-tippy="{
+                                                        content: `Измени ${document.document_type.type}`,
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"
+                                                />
+                                            </Link>
+
+                                            <button
+                                                class="hover:text-red-700 text-slate-300"
+                                                @click="
+                                                    () =>
+                                                        deleteDocument(
+                                                            document.id,
+                                                        )
+                                                "
+                                            >
+                                                <DeleteIcon
+                                                    v-tippy="{
+                                                        content:
+                                                            'Избриши Банка',
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"
+                                                />
+                                            </button>
+
+                                            <!-- Copy To Actions -->
+
+                                            <div class="w-full lg:w-1/2">
+                                                <form
+                                                    class="flex gap-2"
+                                                    @submit.prevent="
+                                                        form.post(
+                                                            `/convert/document/${document.id}/${document.desiredDocumentId}`,
+                                                            {
+                                                                onError: () =>
+                                                                    form.reset(),
+                                                            },
+                                                        )
+                                                    "
+                                                >
+                                                    <select
+                                                        v-model="
+                                                            document.desiredDocumentId
+                                                        "
+                                                        id="convert"
+                                                        class="w-full h-6 m-0 py-0 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                    >
+                                                        <option
+                                                            value=""
+                                                            disabled
+                                                        >
+                                                            Направи...
+                                                        </option>
+                                                        <option
+                                                            v-for="documentType in documentTypes"
+                                                            :key="
+                                                                documentType.id
+                                                            "
+                                                            :value="
+                                                                documentType.id
+                                                            "
+                                                        >
+                                                            {{
+                                                                latinToCyrillic(
+                                                                    documentType.type,
+                                                                )
+                                                            }}
+                                                        </option>
+                                                    </select>
+                                                    <button
+                                                        :disabled="
+                                                            !document.desiredDocumentId
+                                                        "
+                                                        class="px-2 py-1 text-white rounded-md bg-slate-600 hover:bg-slate-800"
+                                                        type="submit"
+                                                    >
+                                                        <!-- <span
+                                                            v-if="
+                                                                form.processing
+                                                            "
+                                                            >Loading...</span
+                                                        > -->
+                                                        Napravi
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- Pagination Links -->
+                        <div
+                            v-if="documents && documents.links"
+                            class="flex flex-col lg:flex-row lg:justify-around"
+                        >
+                            <div class="mt-2">
+                                <Link
+                                    v-for="link in documents.links"
+                                    :key="link.label"
+                                    :href="link.url || '#'"
+                                    class="p-1 mx-1 hover:bg-sky-200"
+                                    :class="{
+                                        'text-slate-300': !link.url,
+                                        'text-sky-500 font-bold': link.active,
+                                    }"
+                                >
+                                    {{ getPaginationLabel(link.label) }}
+                                </Link>
+                            </div>
+
+                            <p class="mt-3 text-xs text-gray-500">
+                                Прикажани се од {{ documents.from }} до
+                                {{ documents.to }} од вкупно
+                                {{ documents.total }} записи
+                            </p>
+                        </div>
+                        <div
+                            class="flex justify-between mb-4 border-t-4 border-emerald-600 mt-8 pt-4"
+                        >
                             <h2 class="px-6 text-sky-800">
                                 Детални информации
                             </h2>
@@ -311,6 +748,7 @@ const deleteAccount = (id) => {
                                 </div>
                             </div>
                             <div
+                                v-if="!company.is_customer"
                                 class="w-full p-4 border border-blue-500 rounded md:w-50"
                             >
                                 <Link
@@ -476,57 +914,25 @@ const deleteAccount = (id) => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex justify-between mb-4">
-                            <h2 class="p-6 text-sky-800">Документи</h2>
-                        </div>
-                        <div
-                            class="w-full p-4 border border-blue-500 rounded md:w-50"
-                        >
-                            <table
-                                class="min-w-full text-sm font-light text-center border-collapse text-surface border-e"
+                            <div
+                                v-if="company.is_customer"
+                                class="w-full p-4 border border-blue-500 rounded md:w-50"
                             >
-                                <thead
-                                    class="font-medium border-b border-neutral-200"
+                                <h2 class="mt-4 font-bold">Анализи</h2>
+                                <hr />
+                                <!-- Analizi -->
+                                <div
+                                    class="container p-2 mx-auto sm:p-4 dark:text-gray-800"
                                 >
-                                    <tr>
-                                        <th
-                                            scope="col"
-                                            class="px-2 py-1 text-gray-400"
-                                        >
-                                            Id
-                                        </th>
-                                        <th scope="col" class="px-2 py-1">
-                                            Бр
-                                        </th>
-                                        <th scope="col" class="px-2 py-1">
-                                            Опис
-                                        </th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <tr
-                                        class="border-b border-neutral-200 border-e"
-                                    >
-                                        <td
-                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
-                                        >
-                                            1
-                                        </td>
-                                        <td
-                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
-                                        >
-                                            2
-                                        </td>
-                                        <td
-                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
-                                        >
-                                            3
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    <div class="overflow-x-auto">
+                                        <Bar
+                                            id="my-chart-id"
+                                            :options="chartOptions"
+                                            :data="chartData"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
