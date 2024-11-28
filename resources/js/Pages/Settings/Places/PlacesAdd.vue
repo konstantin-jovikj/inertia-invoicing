@@ -82,44 +82,44 @@ console.log("Countries:", props.countries);
                                                 <span
                                                     class="text-xs italic text-red-600"
                                                     >{{
-                                                        form.errors.name
+                                                        form.errors.country_id
                                                     }}</span
                                                 >
                                             </div>
 
                                             <div class="md:col-span-3" v-if="form.country_id">
-                                                <InputLabel for="name"
+                                                <InputLabel for="place"
                                                     >Име</InputLabel
                                                 >
 
                                                 <TextInput
                                                     v-model="form.place"
                                                     type="text"
-                                                    id="name"
+                                                    id="place"
                                                     class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
                                                 />
                                                 <span
                                                     class="text-xs italic text-red-600"
                                                     >{{
-                                                        form.errors.name
+                                                        form.errors.place
                                                     }}</span
                                                 >
                                             </div>
 
                                             <div class="md:col-span-2" v-if="form.country_id">
-                                                <InputLabel for="code"
-                                                    >Код</InputLabel
+                                                <InputLabel for="zio"
+                                                    >Поштенски Бр / ZIP</InputLabel
                                                 >
                                                 <TextInput
                                                     v-model="form.zip"
                                                     type="text"
-                                                    id="code"
+                                                    id="zip"
                                                     class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
                                                 />
                                                 <span
                                                     class="text-xs italic text-red-600"
                                                     >{{
-                                                        form.errors.code
+                                                        form.errors.zip
                                                     }}</span
                                                 >
                                             </div>

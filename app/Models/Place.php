@@ -12,7 +12,7 @@ class Place extends Model
     protected $fillable = [
         'zip',
         'place',
-        'country_id'
+        'country_id',
     ];
 
     public function country(){

@@ -68,6 +68,10 @@ class CompanyController extends Controller
             'cert' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional, adjust size limit as needed
             'web' => 'nullable',
             'address' => 'nullable|string|max:255',
+            'phone'=> "nullable",
+            'mobile' => "nullable",
+            'email' => "nullable",
+            'notes' => "nullable",
         ]);
 
         // Set is_customer to true if customer_id is provided, else false
@@ -169,6 +173,10 @@ class CompanyController extends Controller
             'tax_number' => ['nullable', 'string', 'max:50'],
             'web' => ['nullable'],
             'address' => ['nullable', 'string', 'max:255'],
+            'phone'=> ['nullable'],
+            'mobile' => ['nullable'],
+            'email' => ['nullable'],
+            'notes' => ['nullable'],
         ]);
 
         $validated['customer_id'] = $company->customer_id;
