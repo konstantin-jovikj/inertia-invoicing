@@ -7,6 +7,7 @@ import { debounce } from "lodash";
 import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
 import AddIcon from "../../Components/AddIcon.vue";
+import DocumentNewIcon from "@/Components/DocumentNewIcon.vue";
 import TextInput from "../../Components/TextInput.vue";
 import InputLabel from "../../Components/InputLabel.vue";
 import { useForm } from "@inertiajs/vue3";
@@ -253,10 +254,10 @@ const getPaginationLabel = (label) => {
                                     <td class="">
                                         {{ documents.from + index }}
                                     </td>
-                                    <td class="">
+                                    <td class="text-base font-semibold text-emerald-700">
                                         {{ document.document_no }}
                                     </td>
-                                    <td class="">
+                                    <td class=" text-base font-semibold">
                                         {{ latinToCyrillic(document.document_type.type) }}
                                         <span class="text-gray-400">
                                             {{
@@ -266,10 +267,10 @@ const getPaginationLabel = (label) => {
                                             }}
                                         </span>
                                     </td>
-                                    <td class="">
+                                    <td class="text-base font-semibold text-sky-600">
                                         {{ document.company.name }}
                                     </td>
-                                    <td class="">
+                                    <td class="text-base font-semibold text-purple-600">
                                         {{
                                             new Date(
                                                 document.date,
@@ -279,7 +280,7 @@ const getPaginationLabel = (label) => {
 
                                     <td class="px-2 text-right">
                                         <span
-                                            class="pr-2 font-bold text-red-600"
+                                            class="pr-2 text-base font-semibold text-red-600"
                                         >
                                             {{
                                                 new Intl.NumberFormat("en-US", {
@@ -288,7 +289,7 @@ const getPaginationLabel = (label) => {
                                                 }).format(document.total)
                                             }}
                                         </span>
-                                        <span class="px-1 text-left">
+                                        <span class="px-1 text-left text-base font-semibold text-red-600">
                                             {{
                                                 document.curency_id
                                                     ? document.curency.symbol
@@ -374,18 +375,21 @@ const getPaginationLabel = (label) => {
                                                         {{ latinToCyrillic(documentType.type) }}
                                                         </option>
                                                     </select>
+
+                                                    
                                                     <button
                                                     :disabled="!document.desiredDocumentId"
-                                                        class="px-2 py-1 text-white rounded-md bg-slate-600 hover:bg-slate-800"
+                                                   
                                                         type="submit"
                                                     >
+                                                        
+                                                        <DocumentNewIcon  class="  hover:text-sky-800" />
                                                         <span
                                                             v-if="
                                                                 form.processing
                                                             "
                                                             >Loading...</span
                                                         >
-                                                        Napravi
                                                     </button>
                                                 </form>
                                             </div>

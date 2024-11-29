@@ -5,6 +5,7 @@ import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
 import AddAccountIcon from "@/Components/AddAccountIcon.vue";
 import AddContactIcon from "@/Components/AddContactIcon.vue";
+import DocumentNewIcon from "@/Components/DocumentNewIcon.vue";
 import { computed, ref, watch, onMounted } from "vue";
 import { latinToCyrillic } from "@/helpers/latinToCyrillic";
 import { useForm } from "@inertiajs/vue3";
@@ -492,19 +493,18 @@ const chartOptions = ref({
                                                         </option>
                                                     </select>
                                                     <button
-                                                        :disabled="
-                                                            !document.desiredDocumentId
-                                                        "
-                                                        class="px-2 py-1 text-white rounded-md bg-slate-600 hover:bg-slate-800"
+                                                    :disabled="!document.desiredDocumentId"
+                                                   
                                                         type="submit"
                                                     >
-                                                        <!-- <span
+                                                        
+                                                        <DocumentNewIcon  class="  hover:text-sky-800" />
+                                                        <span
                                                             v-if="
                                                                 form.processing
                                                             "
                                                             >Loading...</span
-                                                        > -->
-                                                        Napravi
+                                                        >
                                                     </button>
                                                 </form>
                                             </div>
