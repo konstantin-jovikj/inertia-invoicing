@@ -210,18 +210,30 @@
                                 @endif
                                 <td class="border border-gray-300 px-2 py-1 leading-none">
                                     {{ $product->description }}
+                                    @if ($product->length)
+                                        - {{ rtrim(rtrim(number_format($product->length, 2, '.', ','), '0'), '.') }}
+                                    @endif
+                                    @if ($product->width)
+                                    x {{rtrim(rtrim(number_format($product->width, 2, '.', ','), '0'), '.')}}
+                                    @endif
+                                    @if ($product->height)
+                                    x {{rtrim(rtrim(number_format($product->height, 2, '.', ','), '0'), '.')}}
+                                    @endif
+                                    @if ($product->manufacturers)
+                                    - <span class="font-bold">{{ $product->manufacturers->name }} - {{ $product->manufacturers->place->country->name}}</span> 
+                                    @endif
                                 </td>
                                 <td class="border border-gray-300 px-2 py-1 leading-none">
                                     @if ($showRowNumber)
                                         {{ $product->qty }}
                                     @endif
                                 </td>
-                                <td class="border border-gray-300 px-2 py-1 leading-none">
+                                <td class="border border-gray-300 px-2 py-1 leading-none text-right">
                                     @if ($showRowNumber && $product->single_price != 0)
                                         {{ number_format($product->single_price, 2, '.', ',') }}
                                     @endif
                                 </td>
-                                <td class="border border-gray-300 px-2 py-1 leading-none">
+                                <td class="border border-gray-300 px-2 py-1 leading-none text-right">
                                     @if ($showRowNumber && $product->total_price != 0)
                                         {{ number_format($product->total_price, 2, '.', ',') }}
                                     @endif
