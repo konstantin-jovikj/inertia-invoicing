@@ -13,6 +13,7 @@ use App\Models\Product;
 use App\Models\Vehicle;
 use App\Models\Incoterm;
 use App\Models\Declaration;
+use App\Models\PackingList;
 use App\Models\DocumentNote;
 use App\Models\DocumentType;
 use Illuminate\Database\Eloquent\Model;
@@ -117,4 +118,9 @@ class Document extends Model
     {
         return $this->belongsTo(Company::class, 'client_id');
     }
+
+    public function packingList()
+{
+    return $this->hasOne(PackingList::class);
+}
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\PDFController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
@@ -183,6 +184,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/product/warranty/{product}', [PDFController::class, 'createWarranty'])->name('warranty');
     Route::get('/document/print/{document}', [PDFController::class, 'printDocument'])->name('print.document');
+
+    //Packing List
+
+    Route::get('/packinglist/add/{document}', [PackingListController::class, 'create'])->name('packinglist.create');
+
 
 });
 

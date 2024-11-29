@@ -8,6 +8,7 @@ import DeleteIcon from "@/Components/DeleteIcon.vue";
 import AddContactIcon from "@/Components/AddContactIcon.vue";
 import AddRowIcon from "@/Components/AddRowIcon.vue";
 import EditIcon from "@/Components/EditIcon.vue";
+import PackageIcon from "@/Components/PackageIcon.vue";
 import { onMounted } from "vue";
 import { debounce } from "lodash";
 import { Tippy } from "vue-tippy";
@@ -199,6 +200,22 @@ function convertToMacedonianWords(number) {
                                     <PrintIcon
                                         v-tippy="{
                                             content: `Принтај ${props.document.document_type.type}`,
+                                            arrow: true,
+                                            theme: 'light',
+                                        }"
+                                    />
+                                </a>
+
+
+                                <!-- Create Packing List AddIcon -->
+                                <a
+                                    class="px-4 hover:text-sky-600 text-slate-300"
+                                    :href="`/packinglist/add/${props.document.id}`"
+                                    target="_blank"
+                                >
+                                    <PackageIcon
+                                        v-tippy="{
+                                            content: `Направи Пакинг Листа`,
                                             arrow: true,
                                             theme: 'light',
                                         }"
