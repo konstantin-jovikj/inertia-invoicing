@@ -185,7 +185,7 @@ const clearCert = () => {
                                                 <span
                                                     class="text-xs italic text-red-600"
                                                     >{{
-                                                        form.errors.code
+                                                        form.errors.tax_number
                                                     }}</span
                                                 >
                                             </div>

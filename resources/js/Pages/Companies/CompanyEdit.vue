@@ -31,8 +31,11 @@ const form = useForm({
     name: company.value.name,
     reg_number: company.value.reg_number,
     tax_number: company.value.tax_number,
-
     web: company.value.web,
+    phone: company.value.phone,
+    mobile: company.value.mobile,
+    email: company.value.email,
+    notes: company.value.notes,
 });
 console.log("FORM Data : ", form);
 
@@ -197,6 +200,94 @@ console.log("FORM Data : ", form);
                                                 >
                                             </div>
                                         </div>
+
+                                        <div
+                                            class="grid grid-cols-1 gap-4 mt-4 text-sm gap-y-2 md:grid-cols-12"
+                                        >
+                                            <div class="md:col-span-4">
+                                                <InputLabel for="phone"
+                                                    >Телефон</InputLabel
+                                                >
+
+                                                <TextInput
+                                                    v-model="form.phone"
+                                                    type="text"
+                                                    id="phone"
+                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                                                />
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.phone
+                                                    }}</span
+                                                >
+                                            </div>
+
+                                            <div class="md:col-span-4">
+                                                <InputLabel for="mobile"
+                                                    >Мобилен</InputLabel
+                                                >
+
+                                                <TextInput
+                                                    v-model="form.mobile"
+                                                    type="text"
+                                                    id="mobile"
+                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                                                />
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.mobile
+                                                    }}</span
+                                                >
+                                            </div>
+
+                                            <div class="md:col-span-4">
+                                                <InputLabel for="email"
+                                                    >Е-маил</InputLabel
+                                                >
+
+                                                <TextInput
+                                                    v-model="form.email"
+                                                    type="email"
+                                                    id="email"
+                                                    class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                                                />
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.email
+                                                    }}</span
+                                                >
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="grid grid-cols-1 gap-4 mt-8 text-sm gap-y-2 md:grid-cols-12"
+                                        >
+                                            <div class="md:col-span-12">
+                                                <InputLabel for="notes"
+                                                    >Забелешки</InputLabel
+                                                >
+                                                <textarea
+                                                    v-model="form.notes"
+                                                    id="notes"
+                                                    class="w-full border px-4 py-2 rounded focus:border-blue-500 focus:shadow-outline outline-none text-sm"
+                                                    rows="12"
+                                                    placeholder="Забелешки ..."
+                                                ></textarea>
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.notes
+                                                    }}</span
+                                                >
+                                            </div>
+                                        </div>
+
+
+
 
                                         <div
                                             class="mt-4 text-right md:col-span-9"
