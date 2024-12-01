@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('document_no')->nullable();
             $table->index('document_no');
             $table->dateTime('date')->nullable();
-            $table->index(['date', 'document_type_id']);
+            $table->index(['date', 'document_id']);
             $table->string('drawing_no')->nullable();
             $table->string('delivery')->nullable();
             $table->decimal('advance_payment', 14, 2)->nullable();
