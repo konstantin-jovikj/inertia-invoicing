@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Product;
 use App\Models\Document;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,11 +12,12 @@ class PackingList extends Model
         'user_id',
         'owner_id',
         'client_id',
-        'document_type_id',
+        'document_id',
         'vehicle_id',
         'driver_id',
         'curency_id',
         'incoterm_id',
+        'packing_list_id',
         'tax_id',
         'term_id',
         'is_translation',
@@ -41,5 +43,10 @@ class PackingList extends Model
     public function document()
     {
         return $this->belongsTo(Document::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'packing_list_id');
     }
 }

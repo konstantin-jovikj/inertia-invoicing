@@ -44,6 +44,8 @@ class PDFController extends Controller
         $owner->load('accounts.bank');
         $client->load('accounts.bank', 'customer.customerType');
         $document->load('documentType');
+        $products = Product::whereNull('packing_list_id')->where('document_id',$document->id )->get();
+        $packingListProducts = Product::whereNotNull('packing_list_id')->where('document_id',$document->id )->get();
 
         // $products = Product::where('document_id', $document->id)->get();
 
@@ -56,7 +58,7 @@ class PDFController extends Controller
         $convertedDocumentName = latinToCyrillic($document->documentType->type);
         $convertedCountryClient = latinToCyrillic($client->place->country->name);
 
-        return Pdf::view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient'))
+        return Pdf::view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingListProducts'))
                 ->withBrowsershot(function (Browsershot $browsershot) {
                     $browsershot->transparentBackground();
                     $browsershot->writeOptionsToFile();

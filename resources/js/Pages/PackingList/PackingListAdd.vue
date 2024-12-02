@@ -1,0 +1,4 @@
+<template>
+    Packing List
+</template>
+    

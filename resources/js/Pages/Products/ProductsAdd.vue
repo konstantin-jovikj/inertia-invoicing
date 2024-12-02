@@ -20,6 +20,7 @@ import PrintIcon from "@/Components/PrintIcon.vue";
 const props = defineProps({
     document: Object,
     products: Array,
+    packingListExists: Boolean,
 });
 
 console.log(props.products);
@@ -159,6 +160,8 @@ function convertToMacedonianWords(number) {
 
     return result;
 }
+
+console.log('packingListExists', props.packingListExists)
 </script>
 
 <template>
@@ -208,10 +211,9 @@ function convertToMacedonianWords(number) {
 
 
                                 <!-- Create Packing List AddIcon -->
-                                <a
+                                <a v-if="!packingListExists"
                                     class="px-4 hover:text-sky-600 text-slate-300"
                                     :href="`/packinglist/add/${props.document.id}`"
-                                    target="_blank"
                                 >
                                     <PackageIcon
                                         v-tippy="{

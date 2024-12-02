@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Manufacturer;
+use App\Models\PackingList;
 use App\Models\ProductModel;
 use App\Models\Refrigerant;
 use App\Models\Temperature;
@@ -28,16 +29,18 @@ class ProductController extends Controller
      */
     public function create(Document $document)
     {
-        // dd($document);
         $document->load('documentType', 'company', 'curency', 'tax');
-        // dd($document->company);
-
-        $products = Product::where('document_id', $document->id)->get();
+    
+        $products = Product::where('document_id', $document->id)->whereNull('packing_list_id')->get();
+        $isPackingList = PackingList::where('document_id', $document->id)->get();
+        
+        $packingListExists = count($isPackingList) > 0;
         $products->load('manufacturers.place.country');
-
+    
         return inertia('Products/ProductsAdd', [
             'document' => $document,
             'products' => $products,
+            'packingListExists' => $packingListExists,
         ]);
     }
 
@@ -283,7 +286,7 @@ class ProductController extends Controller
             $product->save();
         }
         // Find the document using the provided document_id
-        $document = Document::findOrFail($product->document_id);
+        $document = Document::where('id', $product->document_id)->first();
 
 
         // Reset document
@@ -326,7 +329,7 @@ class ProductController extends Controller
         // Return a success response with the created product
         return redirect()
             ->route('products.create', ['document' => $request->document_id])
-            ->with('message', 'Product saved successfully!');
+            ->with('message', 'Product updated successfully!');
     }
 
     /**

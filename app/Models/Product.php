@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Voltage;
 use App\Models\Category;
 use App\Models\Document;
+use App\Models\PackingList;
 use App\Models\Refrigerant;
 use App\Models\Temperature;
 use App\Models\Manufacturer;
@@ -42,6 +43,11 @@ class Product extends Model
     public function document()
     {
         return $this->belongsTo(Document::class);
+    }
+
+    public function packingList()
+    {
+        return $this->belongsTo(PackingList::class);
     }
 
     public function temperature()

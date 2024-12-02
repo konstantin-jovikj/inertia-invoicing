@@ -190,7 +190,7 @@
                             $i = 1; // Initialize row number outside the loop
                         @endphp
 
-                        @foreach ($document->products as $product)
+                        @foreach ($products as $product)
                             @php
                                 $showRowNumber = $product->description && $product->qty;
                             @endphp

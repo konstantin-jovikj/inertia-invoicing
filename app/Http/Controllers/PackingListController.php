@@ -23,25 +23,55 @@ class PackingListController extends Controller
      */
     public function create(Document $document)
     {
-        // dd($document);
-        $document->load('documentType', 'company', 'curency', 'tax');
-        // dd($document->company);
 
+        // Load related data for the document
+        $document->load('documentType', 'company', 'curency', 'tax');
+        // dd($document->id);
+
+        
+        // Fetch products associated with the document and load related data
         $products = Product::where('document_id', $document->id)->get();
         $products->load('manufacturers.place.country');
-
-
-        //create Packing List
-        //Loop through document products and add them to the created Packing List
-        //include calculated fields
-
-        //change the inertia return bellow
-
-        return inertia('Products/ProductsAdd', [
+        
+        // dd($document);
+        // Create Packing List
+        $packingList = PackingList::create([
+            'user_id' => $document->user_id,
+            'owner_id' => $document->owner_id,
+            'client_id' => $document->client_id,
+            'document_id' => $document->id,
+            'vehicle_id' => $document->vehicle_id,
+            'driver_id' => $document->driver_id,
+            'curency_id' => $document->curency_id,
+            'incoterm_id' => $document->incoterm_id,
+            'tax_id' => $document->tax_id,
+            'term_id' => $document->term_id,
+            'is_translation' => $document->is_translation,
+            'is_for_export' => $document->is_for_export,
+            'document_no' => $document->document_no,
+            'drawing_no' => $document->drawing_no,
+            'date' => $document->date,
+            'advance_payment' => $document->advance_payment,
+            'discount' => $document->discount,
+            'delivery' => $document->delivery,
+        ]);
+        // dd('packing_list_id', $packingList->id,);
+    
+        // Loop through document products and add them to the created Packing List
+        foreach ($products as $product) {
+            $newProduct = $product->replicate(); // Creates a new instance
+            $newProduct->packing_list_id = $packingList->id;
+            $newProduct->save();
+        }
+    
+        // Return response with the created packing list and related data
+        return inertia('PackingList/PackingListAdd', [
             'document' => $document,
             'products' => $products,
+            'packing-list' => $packingList,
         ]);
     }
+    
 
     /**
      * Store a newly created resource in storage.
