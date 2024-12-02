@@ -61,4 +61,9 @@ class Company extends Model
     {
         return $this->hasMany(Document::class);
     }
+
+    public function packingLists()
+    {
+        return $this->hasMany(PackingList::class);
+    }
 }

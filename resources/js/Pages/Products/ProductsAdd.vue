@@ -162,6 +162,10 @@ function convertToMacedonianWords(number) {
 }
 
 console.log('packingListExists', props.packingListExists)
+
+const createPackingList = () => {
+    router.post(`/packinglist/add/${props.document.id}`)
+}
 </script>
 
 <template>
@@ -211,18 +215,19 @@ console.log('packingListExists', props.packingListExists)
 
 
                                 <!-- Create Packing List AddIcon -->
-                                <a v-if="!packingListExists"
-                                    class="px-4 hover:text-sky-600 text-slate-300"
-                                    :href="`/packinglist/add/${props.document.id}`"
-                                >
-                                    <PackageIcon
-                                        v-tippy="{
-                                            content: `Направи Пакинг Листа`,
-                                            arrow: true,
-                                            theme: 'light',
-                                        }"
-                                    />
-                                </a>
+                                <a 
+    v-if="!packingListExists"
+    class="px-4 hover:text-sky-600 text-slate-300"
+    @click.prevent="createPackingList"
+>
+    <PackageIcon
+        v-tippy="{
+            content: 'Направи Пакинг Листа',
+            arrow: true,
+            theme: 'light',
+        }"
+    />
+</a>
                             </div>
                             <!-- Izmeni Dokument end-->
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">

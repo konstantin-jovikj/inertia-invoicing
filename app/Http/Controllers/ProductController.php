@@ -286,7 +286,7 @@ class ProductController extends Controller
             $product->save();
         }
         // Find the document using the provided document_id
-        $document = Document::where('id', $product->document_id)->first();
+$document = Document::where('id', $product->document_id)->first();
 
 
         // Reset document

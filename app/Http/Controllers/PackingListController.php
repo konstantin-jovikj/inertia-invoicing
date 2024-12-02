@@ -21,9 +21,29 @@ class PackingListController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Document $document)
+    public function create(PackingList $packingList)
     {
 
+        // Load related data for the document
+        $packingList->load('company');
+    
+        $products = Product::where('packing_list_id', $packingList->id)->get();
+        
+        $products->load('manufacturers.place.country');
+    
+        // Return response with the created packing list and related data
+        return inertia('PackingList/PackingListAdd', [
+            'packingList' => $packingList,
+            'products' => $products,
+        ]);
+    }
+    
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Document $document)
+    {
         // Load related data for the document
         $document->load('documentType', 'company', 'curency', 'tax');
         // dd($document->id);
@@ -63,22 +83,10 @@ class PackingListController extends Controller
             $newProduct->packing_list_id = $packingList->id;
             $newProduct->save();
         }
-    
-        // Return response with the created packing list and related data
-        return inertia('PackingList/PackingListAdd', [
-            'document' => $document,
-            'products' => $products,
-            'packing-list' => $packingList,
-        ]);
-    }
-    
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePackingListRequest $request)
-    {
-        //
+        return redirect()
+        ->route('packinglist.create', ['packingList' => $packingList])
+        ->with('message', 'Packing List saved successfully!');
     }
 
     /**
