@@ -25,7 +25,7 @@ class PackingListController extends Controller
     {
 
         // Load related data for the document
-        $packingList->load('company');
+        $packingList->load('company', 'document');
     
         $products = Product::where('packing_list_id', $packingList->id)->get();
         

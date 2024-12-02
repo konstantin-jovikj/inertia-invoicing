@@ -123,6 +123,17 @@ console.log('packingListExists', props.packingListExists)
                                                 props.packingList.document_no
                                             }}</span
                                         >
+                                        <span class="italic text-md ps-4">
+                                            За Фактура Бр:
+                                        </span>
+                                        <Link
+                                        :href="route('products.create',
+                                            props.packingList.document_id,)"
+                                            class="text-lg font-bold text-black hover:text-red-700"
+                                            >{{
+                                                props.packingList.document.document_no
+                                            }}</Link
+                                        >
                                     </div>
                                     <div>
                                         <span class="italic text-md"
