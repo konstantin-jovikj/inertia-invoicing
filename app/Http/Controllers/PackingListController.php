@@ -6,6 +6,8 @@ use App\Models\Company;
 use App\Models\Product;
 use App\Models\Document;
 use App\Models\PackingList;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Http\Requests\StorePackingListRequest;
 use App\Http\Requests\UpdatePackingListRequest;
 
@@ -120,9 +122,21 @@ class PackingListController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePackingListRequest $request, PackingList $packingList)
+    public function update(Request $request, PackingList $packingList)
     {
-        //
+                // Validate all fields coming from the user
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'owner_id' => 'required|exists:companies,id',
+            'client_id' => 'required|exists:companies,id',
+            'document_no' => 'required|max:255',
+            'date' => 'nullable|date',
+        ]);
+
+        $packingList->update($validatedData);
+        return Inertia::location(route('packinglist.create', [
+            'packingList' => $packingList->id,
+        ]));
     }
 
     /**
