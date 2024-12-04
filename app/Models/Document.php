@@ -120,7 +120,7 @@ class Document extends Model
     }
 
     public function packingList()
-{
-    return $this->hasOne(PackingList::class);
-}
+    {
+        return $this->hasOne(PackingList::class);
+    }
 }

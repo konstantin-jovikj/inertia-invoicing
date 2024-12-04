@@ -29,7 +29,7 @@ class ProductController extends Controller
      */
     public function create(Document $document)
     {
-        $document->load('documentType', 'company', 'curency', 'tax');
+        $document->load('documentType', 'company', 'curency', 'tax', 'packingList');
     
         $products = Product::where('document_id', $document->id)->whereNull('packing_list_id')->get();
         $isPackingList = PackingList::where('document_id', $document->id)->get();

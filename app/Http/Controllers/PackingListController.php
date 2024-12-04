@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Product;
 use App\Models\Document;
 use App\Models\PackingList;
@@ -102,7 +103,18 @@ class PackingListController extends Controller
      */
     public function edit(PackingList $packingList)
     {
-        //
+        $packingList->load('document', 'products', 'company');
+
+        $companies = Company::select('id', 'name', 'is_customer')
+            ->whereIn('is_customer', [true, false])
+            ->get()
+            ->groupBy('is_customer');
+
+        return inertia('PackingList/PackingListEdit', [
+            'packingList' => $packingList,
+            'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
+            'clientCompanies' => $companies->get(true, collect()), // companies where 'is_customer' is true
+        ]);
     }
 
     /**

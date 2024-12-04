@@ -92,6 +92,8 @@ const getPaginationLabel = (label) => {
     if (label === "Next &raquo;") return ">>";
     return label;
 };
+
+console.log(props.documents);
 </script>
 
 <template>
@@ -254,11 +256,17 @@ const getPaginationLabel = (label) => {
                                     <td class="">
                                         {{ documents.from + index }}
                                     </td>
-                                    <td class="text-base font-semibold text-emerald-700">
+                                    <td
+                                        class="text-base font-semibold text-emerald-700"
+                                    >
                                         {{ document.document_no }}
                                     </td>
-                                    <td class=" text-base font-semibold">
-                                        {{ latinToCyrillic(document.document_type.type) }}
+                                    <td class="text-base font-semibold">
+                                        {{
+                                            latinToCyrillic(
+                                                document.document_type.type,
+                                            )
+                                        }}
                                         <span class="text-gray-400">
                                             {{
                                                 document.is_for_export
@@ -266,11 +274,22 @@ const getPaginationLabel = (label) => {
                                                     : ""
                                             }}
                                         </span>
+                                        <span>
+                                            <span class="text-xs p-2 rounded-full text-red-600 hover:bg-gray-800" v-if="document.packing_list">
+                                               <Link :href="`/packinglist/create/${document.id}`">
+                                                {{    `Пакинг Листа : ${document.packing_list.document_no}` }}
+                                            </Link> 
+                                            </span>
+                                        </span>
                                     </td>
-                                    <td class="text-base font-semibold text-sky-600">
+                                    <td
+                                        class="text-base font-semibold text-sky-600"
+                                    >
                                         {{ document.company.name }}
                                     </td>
-                                    <td class="text-base font-semibold text-purple-600">
+                                    <td
+                                        class="text-base font-semibold text-purple-600"
+                                    >
                                         {{
                                             new Date(
                                                 document.date,
@@ -289,7 +308,9 @@ const getPaginationLabel = (label) => {
                                                 }).format(document.total)
                                             }}
                                         </span>
-                                        <span class="px-1 text-left text-base font-semibold text-red-600">
+                                        <span
+                                            class="px-1 text-left text-base font-semibold text-red-600"
+                                        >
                                             {{
                                                 document.curency_id
                                                     ? document.curency.symbol
@@ -353,7 +374,9 @@ const getPaginationLabel = (label) => {
                                                     "
                                                 >
                                                     <select
-                                                     v-model="document.desiredDocumentId"
+                                                        v-model="
+                                                            document.desiredDocumentId
+                                                        "
                                                         id="convert"
                                                         class="w-full h-6 m-0 py-0 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                     >
@@ -372,18 +395,23 @@ const getPaginationLabel = (label) => {
                                                                 documentType.id
                                                             "
                                                         >
-                                                        {{ latinToCyrillic(documentType.type) }}
+                                                            {{
+                                                                latinToCyrillic(
+                                                                    documentType.type,
+                                                                )
+                                                            }}
                                                         </option>
                                                     </select>
 
-                                                    
                                                     <button
-                                                    :disabled="!document.desiredDocumentId"
-                                                   
+                                                        :disabled="
+                                                            !document.desiredDocumentId
+                                                        "
                                                         type="submit"
                                                     >
-                                                        
-                                                        <DocumentNewIcon  class="  hover:text-sky-800" />
+                                                        <DocumentNewIcon
+                                                            class="hover:text-sky-800"
+                                                        />
                                                         <span
                                                             v-if="
                                                                 form.processing

@@ -71,13 +71,13 @@ console.log('packingListExists', props.packingListExists)
                         <div
                             class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
                         >
-                            <!-- Izmeni Dokument -->
+                            <!-- Izmeni Paking Lista -->
                             <div class="flex gap-2">
                                 <ModalLink
                                     class="hover:text-green-600 text-slate-300"
                                     :href="
                                         route(
-                                            'document.edit',
+                                            'packinglist.edit',
                                             props.packingList.id,
                                         )
                                     "

@@ -189,6 +189,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/packinglist/create/{packingList}', [PackingListController::class, 'create'])->name('packinglist.create');
     Route::post('/packinglist/add/{document}', [PackingListController::class, 'store'])->name('packinglist.store');
+    Route::get('/packinglist/edit/{packingList}', [PackingListController::class, 'edit'])->name('packinglist.edit');
+    Route::put('/packinglist/update/{packingList}', [PackingListController::class, 'update'])->name('packinglist.update');
 
 
 });

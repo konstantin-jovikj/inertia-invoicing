@@ -28,7 +28,7 @@ class DocumentController extends Controller
         $documentTypes = DocumentType::all(); // Fetch all document types for the dropdown
         $clients = Company::where('is_customer', true)->get();
 
-        $documents = Document::with('documentType', 'company', 'curency')
+        $documents = Document::with('documentType', 'company', 'curency', 'packingList')
             ->when($request->type, function ($query) use ($request) {
                 // Apply type filter only if 'type' is provided
                 $query->where('document_type_id', $request->type);
@@ -52,7 +52,7 @@ class DocumentController extends Controller
             })
             ->paginate(20)
             ->withQueryString();  // Retains query parameters (for pagination)
-
+            // dd($documents->pluck('packingList'));
         return inertia('Documents/DocumentsIndex', [
             'documents' => $documents,
             'documentTypes' => $documentTypes,

@@ -161,11 +161,11 @@ function convertToMacedonianWords(number) {
     return result;
 }
 
-console.log('packingListExists', props.packingListExists)
+console.log("packingListExists", props.packingListExists);
 
 const createPackingList = () => {
-    router.post(`/packinglist/add/${props.document.id}`)
-}
+    router.post(`/packinglist/add/${props.document.id}`);
+};
 </script>
 
 <template>
@@ -213,21 +213,22 @@ const createPackingList = () => {
                                     />
                                 </a>
 
-
                                 <!-- Create Packing List AddIcon -->
-                                <a 
-    v-if="!packingListExists"
-    class="px-4 hover:text-sky-600 text-slate-300"
-    @click.prevent="createPackingList"
->
-    <PackageIcon
-        v-tippy="{
-            content: 'Направи Пакинг Листа',
-            arrow: true,
-            theme: 'light',
-        }"
-    />
-</a>
+                                <a
+                                    v-if="!packingListExists"
+                                    class="px-4 hover:text-sky-600 text-slate-300"
+                                    @click.prevent="createPackingList"
+                                >
+                                    <PackageIcon
+                                        v-tippy="{
+                                            content: 'Направи Пакинг Листа',
+                                            arrow: true,
+                                            theme: 'light',
+                                        }"
+                                    />
+                                </a>
+
+                                
                             </div>
                             <!-- Izmeni Dokument end-->
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
@@ -248,33 +249,42 @@ const createPackingList = () => {
                                                 props.document.document_no
                                             }}</span
                                         >
+
+                                        <span
+                                    class="ps-4 text-red-800"
+                                    v-if="document.packing_list"
+                                >
+                                    <Link
+                                        :href="`/packinglist/create/${document.id}`"
+                                    >
+                                        {{
+                                            `со пакинг листа бр: ${document.packing_list.document_no}`
+                                        }}
+                                    </Link>
+                                </span>
                                     </div>
                                     <div>
                                         <span class="italic text-md"
                                             >Kлиент:
                                         </span>
-                                        <!-- <span
-                                            class="text-lg font-bold text-black"
-                                        >
-                                            {{ props.document.company.name }}
-                                        </span> -->
+ 
 
                                         <Link
-                                                class="hover:text-green-600 text-slate-300 content-center"
-                                                :href="
-                                                    route(
-                                                        'company.show',
-                                                        props.document.company.id,
-                                                    )
-                                                "
-                                                
+                                            class="hover:text-green-600 text-slate-300 content-center"
+                                            :href="
+                                                route(
+                                                    'company.show',
+                                                    props.document.company.id,
+                                                )
+                                            "
                                             ><span
-                                            class="text-lg font-bold text-black"
-                                        >
-                                            {{ props.document.company.name }}
-                                        </span>
-                                                
-                                            </Link>
+                                                class="text-lg font-bold text-black"
+                                            >
+                                                {{
+                                                    props.document.company.name
+                                                }}
+                                            </span>
+                                        </Link>
                                     </div>
                                     <!-- <hr /> -->
                                 </div>
@@ -372,7 +382,8 @@ const createPackingList = () => {
                                                                     product.length
                                                                 "
                                                             >
-                                                                 <span> - </span> {{
+                                                                <span> - </span>
+                                                                {{
                                                                     new Intl.NumberFormat(
                                                                         "en-US",
                                                                         {
