@@ -145,13 +145,13 @@ class PackingListController extends Controller
         // dd($packingList->id,$product->id);
         // Retrieve the existing orders for the specified document as a collection
         $existingOrder = Product::where('packing_list_id', $packingList->id)->get();
-
+        // dd( $existingOrder);
         // Define the empty row with the necessary values
         $emptyRow = new Product([
             "id" => $product->id,
             "packing_list_id" => $packingList->id,
             "description" => null,
-            "qty" => 1,
+            "qty" => null,
         ]);
 
         // Insert the empty row at the correct position in the collection
@@ -173,6 +173,41 @@ class PackingListController extends Controller
         ->route('packinglist.create', ['packingList' => $packingList->id])
         ->with('message', 'Empty Row inserted successfully!');
     }
+
+    public function addEmptyRowCustom(PackingList $packingList, Product $product)
+    {
+        // dd($packingList->id,$product->id);
+        // Retrieve the existing orders for the specified document as a collection
+        $existingOrder = Product::where('packing_list_id', $packingList->id)->get();
+        dd( $existingOrder);
+        // Define the empty row with the necessary values
+        $emptyRow = new Product([
+            "id" => $product->id,
+            "packing_list_id" => $packingList->id,
+            "description" => null,
+            "qty" => null,
+        ]);
+
+        // Insert the empty row at the correct position in the collection
+        $newOrder = $existingOrder->flatMap(function ($order) use ($emptyRow, $product) {
+            return $order->id == $product->id ? collect([$emptyRow, $order]) : collect([$order]);
+        });
+
+        // Delete the existing orders from the database
+        Product::where('packing_list_id', $packingList->id)->delete();
+
+        // Save each item in the new order collection to the database
+        $newOrder->each(fn($order) => Product::create($order->toArray()));
+
+        // Return the new order collection or a success message, if needed
+        // return $newOrder;
+        // dd($packingList->id);
+
+        return redirect()
+        ->route('packinglist.create', ['packingList' => $packingList->id])
+        ->with('message', 'Empty Row inserted successfully!');
+    }
+
 
 
     /**
