@@ -255,7 +255,7 @@ const createPackingList = () => {
                                     v-if="document.packing_list"
                                 >
                                     <Link
-                                        :href="`/packinglist/create/${document.packing_list.id}`"
+                                        :href="`/packinglist/create/${document.id}`"
                                     >
                                         {{
                                             `со пакинг листа бр: ${document.packing_list.document_no}`

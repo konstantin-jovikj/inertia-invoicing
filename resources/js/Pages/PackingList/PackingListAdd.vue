@@ -32,7 +32,7 @@ const flashMessage = ref(page.props.flash?.message || ""); // Access flash messa
 // State for managing products
 const state = reactive({
     products: [...props.products],
-    // packingList: [...props.packingList],
+    packingList: [...props.products],
 });
 
 // Delete Product function
@@ -57,8 +57,6 @@ onMounted(() => {
 });
 
 
-
-// console.log('packingListExists', props.packingListExists)
 </script>
 
 <template>
@@ -197,6 +195,12 @@ onMounted(() => {
                                                             scope="col"
                                                             class="px-2 py-1"
                                                         >
+                                                            Бр во Фактура
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-2 py-1"
+                                                        >
                                                             Опис
                                                         </th>
                                                         <th
@@ -209,13 +213,25 @@ onMounted(() => {
                                                             scope="col"
                                                             class="px-2 py-1"
                                                         >
-                                                            Димензии
+                                                            Димензии (cm)
                                                         </th>
                                                         <th
                                                             scope="col"
                                                             class="px-2 py-1"
                                                         >
-                                                            Маса
+                                                            Единечна Маса(Kg)
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-2 py-1"
+                                                        >
+                                                            Вкупна Маса(Kg)
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-2 py-1"
+                                                        >
+                                                            Волумен(m3)
                                                         </th>
                                                         <th
                                                             scope="col"
@@ -249,17 +265,60 @@ onMounted(() => {
                                                         </td>
 
                                                         <td
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                        >
+                                                            {{ product.product_code }}
+                                                        </td>
+
+                                                        <td
                                                             class="px-2 py-1 text-left whitespace-nowrap border-e flex"
                                                         >
                                                             {{
                                                                 product.description
                                                             }}
+
                                                             <div
+                                                                v-if="
+                                                                    product.manufacturer_id
+                                                                "
+                                                            >
+                                                                -
+                                                                <span
+                                                                    class="font-bold text-green-900"
+                                                                    >{{
+                                                                        product
+                                                                            .manufacturers
+                                                                            .name
+                                                                    }}</span
+                                                                >
+                                                                -
+                                                                <span
+                                                                    class="text-blue-800"
+                                                                >
+                                                                    {{
+                                                                        product
+                                                                            .manufacturers
+                                                                            .place
+                                                                            .country
+                                                                            .name
+                                                                    }}
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                        >
+                                                            {{ product.qty }}
+                                                        </td>
+                                                        <td
+                                                            class="px-2 py-1 text-right whitespace-nowrap border-e flex"
+                                                        >
+                                                        <div
                                                                 v-if="
                                                                     product.length
                                                                 "
                                                             >
-                                                                 <span> - </span> {{
+                                                                 <span> </span> {{
                                                                     new Intl.NumberFormat(
                                                                         "en-US",
                                                                         {
@@ -307,48 +366,21 @@ onMounted(() => {
                                                                     )
                                                                 }}
                                                             </div>
-                                                            <div
-                                                                v-if="
-                                                                    product.manufacturer_id
-                                                                "
-                                                            >
-                                                                -
-                                                                <span
-                                                                    class="font-bold text-green-900"
-                                                                    >{{
-                                                                        product
-                                                                            .manufacturers
-                                                                            .name
-                                                                    }}</span
-                                                                >
-                                                                -
-                                                                <span
-                                                                    class="text-blue-800"
-                                                                >
-                                                                    {{
-                                                                        product
-                                                                            .manufacturers
-                                                                            .place
-                                                                            .country
-                                                                            .name
-                                                                    }}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
-                                                        >
-                                                            {{ product.qty }}
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
-                                                         
+                                                        {{ product.weight }}
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
-                  
+                                                        {{ product.product_total_weight }}
+                                                        </td>
+                                                        <td
+                                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                                        >
+                                                        {{ product.product_total_volume }}
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
@@ -359,7 +391,7 @@ onMounted(() => {
                                                             >
                                                                 <Link
                                                                     class="px-4 hover:text-orange-600 text-slate-300"
-                                                                    :href="`/documents/add/row/${props.packingList.id}/${product.id}`"
+                                                                  :href="`/packinglist/add/row/${props.packingList.id}/${product.id}`"
                                                                 >
                                                                     <AddRowIcon
                                                                         v-tippy="{
