@@ -70,6 +70,23 @@ class ProductController extends Controller
         ]);
     }
 
+
+    public function createPackingListModal(PackingList $packingList)
+    {
+        // dd($document);
+        $packingList->load('company');
+        $manufacturers = Manufacturer::all();
+        
+        // dd($document->company);
+
+        // $products = Product::where('document_id', $document->id)->get();
+
+        return Inertia::modal('Products/PackingListProductAddModal', [
+            'packingList' => $packingList,
+            'manufacturers' => $manufacturers,
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -184,6 +201,55 @@ class ProductController extends Controller
             ->with('message', 'Product saved successfully!');
     }
 
+
+
+    public function storePackingListProducts(Request $request)
+{
+
+    // Validate the input
+    $validated = $request->validate([
+        'packing_list_id' => 'required|exists:packing_lists,id',
+        'description' => 'nullable|string|max:255',
+        'qty' => 'required|numeric|min:1',
+        'product_code' => 'nullable|max:20',
+        'serial_no' => 'nullable|max:20',
+        'manufacturer_id' => 'nullable|exists:manufacturers,id',
+        'length' => 'nullable|numeric|min:0',
+        'width' => 'nullable|numeric|min:0',
+        'height' => 'nullable|numeric|min:0',
+        'weight' => 'nullable|numeric|min:0',
+    ]);
+
+    // Calculate total volume and weight
+    $length = $request->length ?? 0;
+    $width = $request->width ?? 0;
+    $height = $request->height ?? 0;
+    $weight = $request->weight ?? 0;
+
+    $productTotalVolume = $request->qty * (($length * $width * $height) / 1000000);
+    $productTotalWeight = $request->qty * $weight;
+
+    // Create the product
+    $product = Product::create(array_merge($validated, [
+        'product_total_volume' => $productTotalVolume,
+        'product_total_weight' => $productTotalWeight,
+    ]));
+
+    // Update the packing list totals
+    $packingList = PackingList::findOrFail($request->packing_list_id);
+    $docProducts = Product::where('packing_list_id', $packingList->id)->get();
+
+    $packingList->total_volume = $docProducts->sum('product_total_volume');
+    $packingList->total_weight = $docProducts->sum('product_total_weight');
+    $packingList->save();
+
+    // Redirect with success message
+    return redirect()
+        ->route('packinglist.create', ['packingList' => $request->packing_list_id])
+        ->with('message', 'Product saved successfully!');
+}
+
+
     /**
      * Display the specified resource.
      */
@@ -216,6 +282,20 @@ class ProductController extends Controller
             'models' => $models,
             'refrigerants' => $refrigerants,
             'temperatures' => $temperatures,
+        ]);
+    }
+
+
+    public function editPackingListProduct(Product $product)
+    {
+
+        // $document->load('documentType', 'company');
+        $manufacturers = Manufacturer::all();
+
+        return inertia('Products/PackingListProductEditModal', [
+            'product' => $product ?? null, // Ensure product is passed
+            'manufacturers' => $manufacturers,
+
         ]);
     }
 
@@ -331,6 +411,46 @@ $document = Document::where('id', $product->document_id)->first();
             ->route('products.create', ['document' => $request->document_id])
             ->with('message', 'Product updated successfully!');
     }
+
+
+    public function updatePackingListProducts(Request $request, Product $product)
+{
+    $validated = $request->validate([
+        'description' => 'nullable|string|max:255',
+        'qty' => 'required|numeric|min:1',
+        'product_code' => 'nullable|max:20',
+        'serial_no' => 'nullable|max:20',
+        'manufacturer_id' => 'nullable|exists:manufacturers,id',
+        'length' => 'nullable|numeric|min:0',
+        'width' => 'nullable|numeric|min:0',
+        'height' => 'nullable|numeric|min:0',
+        'weight' => 'nullable|numeric|min:0',
+    ]);
+
+    $length = $request->length ?? 0;
+    $width = $request->width ?? 0;
+    $height = $request->height ?? 0;
+    $weight = $request->weight ?? 0;
+
+    $productTotalVolume = $request->qty * (($length * $width * $height) / 1000000);
+    $productTotalWeight = $request->qty * $weight;
+
+    $product->update(array_merge($validated, [
+        'product_total_volume' => $productTotalVolume,
+        'product_total_weight' => $productTotalWeight,
+    ]));
+
+    // Use the product's existing packing_list_id
+    $packingList = PackingList::findOrFail($product->packing_list_id);
+    $packingList->total_volume = Product::where('packing_list_id', $packingList->id)->sum('product_total_volume');
+    $packingList->total_weight = Product::where('packing_list_id', $packingList->id)->sum('product_total_weight');
+    $packingList->save();
+
+    return redirect()
+        ->route('packinglist.create', ['packingList' => $product->packing_list_id])
+        ->with('message', 'Product saved successfully!');
+}
+
 
     /**
      * Remove the specified resource from storage.

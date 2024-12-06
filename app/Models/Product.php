@@ -20,6 +20,7 @@ class Product extends Model
         'manufacturer_id',
         'category_id',
         'document_id',
+        'packing_list_id',
         'model_id',
         'refrigerant_id',
         'product_code',

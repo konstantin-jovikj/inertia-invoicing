@@ -178,20 +178,24 @@ Route::middleware('auth')->group(function () {
     Route::put('/products/update/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/delete/{product}', [ProductController::class, 'destroy'])->name('products.delete');
     Route::get('/products/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
-
-
+    
+    
     // PDF
-
+    
     Route::get('/product/warranty/{product}', [PDFController::class, 'createWarranty'])->name('warranty');
     Route::get('/document/print/{document}', [PDFController::class, 'printDocument'])->name('print.document');
-
+    
     //Packing List
-
+    
     Route::get('/packinglist/create/{packingList}', [PackingListController::class, 'create'])->name('packinglist.create');
     Route::post('/packinglist/add/{document}', [PackingListController::class, 'store'])->name('packinglist.store');
     Route::get('/packinglist/edit/{packingList}', [PackingListController::class, 'edit'])->name('packinglist.edit');
     Route::put('/packinglist/update/{packingList}', [PackingListController::class, 'update'])->name('packinglist.update');
+    Route::get('/packinglist/add/modal/{packingList}', [ProductController::class, 'createPackingListModal'])->name('packinglist-modal.create');
+    Route::post('/products/packinglist/store', [ProductController::class, 'storePackingListProducts'])->name('products.packinglist.store');
 
+    Route::get('/products/packinglist/edit/{product}', [ProductController::class, 'editPackingListProduct'])->name('product.packinglist.edit');
+    Route::put('/products/packinglist/update/{product}', [ProductController::class, 'updatePackingListProducts'])->name('product.packinglist.update');
 
 });
 

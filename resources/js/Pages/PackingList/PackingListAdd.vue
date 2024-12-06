@@ -23,7 +23,8 @@ const props = defineProps({
     packingListExists: Boolean,
 });
 
-console.log(props.products);
+console.log(props.packingList);
+
 // Accessing Inertia's page props
 const page = usePage(); // This gives you access to all shared props
 const flashMessage = ref(page.props.flash?.message || ""); // Access flash message from shared props
@@ -31,7 +32,7 @@ const flashMessage = ref(page.props.flash?.message || ""); // Access flash messa
 // State for managing products
 const state = reactive({
     products: [...props.products],
-    packingList: [...props.products],
+    // packingList: [...props.packingList],
 });
 
 // Delete Product function
@@ -57,7 +58,7 @@ onMounted(() => {
 
 
 
-console.log('packingListExists', props.packingListExists)
+// console.log('packingListExists', props.packingListExists)
 </script>
 
 <template>
@@ -342,42 +343,12 @@ console.log('packingListExists', props.packingListExists)
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
-                                                            <!-- {{
-                                                                new Intl.NumberFormat(
-                                                                    "en-US",
-                                                                    {
-                                                                        minimumFractionDigits: 2,
-                                                                        maximumFractionDigits: 2,
-                                                                    },
-                                                                ).format(
-                                                                    product.single_price,
-                                                                )
-                                                            }}
-                                                            {{
-                                                                props.packingList
-                                                                    .curency
-                                                                    .symbol
-                                                            }} -->
+                                                         
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
                                                         >
-                                                            <!-- {{
-                                                                new Intl.NumberFormat(
-                                                                    "en-US",
-                                                                    {
-                                                                        minimumFractionDigits: 2,
-                                                                        maximumFractionDigits: 2,
-                                                                    },
-                                                                ).format(
-                                                                    product.total_price,
-                                                                )
-                                                            }}
-                                                            {{
-                                                                props.packingList
-                                                                    .curency
-                                                                    .symbol
-                                                            }} -->
+                  
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
@@ -404,7 +375,7 @@ console.log('packingListExists', props.packingListExists)
                                                                     class="hover:text-green-600 text-slate-300"
                                                                     :href="
                                                                         route(
-                                                                            'product.edit',
+                                                                            'product.packinglist.edit',
                                                                             product.id,
                                                                         )
                                                                     "
@@ -448,7 +419,7 @@ console.log('packingListExists', props.packingListExists)
 
                                         <div class="mt-4">
                                             <ModalLink
-                                                :href="`/products/add/modal/${props.packingList.id}`"
+                                                :href="`/packinglist/add/modal/${props.packingList.id}`"
                                                 class="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-900"
                                             >
                                                 Додај Производ
