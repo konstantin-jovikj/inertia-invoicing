@@ -461,7 +461,7 @@ onMounted(() => {
                                 </div>
 
                                 <!-- CALCULATED FIELDS -->
-                                <!-- <div class="flex justify-end">
+                                <div class="flex justify-end">
                                     <table
                                         class="font-light text-center border-collapse w-[400px] text-sm text-surface border-e mt-4"
                                     >
@@ -474,7 +474,7 @@ onMounted(() => {
                                                 <span
                                                     class="italic font-normal text-right text-indigo-600 pe-4 text-md"
                                                 >
-                                                    Основица
+                                                    Вкупно Маса
                                                 </span>
                                             </th>
                                             <td
@@ -488,28 +488,17 @@ onMounted(() => {
                                                             maximumFractionDigits: 2,
                                                         },
                                                     ).format(
-                                                        props.packingList.total,
+                                                        props.packingList.total_weight,
                                                     )
                                                 }}
-                                            </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
-                                            >
-                                                {{
-                                                    props.packingList.curency
-                                                        .symbol
-                                                }}
+                                                <span class="pe-2 text-sm">
+                                                    Kg
+                                                </span>
                                             </td>
                                         </tr>
 
 
-                                        <tr
-                                            v-if="
-                                                props.packingList.discount !==
-                                                    null &&
-                                                props.packingList.discount > 0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
+                                        <tr class="border-t border-b border-indigo-300 border-e border-s"
                                         >
                                             <th
                                                 class="border-indigo-300 bg-indigo-50 border-e"
@@ -517,11 +506,7 @@ onMounted(() => {
                                                 <span
                                                     class="italic font-normal text-right text-indigo-600 pe-4 text-md"
                                                 >
-                                                    Попуст
-                                                    {{
-                                                        props.packingList.discount
-                                                    }}
-                                                    %
+                                                    Вкупно Волумен
                                                 </span>
                                             </th>
                                             <td
@@ -536,292 +521,18 @@ onMounted(() => {
                                                         },
                                                     ).format(
                                                         props.packingList
-                                                            .discount_amount,
-                                                    )
+                                                            .total_volume,
+                                                            
+                                                    ) 
                                                 }}
-                                            </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
-                                            >
-                                                {{
-                                                    props.packingList.curency
-                                                        .symbol
-                                                }}
-                                            </td>
-                                        </tr>
-
-
-                                        <tr
-                                            v-if="
-                                                props.packingList.tax &&
-                                                props.packingList.tax.tax_rate != 0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-indigo-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md"
-                                                >
-                                                    ДДВ
-                                                    {{
-                                                        props.packingList.tax
-                                                            .tax_rate
-                                                    }}
-                                                    %
+                                                <span class="pe-2 text-sm">
+                                                    m<sup>3</sup>
                                                 </span>
-                                            </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600"
-                                            >
-                                                {{
-                                                    new Intl.NumberFormat(
-                                                        "en-US",
-                                                        {
-                                                            minimumFractionDigits: 2,
-                                                            maximumFractionDigits: 2,
-                                                        },
-                                                    ).format(
-                                                        props.packingList
-                                                            .tax_amount,
-                                                    )
-                                                }}
-                                            </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
-                                            >
-                                                {{
-                                                    props.packingList.curency
-                                                        .symbol
-                                                }}
                                             </td>
                                         </tr>
 
-
-                                        <tr
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-pink-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-pink-600 pe-4 text-md"
-                                                >
-                                                    Вкупно со ДДВ
-                                                </span>
-                                            </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-pink-600"
-                                            >
-                                                {{
-                                                    new Intl.NumberFormat(
-                                                        "en-US",
-                                                        {
-                                                            minimumFractionDigits: 2,
-                                                            maximumFractionDigits: 2,
-                                                        },
-                                                    ).format(
-                                                        props.packingList
-                                                            .total_with_tax_and_discount,
-                                                    )
-                                                }}
-                                            </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-pink-600 pe-4"
-                                            >
-                                                {{
-                                                    props.packingList.curency
-                                                        .symbol
-                                                }}
-                                            </td>
-                                        </tr>
-
-
-
-                                        <tr
-                                            v-if="
-                                                props.packingList
-                                                    .advance_payment !== null &&
-                                                props.packingList.advance_payment >
-                                                    0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-teal-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
-                                                >
-                                                    Аванс
-                                                </span>
-                                            </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600"
-                                            >
-                                                {{
-                                                    new Intl.NumberFormat(
-                                                        "en-US",
-                                                        {
-                                                            minimumFractionDigits: 2,
-                                                            maximumFractionDigits: 2,
-                                                        },
-                                                    ).format(
-                                                        props.packingList
-                                                            .advance_payment,
-                                                    )
-                                                }}
-                                            </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600 pe-4"
-                                            >
-                                                {{
-                                                    props.packingList.curency
-                                                        .symbol
-                                                }}
-                                            </td>
-                                        </tr>
-
-
-
-                                        <tr
-                                            v-if="
-                                                props.packingList
-                                                    .advance_payment !== null &&
-                                                props.packingList.advance_payment >
-                                                    0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-teal-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
-                                                >
-                                                    Преостаната Основица
-                                                </span>
-                                            </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600"
-                                            >
-                                                {{
-                                                    new Intl.NumberFormat(
-                                                        "en-US",
-                                                        {
-                                                            minimumFractionDigits: 2,
-                                                            maximumFractionDigits: 2,
-                                                        },
-                                                    ).format(
-                                                        props.packingList
-                                                            .advanced_payment_base,
-                                                    )
-                                                }}
-                                            </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600 pe-4"
-                                            >
-                                                {{
-                                                    props.packingList.curency
-                                                        .symbol
-                                                }}
-                                            </td>
-                                        </tr>
-
-
-
-                                        <tr
-                                            v-if="
-                                                props.packingList
-                                                    .advance_payment !== null &&
-                                                props.packingList.advance_payment >
-                                                    0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-teal-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
-                                                >
-                                                    Преостанатo ДДВ
-                                                </span>
-                                            </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600"
-                                            >
-                                                {{
-                                                    new Intl.NumberFormat(
-                                                        "en-US",
-                                                        {
-                                                            minimumFractionDigits: 2,
-                                                            maximumFractionDigits: 2,
-                                                        },
-                                                    ).format(
-                                                        props.packingList
-                                                            .advanced_payment_tax,
-                                                    )
-                                                }}
-                                            </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600 pe-4"
-                                            >
-                                                {{
-                                                    props.packingList.curency
-                                                        .symbol
-                                                }}
-                                            </td>
-                                        </tr>
-
-
-
-                                        <tr
-                                            v-if="
-                                                props.packingList
-                                                    .advance_payment !== null &&
-                                                props.packingList.advance_payment >
-                                                    0
-                                            "
-                                            class="border-t border-b-4 border-b-red-500 border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-red-100 border-e"
-                                            >
-                                                <span
-                                                    class="font-medium text-right text-red-600 pe-4 text-md"
-                                                >
-                                                    Вк.Преостанато со ДДВ
-                                                </span>
-                                            </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-red-600 bg-red-100"
-                                            >
-                                                {{
-                                                    new Intl.NumberFormat(
-                                                        "en-US",
-                                                        {
-                                                            minimumFractionDigits: 2,
-                                                            maximumFractionDigits: 2,
-                                                        },
-                                                    ).format(
-                                                        props.packingList
-                                                            .grand_total,
-                                                    )
-                                                }}
-                                            </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-red-600 pe-4 bg-red-100"
-                                            >
-                                                {{
-                                                    props.packingList.curency
-                                                        .symbol
-                                                }}
-                                            </td>
-                                        </tr>
                                     </table>
-                                </div> -->
+                                </div>
                             </div>
                         </div>
                     </div>

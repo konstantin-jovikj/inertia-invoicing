@@ -1,30 +1,39 @@
 <div class="header flex">
     <div class="image-wrapper ">
-        <img class="image-width" src="{{ $logo }}" alt="Logo">
+        @if ($logo)
+            <img class="image-width" src="{{ $logo }}" alt="Logo">
+        @else
+            <p></p>
+        @endif
         <div class="flex">
             <div class="w-50">
                 @if ($document->is_for_export)
-                <p class="text-small">{{ $owner->name }}</p>
-                <p class="text-small">{{ $owner->address }}</p>
+                    <p class="text-small">{{ $owner->name }}</p>
+                    <p class="text-small">{{ $owner->address }}</p>
                 @else
-                <p class="text-small">{{ $convertedOwner }}</p>
-                <p class="text-small">{{ $convertedAddress }}</p>
+                    <p class="text-small">{{ $convertedOwner }}</p>
+                    <p class="text-small">{{ $convertedAddress }}</p>
                 @endif
             </div>
             <div class="w-50">
                 @if ($document->is_for_export)
-                <p class="text-small">{{ $owner->place->zip }} - {{ $owner->place->place }}</p>
-                <p class="text-small">{{ $owner->place->country->name }}</p>
+                    <p class="text-small">{{ $owner->place->zip }} - {{ $owner->place->place }}</p>
+                    <p class="text-small">{{ $owner->place->country->name }}</p>
                 @else
-                <p class="text-small">{{ $owner->place->zip }} - {{ $convertedPlace }}</p>
-                <p class="text-small">{{ $convertedCountry }}</p>
+                    <p class="text-small">{{ $owner->place->zip }} - {{ $convertedPlace }}</p>
+                    <p class="text-small">{{ $convertedCountry }}</p>
                 @endif
             </div>
         </div>
         <p class="text-small font-bold web">{{ $owner->web }}</p>
     </div>
     <div class="image-wrapper ">
-        <img class="image-width" src="{{ $cert }}" alt="Cert">
+        @if ($cert)
+            <img class="image-width" src="{{ $cert }}" alt="Cert">
+        @else
+            <p></p>
+        @endif
+
     </div>
     <div class="image-wrapper bank">
         <div id="bank_account">
@@ -59,37 +68,40 @@
 </div>
 
 <style>
-    .web{
+    .web {
         margin-top: 5px;
         text-align: center;
     }
 
-    p{
+    p {
         padding: 5px;
         margin: 0;
     }
 
-    .line p{
+    .line p {
         padding: 0;
         margin: 0;
     }
 
-    .bank{
+    .bank {
         padding-left: 15px;
         line-height: 10px;
     }
-    .flex-col{
+
+    .flex-col {
         flex-direction: column;
     }
-    .font-color{
+
+    .font-color {
         color: blue;
     }
 
-    .font-bold{
+    .font-bold {
         font-weight: bold;
 
     }
-    .text-small{
+
+    .text-small {
         font-size: 9px;
         line-height: 5px;
         text-align: left;
@@ -98,18 +110,19 @@
 
     }
 
-    .text-medium{
+    .text-medium {
         font-size: 12px;
         line-height: 5px;
         text-align: left;
 
     }
-    .w-50{
+
+    .w-50 {
         width: 50%;
     }
 
-    .w-100{
-        width:100%;
+    .w-100 {
+        width: 100%;
     }
 
     .flex {

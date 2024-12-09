@@ -40,15 +40,15 @@ class PDFController extends Controller
         $clientId = $document->client_id;
         $client = Company::findOrFail($clientId);
         $owner = Company::findOrFail($ownerId);
-
+    
         $owner->load('accounts.bank');
         $client->load('accounts.bank', 'customer.customerType');
         $document->load('documentType');
-        $products = Product::whereNull('packing_list_id')->where('document_id',$document->id )->get();
-        $packingListProducts = Product::whereNotNull('packing_list_id')->where('document_id',$document->id )->get();
-
+        $products = Product::whereNull('packing_list_id')->where('document_id', $document->id)->get();
+        $packingListProducts = Product::whereNotNull('packing_list_id')->where('document_id', $document->id)->get();
+    
         // $products = Product::where('document_id', $document->id)->get();
-
+    
         $convertedOwner = latinToCyrillic($owner->name);
         $convertedAddress = latinToCyrillic($owner->address);
         $convertedPlace = latinToCyrillic($owner->place->place);
@@ -56,38 +56,45 @@ class PDFController extends Controller
         $convertedCountry = latinToCyrillic($owner->place->country->name);
         $convertedCountryClient = latinToCyrillic($client->place->country->name);
         $convertedDocumentName = latinToCyrillic($document->documentType->type);
-        $convertedCountryClient = latinToCyrillic($client->place->country->name);
+    
+        $headerData = [
+            'owner' => $owner,
+            'convertedOwner' => $convertedOwner,
+            'document' => $document,
+            'convertedAddress' => $convertedAddress,
+            'convertedPlace' => $convertedPlace,
+            'convertedCountry' => $convertedCountry,
+            'convertedDocumentName' => $convertedDocumentName,
+            'client' => $client,
+            'convertedPlaceClient' => $convertedPlaceClient,
+            'convertedCountryClient' => $convertedCountryClient,
+            'logo' => 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->logo))),
+        ];
+    
+        if ($owner->cert && file_exists(storage_path('app/public/' . $owner->cert))) {
+            $headerData['cert'] = 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->cert)));
+        } else {
+            $headerData['cert'] = null; // Ensure cert is defined even if it doesn't exist
+        }
 
+        if ($owner->logo && file_exists(storage_path('app/public/' . $owner->logo))) {
+            $headerData['logo'] = 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->logo)));
+        } else {
+            $headerData['logo'] = null; // Ensure logo is defined even if it doesn't exist
+        }
+    
         return Pdf::view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingListProducts'))
-                ->withBrowsershot(function (Browsershot $browsershot) {
-                    $browsershot->transparentBackground();
-                    $browsershot->writeOptionsToFile();
-                    
-                })
-                ->margins(35,0,14,0)
-                ->headerView('Pdf.header', 
-                [
-                    'owner' => $owner,
-                    'convertedOwner' => $convertedOwner,
-                    'document' => $document,
-                    'convertedAddress' => $convertedAddress,
-                    'convertedPlace' => $convertedPlace,
-                    'convertedCountry' => $convertedCountry,
-                    'convertedDocumentName' => $convertedDocumentName,
-                    'client' => $client,
-                    'convertedPlaceClient' => $convertedPlaceClient,
-                    'convertedCountryClient' => $convertedCountryClient,
-                    'logo' => 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->logo))),
-                    'cert' => 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->cert))),
-
-                    
-                ])
-                ->footerView('Pdf.footer',[
-                    'document' => $document,
-                ])
-                ->format(Format::A4)
-                ->name('invoice.pdf');
-
-
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot->transparentBackground();
+                $browsershot->writeOptionsToFile();
+            })
+            ->margins(35, 0, 14, 0)
+            ->headerView('Pdf.header', $headerData)
+            ->footerView('Pdf.footer', [
+                'document' => $document,
+            ])
+            ->format(Format::A4)
+            ->name('invoice.pdf');
     }
+    
 }

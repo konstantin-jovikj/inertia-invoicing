@@ -276,7 +276,7 @@ console.log(props.documents);
                                         </span>
                                         <span>
                                             <span class="text-xs p-2 rounded-full text-red-600 hover:bg-gray-800" v-if="document.packing_list">
-                                               <Link :href="`/packinglist/create/${document.id}`">
+                                               <Link :href="`/packinglist/create/${document.packing_list.id}`">
                                                 {{    `Пакинг Листа : ${document.packing_list.document_no}` }}
                                             </Link> 
                                             </span>
