@@ -92,7 +92,7 @@ onMounted(() => {
 
                                 <a
                                     class="px-4 hover:text-sky-600 text-slate-300"
-                                    :href="`/document/print/${props.packingList.id}`"
+                                    :href="`/document/print/${props.packingList.document_id}?type=packingList`"
                                     target="_blank"
                                 >
                                     <PrintIcon

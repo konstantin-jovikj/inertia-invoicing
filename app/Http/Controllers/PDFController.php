@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\PackingList;
 use App\Models\Product;
 use App\Models\Document;
 use Illuminate\Http\Request;
@@ -33,22 +34,28 @@ class PDFController extends Controller
             ->name("{$fileName}.pdf");
     }
 
-    public function printDocument(Document $document)
+    public function printDocument(Document $document, Request $request)
     {
-        // dd($document->products);
+        $type = $request->query('type');
+        
+        
+        
         $ownerId = $document->owner_id;
         $clientId = $document->client_id;
         $client = Company::findOrFail($clientId);
         $owner = Company::findOrFail($ownerId);
-    
+        
         $owner->load('accounts.bank');
         $client->load('accounts.bank', 'customer.customerType');
         $document->load('documentType');
         $products = Product::whereNull('packing_list_id')->where('document_id', $document->id)->get();
+        $packingList = PackingList::where('document_id', $document->id)->firstOrFail();
         $packingListProducts = Product::whereNotNull('packing_list_id')->where('document_id', $document->id)->get();
-    
-        // $products = Product::where('document_id', $document->id)->get();
-    
+
+
+        // dd($packingList, $type, );
+
+
         $convertedOwner = latinToCyrillic($owner->name);
         $convertedAddress = latinToCyrillic($owner->address);
         $convertedPlace = latinToCyrillic($owner->place->place);
@@ -56,7 +63,7 @@ class PDFController extends Controller
         $convertedCountry = latinToCyrillic($owner->place->country->name);
         $convertedCountryClient = latinToCyrillic($client->place->country->name);
         $convertedDocumentName = latinToCyrillic($document->documentType->type);
-    
+
         $headerData = [
             'owner' => $owner,
             'convertedOwner' => $convertedOwner,
@@ -70,7 +77,7 @@ class PDFController extends Controller
             'convertedCountryClient' => $convertedCountryClient,
             'logo' => 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->logo))),
         ];
-    
+
         if ($owner->cert && file_exists(storage_path('app/public/' . $owner->cert))) {
             $headerData['cert'] = 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/public/' . $owner->cert)));
         } else {
@@ -82,8 +89,8 @@ class PDFController extends Controller
         } else {
             $headerData['logo'] = null; // Ensure logo is defined even if it doesn't exist
         }
-    
-        return Pdf::view('Pdf.document', compact('owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingListProducts'))
+
+        return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts'))
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot->transparentBackground();
                 $browsershot->writeOptionsToFile();
@@ -96,5 +103,5 @@ class PDFController extends Controller
             ->format(Format::A4)
             ->name('invoice.pdf');
     }
-    
+
 }

@@ -40,6 +40,7 @@ class PackingListController extends Controller
         $packingList->total_weight = $products->sum('product_total_weight');
         $packingList->total_volume = $products->sum('product_total_volume');
     
+        $packingList->save();
         // Return response with the created packing list and related data
         return inertia('PackingList/PackingListAdd', [
             'packingList' => $packingList,
