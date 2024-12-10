@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeclarationController;
 use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\PDFController;
 use Inertia\Inertia;
@@ -199,6 +200,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/packinglist/add/row/{packingList}/{product}', [PackingListController::class, 'addEmptyRow'])
     ->name('packinglist.addrow');
+
+
+    //Declarations
+
+    Route::get('/declarations', [DeclarationController::class, 'index'])->name('declarations.index');
+    Route::post('/toggle/declaration/{declaration}/{document}', [DeclarationController::class, 'toggleDeclaration'])->name('declarations.toggle');
 
 });
 

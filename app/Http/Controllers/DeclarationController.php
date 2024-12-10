@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
 use App\Models\Declaration;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,23 @@ class DeclarationController extends Controller
      */
     public function index()
     {
-        //
+        $declarations = Declaration::paginate(10);
+        // dd($declarations);
+
+        return inertia('Settings/Declarations/DeclarationsIndex', [
+            'declarations' => $declarations,
+        ]);
+    }
+
+    public function toggleDeclaration(Declaration $declaration, Document $document)
+    {
+        if ($declaration->documents()->where('document_id', $document->id)->exists()) {
+            // Detach the document if it is associated
+            $declaration->documents()->detach($document->id);
+        } else {
+            // Attach the document if it is not associated
+            $declaration->documents()->attach($document->id);
+        }
     }
 
     /**

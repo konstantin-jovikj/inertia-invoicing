@@ -80,6 +80,11 @@ const showingNavigationDropdown = ref(false);
                                         >
                                             Банки
                                         </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('declarations.index')"
+                                        >
+                                            Декларации
+                                        </DropdownLink>
 
                                         <hr />
                                         <DropdownLink

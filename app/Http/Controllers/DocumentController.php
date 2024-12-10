@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Declaration;
 use App\Models\Tax;
 use Inertia\Inertia;
 use App\Models\Terms;
@@ -167,6 +168,9 @@ class DocumentController extends Controller
             ->get()
             ->groupBy('is_customer');
 
+        $declarations = Declaration::all();
+        $selectedDeclarations = $document->declarations->pluck('id');
+
         return inertia('Documents/DocumentEditModal', [
             'document' => $document,
             'documentTypes' => $documentTypes,
@@ -178,6 +182,8 @@ class DocumentController extends Controller
             'incoterms' => $incoterms,
             'vehicles' => $vehicles,
             'drivers' => $drivers,
+            'declarations' => $declarations,
+            'selectedDeclarations' => $selectedDeclarations,
         ]);
     }
 
