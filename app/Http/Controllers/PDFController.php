@@ -64,6 +64,8 @@ class PDFController extends Controller
         $convertedCountryClient = latinToCyrillic($client->place->country->name);
         $convertedDocumentName = latinToCyrillic($document->documentType->type);
 
+        $selectedDeclarations = $document->declarations;
+        // dd($selectedDeclarations);
         $headerData = [
             'owner' => $owner,
             'convertedOwner' => $convertedOwner,
@@ -90,7 +92,7 @@ class PDFController extends Controller
             $headerData['logo'] = null; // Ensure logo is defined even if it doesn't exist
         }
 
-        return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts'))
+        return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations'))
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot->transparentBackground();
                 $browsershot->writeOptionsToFile();

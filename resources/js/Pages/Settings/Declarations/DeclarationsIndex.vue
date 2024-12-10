@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { ModalLink } from "@inertiaui/modal-vue";
 import { computed, ref, watch, onMounted } from "vue";
 import { debounce } from "lodash";
 import EditIcon from "../../../Components/EditIcon.vue";
@@ -8,7 +9,7 @@ import DeleteIcon from "../../../Components/DeleteIcon.vue";
 import AddIcon from "../../../Components/AddIcon.vue";
 
 const props = defineProps({
-    declarations: Array,
+    declarations: Object,
 
 });
 
@@ -17,9 +18,9 @@ const flashMessage = ref(pageProps.flash?.message || "");
 
 
 // Delete bank function
-const deleteBank = (id) => {
-    if (confirm("Дали сигурно сакаш да ја избришеш оваа банка?")) {
-        router.delete("/bank/delete/" + id, {
+const deleteDeclaration = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваа Декларација?")) {
+        router.delete("/declaration/delete/" + id, {
             preserveState: false,
             onSuccess: () => {
                 flashMessage.value = props.flash.message;
@@ -65,11 +66,13 @@ const getPaginationLabel = (label) => {
                         <div class="flex justify-between mb-4">
                             <h2 class="font-bold text-sky-800">Декларации</h2>
                             <div class="flex">
-                                <Link
-                                    href="banks/add"
+                                <ModalLink
+                                    href="declaration/create"
                                     class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
                                     ><AddIcon
-                                /></Link>
+                                /></ModalLink>
+
+  
       
                             </div>
                         </div>
@@ -131,11 +134,11 @@ const getPaginationLabel = (label) => {
 
                                     <td class="">
                                         <div class="flex gap-2">
-                                            <Link
+                                            <ModalLink
                                                 class="hover:text-green-600 text-slate-300"
                                                 :href="
                                                     route(
-                                                        'bank.edit',
+                                                        'declaration.edit',
                                                         declaration.id
                                                     )
                                                 "
@@ -146,18 +149,18 @@ const getPaginationLabel = (label) => {
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"/>
-                                            </Link>
+                                            </ModalLink>
 
                                             <button
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
-                                                        deleteBank(declaration.id)
+                                                        deleteDeclaration(declaration.id)
                                                 "
                                             >
                                                 <DeleteIcon v-tippy="{
                                                         content:
-                                                            'Избриши Банка',
+                                                            'Избриши Декларација',
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"/>

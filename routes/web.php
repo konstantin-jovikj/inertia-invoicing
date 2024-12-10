@@ -205,7 +205,13 @@ Route::middleware('auth')->group(function () {
     //Declarations
 
     Route::get('/declarations', [DeclarationController::class, 'index'])->name('declarations.index');
+    Route::get('/declaration/edit/{declaration}', [DeclarationController::class, 'edit'])->name('declaration.edit');
     Route::post('/toggle/declaration/{declaration}/{document}', [DeclarationController::class, 'toggleDeclaration'])->name('declarations.toggle');
+    Route::get('/declaration/create', [DeclarationController::class, 'create'])->name('declaration.create');
+    Route::post('/declaration/store', [DeclarationController::class, 'store'])->name('declaration.store');
+    Route::put('/declaration/update/{declaration}', [DeclarationController::class, 'update'])->name('declaration.update');
+    Route::delete('/declaration/delete/{declaration}', [DeclarationController::class, 'destroy'])->name('declaration.delete');
+
 
 });
 

@@ -37,7 +37,7 @@ class DeclarationController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Settings/Declarations/DeclarationAdd');
     }
 
     /**
@@ -45,7 +45,14 @@ class DeclarationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|max:50',
+            'content' => 'required|max:255',
+        ]);
+
+        Declaration::create($validated);
+
+        return redirect()->route('declarations.index')->with('message', 'Декларацијата е успешно додадена');
     }
 
     /**
@@ -53,7 +60,7 @@ class DeclarationController extends Controller
      */
     public function show(Declaration $declaration)
     {
-        //
+
     }
 
     /**
@@ -61,7 +68,9 @@ class DeclarationController extends Controller
      */
     public function edit(Declaration $declaration)
     {
-        //
+        return inertia('Settings/Declarations/DeclarationEdit',[
+            'declaration' => $declaration,
+        ]);
     }
 
     /**
@@ -69,7 +78,14 @@ class DeclarationController extends Controller
      */
     public function update(Request $request, Declaration $declaration)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|max:50',
+            'content' => 'required|max:255',
+        ]);
+
+        $declaration->update($validated);
+
+        return redirect()->route('declarations.index')->with('message', 'Декларацијата е успешно ажурирана');
     }
 
     /**
@@ -77,6 +93,8 @@ class DeclarationController extends Controller
      */
     public function destroy(Declaration $declaration)
     {
-        //
+        $declaration->delete();
+
+        return redirect()->route('declarations.index')->with('message', 'Декларацијата е успешно избришана');
     }
 }
