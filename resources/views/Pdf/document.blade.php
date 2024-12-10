@@ -171,14 +171,14 @@
                             </th>
 
                             @if ($type == 'packingList')
-                                
-                            <th class="border border-gray-300 px-2 py-1 text-left leading-none w-[30px]">
-                                @if ($document->is_for_export)
-                                    No.in Invoice
-                                @else
-                                    Бр.во Фактура
-                                @endif
-                            </th>
+
+                                <th class="border border-gray-300 px-2 py-1 text-left leading-none w-[30px]">
+                                    @if ($document->is_for_export)
+                                        No.in Invoice
+                                    @else
+                                        Бр.во Фактура
+                                    @endif
+                                </th>
                             @endif
 
 
@@ -230,13 +230,13 @@
                                 </th>
                             @endif
                             @if ($type !== 'packingList')
-                            <th class="border border-gray-300 px-2 py-1 text-left leading-none">
-                                @if ($document->is_for_export)
-                                    Тот.Price
-                                @else
-                                    Вк.Цена
-                                @endif
-                            </th>
+                                <th class="border border-gray-300 px-2 py-1 text-left leading-none">
+                                    @if ($document->is_for_export)
+                                        Тот.Price
+                                    @else
+                                        Вк.Цена
+                                    @endif
+                                </th>
                             @endif
                         </tr>
                     </thead>
@@ -288,7 +288,7 @@
                                             {{ $product->qty }}
                                         @endif
                                     </td>
-                                    @if ($showRowNumber)
+                                    {{-- @if ($showRowNumber)
                                         <td class="border border-gray-300 px-2 py-1 leading-none">
                                             {{ $product->weight }}
                                         </td>
@@ -298,7 +298,7 @@
                                         <td class="border border-gray-300 px-2 py-1 leading-none">
                                             {{ $product->product_total_weight }}
                                         </td>
-                                    @endif
+                                    @endif --}}
 
 
 
@@ -345,44 +345,62 @@
                                             {{ $i }}
                                         @endif
                                     </td>
+
                                     @if ($type == 'packingList')
-                                    <td
-                                    class="border border-gray-300 px-2 {{ $showRowNumber ? 'py-0.5' : 'py-2.5' }} leading-none">
-
-                                        {{ $product->product_code }}
-
-                                </td>
-                                @endif
-                                    @if ($document->drawing_no && $document->document_type_id == 1)
-                                        <td class="border border-gray-300 px-2 py-1 leading-none">
-                                            @if ($showRowNumber)
+                                        @if ($product->product_code === null || $product->product_code == 0)
+                                            <td colspan="2"
+                                                class="border border-gray-300 px-2 {{ $showRowNumber ? 'py-0.5' : 'py-2.5' }} leading-none font-semibold">
+                                                {{ $product->description }}
+                                                @if ($product->length)
+                                                    -
+                                                    {{ rtrim(rtrim(number_format($product->length, 2, '.', ','), '0'), '.') }}
+                                                @endif
+                                                @if ($product->width)
+                                                    x
+                                                    {{ rtrim(rtrim(number_format($product->width, 2, '.', ','), '0'), '.') }}
+                                                @endif
+                                                @if ($product->height)
+                                                    x
+                                                    {{ rtrim(rtrim(number_format($product->height, 2, '.', ','), '0'), '.') }}
+                                                @endif
+                                                @if ($product->manufacturers)
+                                                    - <span class="font-bold">{{ $product->manufacturers->name }} -
+                                                        {{ $product->manufacturers->place->country->name }}</span>
+                                                @endif
+                                            </td>
+                                        @else
+                                            <td
+                                                class="border border-gray-300 px-2 {{ $showRowNumber ? 'py-0.5' : 'py-2.5' }} leading-none">
                                                 {{ $product->product_code }}
-                                            @endif
-                                        </td>
+                                            </td>
+                                            <td class="border border-gray-300 px-2 py-1 leading-none">
+                                                {{ $product->description }}
+                                                @if ($product->length)
+                                                    -
+                                                    {{ rtrim(rtrim(number_format($product->length, 2, '.', ','), '0'), '.') }}
+                                                @endif
+                                                @if ($product->width)
+                                                    x
+                                                    {{ rtrim(rtrim(number_format($product->width, 2, '.', ','), '0'), '.') }}
+                                                @endif
+                                                @if ($product->height)
+                                                    x
+                                                    {{ rtrim(rtrim(number_format($product->height, 2, '.', ','), '0'), '.') }}
+                                                @endif
+                                                @if ($product->manufacturers)
+                                                    - <span class="font-bold">{{ $product->manufacturers->name }} -
+                                                        {{ $product->manufacturers->place->country->name }}</span>
+                                                @endif
+                                            </td>
+                                        @endif
                                     @endif
-                                    <td class="border border-gray-300 px-2 py-1 leading-none">
-                                        {{ $product->description }}
-                                        @if ($product->length)
-                                            -
-                                            {{ rtrim(rtrim(number_format($product->length, 2, '.', ','), '0'), '.') }}
-                                        @endif
-                                        @if ($product->width)
-                                            x {{ rtrim(rtrim(number_format($product->width, 2, '.', ','), '0'), '.') }}
-                                        @endif
-                                        @if ($product->height)
-                                            x
-                                            {{ rtrim(rtrim(number_format($product->height, 2, '.', ','), '0'), '.') }}
-                                        @endif
-                                        @if ($product->manufacturers)
-                                            - <span class="font-bold">{{ $product->manufacturers->name }} -
-                                                {{ $product->manufacturers->place->country->name }}</span>
-                                        @endif
-                                    </td>
+
                                     <td class="border border-gray-300 px-2 py-1 leading-none">
                                         @if ($showRowNumber)
                                             {{ $product->qty }}
                                         @endif
                                     </td>
+
                                     @if ($showRowNumber && $type == 'packingList')
                                         <td class="border border-gray-300 px-2 py-1 leading-none">
                                             {{ $product->weight }} Kg
@@ -400,8 +418,7 @@
                                             @php
                                                 $volume =
                                                     ($product->length * $product->width * $product->height) / 1000000;
-                                                $formattedVolume = number_format($volume, 2, '.', ','); // Format with 3 decimal places to capture any decimals.
-                                                // Trim trailing zeros after decimal point
+                                                $formattedVolume = number_format($volume, 2, '.', ',');
                                                 $formattedVolume = rtrim(rtrim($formattedVolume, '0'), '.');
                                             @endphp
                                             {{ $formattedVolume }} m<sup>3</sup>
@@ -413,6 +430,7 @@
                                             {{ $product->product_total_volume }} m<sup>3</sup>
                                         </td>
                                     @endif
+
                                     @if ($type !== 'packingList')
                                         <td class="border border-gray-300 px-2 py-1 leading-none text-right">
                                             @if ($showRowNumber && $product->single_price != 0)
@@ -426,6 +444,7 @@
                                         </td>
                                     @endif
                                 </tr>
+
                                 @if ($showRowNumber)
                                     @php
                                         $i++;
