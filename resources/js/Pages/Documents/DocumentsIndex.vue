@@ -305,7 +305,7 @@ console.log(props.documents);
                                                 new Intl.NumberFormat("en-US", {
                                                     minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2,
-                                                }).format(document.total)
+                                                }).format(document.total_with_tax_and_discount)
                                             }}
                                         </span>
                                         <span

@@ -128,12 +128,12 @@
             <div class="w-[28%] border-e border-gray-500">
                 @if ($document->is_for_export)
                     <span class="text-xs text-purple-700 italic">Bruto/Netto Kg:</span>
-                    @if ($packingList->total_weight)
+                    @if (!is_null($packingList))
                         <span class="text-sm font-semibold mx-1">{{ $packingList->total_weight }} Kg</span>
                     @endif
                 @else
                     <span class="text-xs text-purple-700 italic ps-1">Маса / Тежина:</span>
-                    @if ($packingList->total_weight)
+                    @if (!is_null($packingList))
                         <span class="text-sm font-semibold mx-1">{{ $packingList->total_weight }} Kg</span>
                     @endif
                 @endif
@@ -142,12 +142,12 @@
             <div class="w-[28%] border-e border-gray-500">
                 @if ($document->is_for_export)
                     <span class="text-xs text-purple-700 italic">Total Volume :</span>
-                    @if ($packingList->total_volume)
+                    @if (!is_null($packingList))
                         <span class="text-sm font-semibold mx-1">{{ $packingList->total_volume }} m<sup>3</sup> </span>
                     @endif
                 @else
                     <span class="text-xs text-purple-700 italic ps-1">Волумен / Зафатнина:</span>
-                    @if ($packingList->total_volume)
+                    @if (!is_null($packingList))
                         <span class="text-sm font-semibold mx-1">{{ $packingList->total_volume }} m<sup>3</sup></span>
                     @endif
                 @endif

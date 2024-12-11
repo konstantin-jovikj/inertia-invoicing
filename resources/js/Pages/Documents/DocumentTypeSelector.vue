@@ -8,9 +8,8 @@ import { debounce } from "lodash";
 import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
 import AddIcon from "../../Components/AddIcon.vue";
+import DocumentNewIcon from "@/Components/DocumentNewIcon.vue";
 import { latinToCyrillic } from "@/helpers/latinToCyrillic"; // Adjust the path if needed
-
-
 
 const props = defineProps({
     documentTypes: Object,
@@ -67,119 +66,48 @@ const getPaginationLabel = (label) => {
                                 Видови на Документи
                             </h2>
                         </div>
-
-                        <table
-                            class="min-w-full divide-y divide-gray-200 shadow table-auto sm:rounded-lg"
-                        >
-                            <thead class="bg-primary">
-                                <tr>
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                        <div class="flex gap-4 flex-wrap">
+                            <div
+                                v-for="documentType in documentTypes.data"
+                                :key="documentType.id"
+                                class="group relative cursor-pointer overflow-hidden bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:max-w-xs sm:rounded-lg sm:px-10"
+                            >
+                                <span
+                                    class="absolute top-10 z-0 h-20 w-20 rounded-full bg-sky-500 transition-all duration-300 group-hover:scale-[10]"
+                                ></span>
+                                <div class="relative z-10 mx-auto max-w-md">
+                                    <span
+                                        class="grid h-20 w-20 place-items-center rounded-full bg-sky-500 transition-all duration-300 group-hover:bg-sky-400"
                                     >
-                                        index
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                    <DocumentNewIcon 
+                                        class="h-10 w-10 text-white transition-all"
+                                    ></DocumentNewIcon>
+                                    
+                                    </span>
+                                    <div
+                                        class="space-y-6 pt-5 text-base leading-7 text-gray-600 transition-all duration-300 group-hover:text-white/90"
                                     >
-                                        Бр
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
+                                        <p class="font-bold text-xl text-sky-700">
+                                            {{
+                                                latinToCyrillic(
+                                                    documentType.type,
+                                                )
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="pt-5 text-base font-semibold leading-7"
                                     >
-                                        Документ
-                                    </th>
-
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
-                                    >
-                                        Акција
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr
-                                    class="hover:bg-slate-100"
-                                    v-for="(
-                                        documentType, index
-                                    ) in documentTypes.data"
-                                    :key="documentType.id"
-                                >
-                                    <td class="text-xs text-slate-300">
-                                        {{ documentType.id }} {{}}
-                                    </td>
-                                    <td class="">
-                                        {{ documentTypes.from + index }} {{}}
-                                    </td>
-                                    <td class="">{{ latinToCyrillic(documentType.type) }}</td>
-
-                                    <td class="">
-                                        <div class="flex gap-2">
+                                        <p>
                                             <Link
-                                                v-tippy="{
-                                                    content:
-                                                        'Додај Нова ' +
-                                                        latinToCyrillic(documentType.type),
-                                                    arrow: true,
-                                                    theme: 'light',
-                                                }"
                                                 :href="`/documents/add/${documentType.id}`"
-                                                class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
-                                                ><AddIcon
-                                            /></Link>
-
-                                            <button
-                                                class="hover:text-red-700 text-slate-300"
-                                                @click="
-                                                    () =>
-                                                        deleteTax(
-                                                            documentType.id
-                                                        )
-                                                "
-                                            >
-                                                <DeleteIcon
-                                                    v-tippy="{
-                                                        content:
-                                                            'Избриши ДДВ Ставка',
-                                                        arrow: true,
-                                                        theme: 'light',
-                                                    }"
-                                                />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <!-- Pagination Links -->
-                        <div
-                            v-if="documentTypes && documentTypes.links"
-                            class="flex flex-col lg:flex-row lg:justify-around"
-                        >
-                            <div class="mt-2">
-                                <Link
-                                    v-for="link in documentTypes.links"
-                                    :key="link.label"
-                                    :href="link.url || '#'"
-                                    class="p-1 mx-1 hover:bg-sky-200"
-                                    :class="{
-                                        'text-slate-300': !link.url,
-                                        'text-sky-500 font-bold': link.active,
-                                    }"
-                                >
-                                    {{ getPaginationLabel(link.label) }}
-                                </Link>
+                                                class="text-sky-500 transition-all duration-300 group-hover:text-white"
+                                                >Направи нов документ &rarr;
+                                            </Link>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-
-                            <p class="mt-3 text-xs text-gray-500">
-                                Прикажани се од {{ documentTypes.from }} до
-                                {{ documentTypes.to }} од вкупно
-                                {{ documentTypes.total }} записи
-                            </p>
                         </div>
                     </div>
                 </div>

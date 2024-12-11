@@ -37,6 +37,7 @@ class PDFController extends Controller
     public function printDocument(Document $document, Request $request)
     {
         $type = $request->query('type');
+        // dd($document, $type);
         
         
         
@@ -49,9 +50,13 @@ class PDFController extends Controller
         $client->load('accounts.bank', 'customer.customerType');
         $document->load('documentType');
         $products = Product::whereNull('packing_list_id')->where('document_id', $document->id)->get();
-        $packingList = PackingList::where('document_id', $document->id)->firstOrFail();
-        $packingListProducts = Product::whereNotNull('packing_list_id')->where('document_id', $document->id)->get();
 
+
+        
+        $packingList = PackingList::where('document_id', $document->id)->first();
+        $packingListProducts = Product::whereNotNull('packing_list_id')->where('document_id', $document->id)->get();
+        
+        // dd($document, $type);
 
         // dd($packingList, $type, );
 
