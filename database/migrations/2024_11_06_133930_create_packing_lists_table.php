@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('packing_lists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('owner_id')->constrained('companies');
-            $table->foreignId('client_id')->constrained('companies');
-            $table->foreignId('document_id')->nullable()->constrained('documents');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('owner_id')->constrained('companies')->onDelete('cascade');
+            $table->foreignId('client_id')->constrained('companies')->onDelete('cascade');
+            $table->foreignId('document_id')->nullable()->constrained('documents')->onDelete('cascade');
             $table->foreignId('vehicle_id')->nullable()->constrained('vehicles');
             $table->foreignId('driver_id')->nullable()->constrained('drivers');
             $table->foreignId('curency_id')->nullable()->constrained('curencies');
