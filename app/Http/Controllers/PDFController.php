@@ -46,7 +46,7 @@ class PDFController extends Controller
         $client = Company::findOrFail($clientId);
         $owner = Company::findOrFail($ownerId);
         
-        $owner->load('accounts.bank');
+        $owner->load('accounts.bank', 'contacts');
         $client->load('accounts.bank', 'customer.customerType');
         $document->load('documentType');
         $products = Product::whereNull('packing_list_id')->where('document_id', $document->id)->get();
