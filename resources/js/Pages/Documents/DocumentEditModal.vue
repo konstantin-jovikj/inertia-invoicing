@@ -10,6 +10,8 @@ import { computed, ref, toRefs } from "vue";
 import { Modal } from "@inertiaui/modal-vue";
 import { watch } from "vue";
 import Checkbox from "@/Components/Checkbox.vue";
+import { latinToCyrillic } from "@/helpers/latinToCyrillic";
+
 
 const props = defineProps({
     document: Object,
@@ -41,6 +43,7 @@ const form = useForm({
     document_type_id: document.value.document_type_id,
     is_for_export: Boolean(document.value.is_for_export),
     is_translation: Boolean(document.value.is_translation),
+    is_for_advanced_payment: Boolean(document.value.is_for_advanced_payment),
     owner_id: document.value.owner_id,
     client_id: document.value.client_id,
     curency_id: document.value.curency_id,
@@ -203,10 +206,35 @@ const isSelected = (declarationId) => {
                                                     }}</span
                                                 >
                                             </div>
+                                            <!-- Is For Advance Payment -->
+                                            <div
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
+                                            >
+                                                <InputLabel for="is_for_advanced_payment"
+                                                    >Дали е Авансна {{ latinToCyrillic(props.document.document_type.type) }}</InputLabel
+                                                >
+
+                                                <input
+                                                    type="checkbox"
+                                                    v-model="
+                                                        form.is_for_advanced_payment
+                                                    "
+                                                    id="is_for_advanced_payment"
+                                                    class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                                />
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors
+                                                            .is_for_advanced_payment
+                                                    }}</span
+                                                >
+                                            </div>
 
                                             <!-- Document No -->
                                             <div
-                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-2"
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
                                                 <InputLabel for="document_no"
                                                     >Број на

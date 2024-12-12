@@ -14,7 +14,9 @@ import { debounce } from "lodash";
 import { Tippy } from "vue-tippy";
 import WarrantyIcon from "@/Components/WarrantyIcon.vue";
 import PrintIcon from "@/Components/PrintIcon.vue";
-// import {Modal, ModalLink } from "@/Components/ModalLink.vue";
+import { latinToCyrillic } from "@/helpers/latinToCyrillic";
+
+
 
 // Props from the parent
 const props = defineProps({
@@ -192,7 +194,7 @@ const createPackingList = () => {
                                 >
                                     <EditIcon
                                         v-tippy="{
-                                            content: `Измени ${props.document.document_type.type}`,
+                                            content: `Измени ${latinToCyrillic(props.document.document_type.type)}`,
                                             arrow: true,
                                             theme: 'light',
                                         }"
@@ -206,7 +208,7 @@ const createPackingList = () => {
                                 >
                                     <PrintIcon
                                         v-tippy="{
-                                            content: `Принтај ${props.document.document_type.type}`,
+                                            content: `Принтај ${latinToCyrillic(props.document.document_type.type)}`,
                                             arrow: true,
                                             theme: 'light',
                                         }"
@@ -236,8 +238,7 @@ const createPackingList = () => {
                                     <div>
                                         <span class="italic text-md">
                                             {{
-                                                props.document.document_type
-                                                    .type
+                                                latinToCyrillic(props.document.document_type.type)
                                             }}
                                         </span>
                                         <span class="italic text-md">

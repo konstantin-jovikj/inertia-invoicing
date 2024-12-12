@@ -36,6 +36,7 @@ class Document extends Model
         'term_id',
         'is_translation',
         'is_for_export',
+        'is_for_advanced_payment',
         'document_no',
         'date',
         'drawing_no',

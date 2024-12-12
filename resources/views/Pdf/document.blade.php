@@ -18,14 +18,21 @@
                 @if ($type === 'packingList')
                     <span class="text-sm">Пакинг Листа Бр: / Packing List Nr: </span>
                     <span class="text-sm">{{ $packingList->document_no }}</span>
-                @elseif (!$document->is_for_export)
-                    <span class="text-sm">{{ $convertedDocumentName }} Бр: </span>
-                    <span class="text-lg">{{ $document->document_no }} </span>
                 @else
-                    <span class="text-sm">{{ $convertedDocumentName }} / {{ $document->documentType->type }} No: </span>
-                    <span class="text-lg">{{ $document->document_no }} </span>
+                    @if ($document->is_for_advanced_payment)
+                        <span>Авансна</span>
+                    @endif
+                    <span class="text-sm">
+                        @if (!$document->is_for_export)
+                            {{ $convertedDocumentName }} Бр: 
+                        @else
+                            {{ $convertedDocumentName }} / {{ $document->documentType->type }} No: 
+                        @endif
+                    </span>
+                    <span class="text-lg">{{ $document->document_no }}</span>
                 @endif
             </div>
+            
 
             <div>
                 @if ($type === 'packingList')
@@ -547,7 +554,8 @@
                                     </th>
                                     <td
                                         class="border border-gray-600 px-2 py-1 text-right text-md font-semibold align-middle whitespace-nowrap">
-                                        <span class="pe-1">{{ number_format($document->total_with_tax_and_discount, 2, '.', ',') }}</span>
+                                        <span
+                                            class="pe-1">{{ number_format($document->total_with_tax_and_discount, 2, '.', ',') }}</span>
                                         <span>{{ $document->curency->symbol }}</span>
                                     </td>
                                 </tr>
@@ -555,7 +563,7 @@
                                 @if (!is_null($document->advance_payment) && $document->advance_payment != 0)
                                     <tr class="  w-full justify-stretch flex-grow">
                                         <th
-                                            class="border border-gray-600 px-2 py-1 text-left leading-none  bg-emerald-200 text-xs font-normal italic">
+                                            class="border border-gray-600 px-2 py-1 text-left leading-none  bg-green-200 text-xs font-normal italic">
 
                                             Вкупно Aванс
 
@@ -598,7 +606,7 @@
                                             {{ $document->curency->symbol }}
                                         </td>
                                     </tr>
-                                    
+
 
                                     <tr class="">
                                         <th
@@ -609,7 +617,7 @@
                                         </th>
                                         <td
                                             class=" px-2 py-1  flex justify-end font-semibold text-md  align-middle items-center whitespace-nowrap">
-                                            {{ number_format($document->grand_total , 2, '.', ',') }}
+                                            {{ number_format($document->grand_total, 2, '.', ',') }}
                                             {{ $document->curency->symbol }}
                                         </td>
                                     </tr>

@@ -19,15 +19,10 @@ class DocumentTypeSeeder extends Seeder
             array('type' => 'Offer'),
             array('type' => 'Proforma-Invoice'),
             array('type' => 'Invoice'),
-            array('type' => 'Avansna Faktura'),
             array('type' => 'Ispratnica'),
-            // array('type' => 'Packing-List'),
             array('type' => 'Kasa-Primi'),
             array('type' => 'Priemnica'),
             array('type' => 'Tovaren List'),
-            array('type' => 'Paten Nalog'),
-            // array('type' => 'Warranty'),
-
         );
 
         DB::table('document_types')->insert($document_types);

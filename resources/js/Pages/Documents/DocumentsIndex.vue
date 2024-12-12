@@ -249,6 +249,8 @@ console.log(props.documents);
                                     class="hover:bg-slate-100"
                                     v-for="(document, index) in documents.data"
                                     :key="document.id"
+                                     :class="[document.is_for_advanced_payment ? 'bg-red-50 hover:bg-red-100' : '']"
+                                    
                                 >
                                     <td class="text-xs text-slate-300">
                                         {{ document.id }} {{}}
@@ -262,6 +264,7 @@ console.log(props.documents);
                                         {{ document.document_no }}
                                     </td>
                                     <td class="text-base font-semibold">
+                                        {{ document.is_for_advanced_payment ? 'Авансна ' : '' }}
                                         {{
                                             latinToCyrillic(
                                                 document.document_type.type,

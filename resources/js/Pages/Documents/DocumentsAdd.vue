@@ -5,6 +5,7 @@ import TextInput from "../../Components/TextInput.vue";
 import InputLabel from "../../Components/InputLabel.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
+import { latinToCyrillic } from "@/helpers/latinToCyrillic";
 
 const props = defineProps({
     documentType: Object,
@@ -26,6 +27,7 @@ const form = useForm({
     document_type_id: props.documentType.id,
     is_for_export: false,
     is_translation: false,
+    is_for_advanced_payment: false,
     owner_id: "",
     client_id: "",
     curency_id: "",
@@ -78,11 +80,11 @@ const submit = () => {
                                     <div class="text-gray-600">
                                         <p class="text-lg font-medium">
                                             Додај Нова
-                                            {{ props.documentType.type }}
+                                            {{ latinToCyrillic(props.documentType.type) }}
                                         </p>
                                         <p>
                                             Внеси податоци за новата
-                                            {{ props.documentType.type }}
+                                            {{ latinToCyrillic(props.documentType.type) }}
                                         </p>
                                     </div>
                                     <div class="lg:col-span-2">
@@ -143,9 +145,35 @@ const submit = () => {
                                                 >
                                             </div>
 
+                                            <!-- Is For Advance Payment -->
+                                            <div
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
+                                            >
+                                                <InputLabel for="is_for_advanced_payment"
+                                                    >Дали е Авансна {{ latinToCyrillic(props.documentType.type) }}</InputLabel
+                                                >
+
+                                                <input
+                                                    type="checkbox"
+                                                    v-model="
+                                                        form.is_for_advanced_payment
+                                                    "
+                                                    id="is_for_advanced_payment"
+                                                    class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                                />
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors
+                                                            .is_for_advanced_payment
+                                                    }}</span
+                                                >
+                                            </div>
+
                                             <!-- Document No -->
                                             <div
-                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-2"
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
                                                 <InputLabel for="document_no"
                                                     >Број на
