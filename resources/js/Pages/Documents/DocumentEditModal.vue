@@ -44,6 +44,7 @@ const form = useForm({
     is_for_export: Boolean(document.value.is_for_export),
     is_translation: Boolean(document.value.is_translation),
     is_for_advanced_payment: Boolean(document.value.is_for_advanced_payment),
+    print_price: Boolean(document.value.print_price),
     owner_id: document.value.owner_id,
     client_id: document.value.client_id,
     curency_id: document.value.curency_id,
@@ -232,6 +233,32 @@ const isSelected = (declarationId) => {
                                                 >
                                             </div>
 
+                                             <!-- Print Price -->
+                                             <div
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
+                                            >
+                                                <InputLabel for="print_price"
+                                                    >Принтај Цени {{ latinToCyrillic(props.document.document_type.type) }}</InputLabel
+                                                >
+
+                                                <input
+                                                    type="checkbox"
+                                                    v-model="
+                                                        form.print_price
+                                                    "
+                                                    id="print_price"
+                                                    class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                                />
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors
+                                                            .print_price
+                                                    }}</span
+                                                >
+                                            </div>
+
                                             <!-- Document No -->
                                             <div
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
@@ -284,7 +311,7 @@ const isSelected = (declarationId) => {
 
                                             <!-- Date -->
                                             <div
-                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
+                                                class=" mb-4 md:col-span-1"
                                             >
                                                 <InputLabel for="date"
                                                     >Датум</InputLabel
@@ -306,7 +333,7 @@ const isSelected = (declarationId) => {
                                             </div>
 
                                             <!-- Firma Domakin -->
-                                            <div class="md:col-span-3">
+                                            <div class="md:col-span-2">
                                                 <InputLabel for="owner_id"
                                                     >Избери фирма</InputLabel
                                                 >

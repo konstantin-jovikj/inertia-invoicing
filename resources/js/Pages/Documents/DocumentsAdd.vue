@@ -28,6 +28,7 @@ const form = useForm({
     is_for_export: false,
     is_translation: false,
     is_for_advanced_payment: false,
+    print_price: true,
     owner_id: "",
     client_id: "",
     curency_id: "",
@@ -171,6 +172,32 @@ const submit = () => {
                                                 >
                                             </div>
 
+                                            <!-- Print Price -->
+                                            <div
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
+                                            >
+                                                <InputLabel for="print_price"
+                                                    >Принтај Цени {{ latinToCyrillic(props.documentType.type) }}</InputLabel
+                                                >
+
+                                                <input
+                                                    type="checkbox"
+                                                    v-model="
+                                                        form.print_price
+                                                    "
+                                                    id="print_price"
+                                                    class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                                />
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors
+                                                            .print_price
+                                                    }}</span
+                                                >
+                                            </div>
+
                                             <!-- Document No -->
                                             <div
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
@@ -221,7 +248,7 @@ const submit = () => {
                                             </div>
                                             <!-- Date -->
                                             <div
-                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
+                                                class="mb-4  md:col-span-1"
                                             >
                                                 <InputLabel
                                                     for="doc_is_for_export"
@@ -244,7 +271,7 @@ const submit = () => {
                                             </div>
 
                                             <!-- Firma Domakin -->
-                                            <div class="md:col-span-3">
+                                            <div class="md:col-span-2">
                                                 <InputLabel for="owner_id"
                                                     >Избери фирма</InputLabel
                                                 >

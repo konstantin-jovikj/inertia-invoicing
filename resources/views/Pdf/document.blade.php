@@ -118,7 +118,7 @@
         @endif
 
         <div class="border-b border-gray-500   w-full flex ">
-            @if ($type !== 'packingList')
+            @if ($type !== 'packingList' && $document->print_price)
 
                 <div class="w-[25%] border-e me-2 border-gray-500">
                     @if ($document->is_for_export)
@@ -213,7 +213,7 @@
                                     Кол
                                 @endif
                             </th>
-                            @if ($type !== 'packingList')
+                            @if ($type !== 'packingList' && $document->print_price)
                                 <th class="border border-gray-300 px-2 py-1 text-left leading-none">
                                     @if ($document->is_for_export)
                                         Price
@@ -236,7 +236,7 @@
                                     Tot.Volume
                                 </th>
                             @endif
-                            @if ($type !== 'packingList')
+                            @if ($type !== 'packingList' && $document->print_price)
                                 <th class="border border-gray-300 px-2 py-1 text-left leading-none">
                                     @if ($document->is_for_export)
                                         Тот.Price
@@ -300,7 +300,7 @@
 
 
 
-                                    @if ($type !== 'packingList')
+                                    @if ($type !== 'packingList' && $document->print_price)
                                         <td class="border border-gray-300 px-2 py-1 leading-none text-right">
                                             @if ($showRowNumber && $product->single_price != 0)
                                                 {{ number_format($product->single_price, 2, '.', ',') }}
@@ -483,6 +483,9 @@
             </div>
 
             {{-- Calculated Fields --}}
+            @if ($document->print_price)
+                
+            
             <div class="w-2/5">
                 <div class=" ">
                     @if ($type !== 'packingList')
@@ -663,6 +666,7 @@
                 </div>
 
             </div>
+            @endif
         </div>
     </main>
 </body>

@@ -23,6 +23,7 @@ class PackingList extends Model
         'term_id',
         'is_translation',
         'is_for_export',
+        'print_price',
         'document_no',
         'date',
         'drawing_no',

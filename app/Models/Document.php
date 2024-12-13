@@ -37,6 +37,7 @@ class Document extends Model
         'is_translation',
         'is_for_export',
         'is_for_advanced_payment',
+        'print_price',
         'document_no',
         'date',
         'drawing_no',
