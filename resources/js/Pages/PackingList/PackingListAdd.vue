@@ -47,6 +47,17 @@ const deleteProduct = (id) => {
     }
 };
 
+const deletePackingList = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваа Пакинг Листа?")) {
+        router.delete("/packinglist/delete/" + id, {
+            preserveState: false,
+            onSuccess: () => {
+                flashMessage.value = props.flash.message;
+            },
+        });
+    }
+};
+
 // Handle flash message timeout
 onMounted(() => {
     if (flashMessage.value) {
@@ -103,6 +114,25 @@ onMounted(() => {
                                         }"
                                     />
                                 </a>
+
+                                <button
+                                                class="hover:text-red-700 text-slate-300"
+                                                @click="
+                                                    () =>
+                                                    deletePackingList(
+                                                        props.packingList.id,
+                                                        )
+                                                "
+                                            >
+                                                <DeleteIcon
+                                                    v-tippy="{
+                                                        content:
+                                                            'Избриши Пакинг Листа',
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"
+                                                />
+                                            </button>
 
 
                             </div>

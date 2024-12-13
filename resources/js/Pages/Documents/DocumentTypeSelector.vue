@@ -12,23 +12,11 @@ import DocumentNewIcon from "@/Components/DocumentNewIcon.vue";
 import { latinToCyrillic } from "@/helpers/latinToCyrillic"; // Adjust the path if needed
 
 const props = defineProps({
-    documentTypes: Object,
+    documentTypes: Array,
 });
 
 const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
-
-// Delete bank function
-const deleteTax = (id) => {
-    if (confirm("Дали сигурно сакаш да ја избришеш оваа ДДВ Ставка?")) {
-        router.delete("/taxes/delete/" + id, {
-            preserveState: false,
-            onSuccess: () => {
-                flashMessage.value = pageProps.flash?.message || ""; // Use pageProps.flash
-            },
-        });
-    }
-};
 
 onMounted(() => {
     if (flashMessage.value) {
@@ -38,12 +26,18 @@ onMounted(() => {
     }
 });
 
-const getPaginationLabel = (label) => {
-    // Handle special cases for prev/next arrows
-    if (label === "&laquo; Previous") return "<<";
-    if (label === "Next &raquo;") return ">>";
-    return label;
-};
+const colors = [
+    "bg-red-500",
+    "bg-fuchsia-600",
+    "bg-lime-600",
+    "bg-amber-600",
+    "bg-sky-500",
+    "bg-stone-600",
+    "bg-teal-700",
+    "bg-orange-300",
+];
+
+console.log(props.documentTypes);
 </script>
 
 <template>
@@ -66,28 +60,52 @@ const getPaginationLabel = (label) => {
                                 Видови на Документи
                             </h2>
                         </div>
+
+                        <!-- Card start -->
                         <div class="flex gap-4 flex-wrap">
                             <div
-                                v-for="documentType in documentTypes.data"
+                                v-for="(
+                                    documentType, index
+                                ) in props.documentTypes"
                                 :key="documentType.id"
-                                class="group relative cursor-pointer overflow-hidden bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:max-w-xs sm:rounded-lg sm:px-10"
+                                class="group relative cursor-pointer overflow-hidden bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 transition-all duration-800 hover:-translate-y-1 hover:shadow-2xl sm:max-w-xs sm:rounded-lg sm:px-10"
                             >
+                                <!-- Dynamic color -->
                                 <span
-                                    class="absolute top-10 z-0 h-20 w-20 rounded-full bg-sky-500 transition-all duration-300 group-hover:scale-[10]"
+                                    :class="`${colors[index % colors.length]} absolute top-10 z-0 h-20 w-20 rounded-full transition-all duration-800 group-hover:scale-[10]`"
                                 ></span>
                                 <div class="relative z-10 mx-auto max-w-md">
                                     <span
-                                        class="grid h-20 w-20 place-items-center rounded-full bg-sky-500 transition-all duration-300 group-hover:bg-sky-400"
+                                        :class="`grid h-20 w-20 place-items-center rounded-full transition-all duration-800 ${colors[index % colors.length]} group-hover:bg-${colors[index % colors.length].replace('bg-', 'lighter-')}`"
                                     >
-                                    <DocumentNewIcon 
-                                        class="h-10 w-10 text-white transition-all"
-                                    ></DocumentNewIcon>
-                                    
+                                        <DocumentNewIcon
+                                            :class="`h-10 w-10 text-white transition-all group-hover:text-${colors[index % colors.length].replace('bg-', '')}`"
+                                        />
                                     </span>
-                                    <div
-                                        class="space-y-6 pt-5 text-base leading-7 text-gray-600 transition-all duration-300 group-hover:text-white/90"
+                                    <p
+                                        class="mt-4 font-semibold text-zinc-400  group-hover:text-white"
+                                        v-if="documentType.latest_document"
                                     >
-                                        <p class="font-bold text-xl text-sky-700">
+                                        Последен Документ:
+                                        {{
+                                            documentType.latest_document
+                                                .document_no
+                                        }}
+                                        {{
+                                            new Date(
+                                                documentType.latest_document.date,
+                                            ).toLocaleDateString("en-GB")
+                                        }}
+                                    </p>
+                                    <p
+                                    class="mt-4 font-semibold text-sky-800 italic group-hover:text-white"
+                                     v-else>Нема документ од овој тип.</p>
+                                    <div
+                                        class="space-y-6 pt-5 text-base leading-7 text-gray-600 transition-all duration-800 group-hover:text-white/90"
+                                    >
+                                        <p
+                                            :class="`font-bold text-xl text-stone-500 group-hover:text-white`"
+                                        >
                                             {{
                                                 latinToCyrillic(
                                                     documentType.type,
@@ -101,7 +119,7 @@ const getPaginationLabel = (label) => {
                                         <p>
                                             <Link
                                                 :href="`/documents/add/${documentType.id}`"
-                                                class="text-sky-500 transition-all duration-300 group-hover:text-white"
+                                                :class="`text-black transition-all duration-800 group-hover:text-white`"
                                                 >Направи нов документ &rarr;
                                             </Link>
                                         </p>
@@ -109,6 +127,8 @@ const getPaginationLabel = (label) => {
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Card end -->
                     </div>
                 </div>
             </div>

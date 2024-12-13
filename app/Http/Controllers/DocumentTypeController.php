@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
 use App\Models\DocumentType;
 use Illuminate\Http\Request;
 
@@ -12,12 +13,19 @@ class DocumentTypeController extends Controller
      */
     public function index()
     {
-        $documentTypes = DocumentType::paginate(20);
-        // dd($documentTypes);
-        return inertia('Documents/DocumentTypeSelector',[
+        // Fetch document types with the latest document
+        $documentTypes = DocumentType::with(['latestDocument' => function ($query) {
+            $query->latest();
+        }])->get();
+
+        // dd($documentTypes->map(function ($documentType) {
+        //     return $documentType->latestDocument;
+        // }));
+    
+        // Pass the data to the Vue component
+        return inertia('Documents/DocumentTypeSelector', [
             'documentTypes' => $documentTypes,
         ]);
-
     }
 
     /**

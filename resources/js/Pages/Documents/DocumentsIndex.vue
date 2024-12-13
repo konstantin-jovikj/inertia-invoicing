@@ -6,6 +6,8 @@ import { computed, ref, watch, onMounted } from "vue";
 import { debounce } from "lodash";
 import EditIcon from "../../Components/EditIcon.vue";
 import DeleteIcon from "../../Components/DeleteIcon.vue";
+import TruckIcon from "@/Components/TruckIcon.vue";
+import PlanetIcon from "@/Components/PlanetIcon.vue";
 import AddIcon from "../../Components/AddIcon.vue";
 import DocumentNewIcon from "@/Components/DocumentNewIcon.vue";
 import TextInput from "../../Components/TextInput.vue";
@@ -249,8 +251,11 @@ console.log(props.documents);
                                     class="hover:bg-slate-100"
                                     v-for="(document, index) in documents.data"
                                     :key="document.id"
-                                     :class="[document.is_for_advanced_payment ? 'bg-red-50 hover:bg-red-100' : '']"
-                                    
+                                    :class="[
+                                        document.is_for_advanced_payment
+                                            ? 'bg-red-50 hover:bg-red-100'
+                                            : '',
+                                    ]"
                                 >
                                     <td class="text-xs text-slate-300">
                                         {{ document.id }} {{}}
@@ -263,25 +268,51 @@ console.log(props.documents);
                                     >
                                         {{ document.document_no }}
                                     </td>
-                                    <td class="text-base font-semibold">
-                                        {{ document.is_for_advanced_payment ? 'Авансна ' : '' }}
+                                    <td class="flex text-base font-semibold">
+                                        <!-- <span
+                                            v-if="document.packing_list"
+                                            class="pe-2 text-orange-500"
+                                        >
+                                            <TruckIcon />
+                                        </span> -->
+                                        {{
+                                            document.is_for_advanced_payment
+                                                ? "Авансна "
+                                                : ""
+                                        }}
                                         {{
                                             latinToCyrillic(
                                                 document.document_type.type,
                                             )
                                         }}
-                                        <span class="text-gray-400">
-                                            {{
-                                                document.is_for_export
-                                                    ? "-за извоз"
-                                                    : ""
-                                            }}
-                                        </span>
+                                        <span
+                                            class="text-cyan-600 flex px-2"
+                                            v-if="document.is_for_export"
+                                        >
+                                            <PlanetIcon
+                                                v-tippy="{
+                                                    content: `извоз`,
+                                                    arrow: true,
+                                                    theme: 'light',
+                                                }"
+                                        /></span>
                                         <span>
-                                            <span class="text-xs p-2 rounded-full text-red-600 hover:bg-gray-800" v-if="document.packing_list">
-                                               <Link :href="`/packinglist/create/${document.packing_list.id}`">
-                                                {{    `Пакинг Листа : ${document.packing_list.document_no}` }}
-                                            </Link> 
+                                            <span
+                                                class=" text-lime-600 hover:bg-gray-800"
+                                                v-if="document.packing_list"
+                                            >
+                                            <!-- <TruckIcon > -->
+                                                <Link 
+                                                v-tippy="{
+                                                    content: `Пакинг Листа Бр: ${document.packing_list.document_no}`,
+                                                    arrow: true,
+                                                    theme: 'light',
+                                                }"
+                                                    :href="`/packinglist/create/${document.packing_list.id}`"
+                                                ><TruckIcon ></TruckIcon>
+ 
+                                                </Link>
+                                                <!-- </TruckIcon> -->
                                             </span>
                                         </span>
                                     </td>
@@ -308,7 +339,9 @@ console.log(props.documents);
                                                 new Intl.NumberFormat("en-US", {
                                                     minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2,
-                                                }).format(document.total_with_tax_and_discount)
+                                                }).format(
+                                                    document.total_with_tax_and_discount,
+                                                )
                                             }}
                                         </span>
                                         <span
@@ -335,7 +368,9 @@ console.log(props.documents);
                                             >
                                                 <EditIcon
                                                     v-tippy="{
-                                                        content: `Измени ${document.document_type.type}`,
+                                                        content:  `Измени ${latinToCyrillic(
+                                                document.document_type.type,
+                                            )}`,
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"
@@ -354,7 +389,9 @@ console.log(props.documents);
                                                 <DeleteIcon
                                                     v-tippy="{
                                                         content:
-                                                            'Избриши Банка',
+                                                            `Избриши ${latinToCyrillic(
+                                                document.document_type.type,
+                                            )}`,
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"

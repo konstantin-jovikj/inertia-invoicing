@@ -201,6 +201,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/packinglist/add/row/{packingList}/{product}', [PackingListController::class, 'addEmptyRow'])
     ->name('packinglist.addrow');
 
+    Route::delete('/packinglist/delete/{packingList}', [PackingListController::class, 'destroy'])->name('packinglist.delete');
+
+
 
     //Declarations
 

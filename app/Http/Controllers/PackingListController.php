@@ -179,6 +179,8 @@ class PackingListController extends Controller
      */
     public function destroy(PackingList $packingList)
     {
-        //
+        $packingList->delete();
+
+        return redirect()->route('document.index');
     }
 }

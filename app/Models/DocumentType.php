@@ -16,4 +16,9 @@ class DocumentType extends Model
     {
         return $this->hasMany(Document::class);
     }
+
+    public function latestDocument()
+{
+    return $this->hasOne(Document::class)->latestOfMany();
+}
 }
