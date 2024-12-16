@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId(column: 'category_id')->nullable()->constrained('categories');
             $table->string('model')->nullable();
-            $table->string('model_en')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
