@@ -85,6 +85,12 @@ const showingNavigationDropdown = ref(false);
                                         >
                                             Декларации
                                         </DropdownLink>
+                                        <hr />
+                                        <DropdownLink
+                                            :href="route('declarations.index')"
+                                        >
+                                            ЕУ Регулативи и директиви
+                                        </DropdownLink>
 
                                         <hr />
                                         <DropdownLink
