@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DeclarationController;
+use App\Http\Controllers\DirectiveController;
 use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\PDFController;
 use Inertia\Inertia;
@@ -216,6 +218,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/declaration/delete/{declaration}', [DeclarationController::class, 'destroy'])->name('declaration.delete');
 
 
+    //Regulatives and Directives
+    Route::get('/directives', [DirectiveController::class, 'index'])->name('directives.index');
+    Route::get('/category/edit/{category}', [CategoryController::class, 'edit'])->name('categoryDirectivesAndRegulations.edit');
+    Route::post('/categories/{category}/toggle-regulation', [CategoryController::class, 'toggleRegulation']);
+    Route::post('/categories/{category}/toggle-directive', [CategoryController::class, 'toggleDirective']);
 });
 
 require __DIR__ . '/auth.php';

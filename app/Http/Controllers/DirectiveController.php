@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Directive;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,11 @@ class DirectiveController extends Controller
      */
     public function index()
     {
-        //
+        $categoryDirectivesAndRegulations = Category::with('directives', 'regulations')->get();
+        // dd($categoryDirectivesAndRegulations);
+        return inertia('DirectivesAssociations/DirectivesAssociationsIndex',[
+            'categoryDirectivesAndRegulations' => $categoryDirectivesAndRegulations,
+        ]);
     }
 
     /**
