@@ -7,7 +7,7 @@ import DeleteIcon from "../../Components/DeleteIcon.vue";
 import AddIcon from "../../Components/AddIcon.vue";
 
 const props = defineProps({
-    regulations: Array,
+    directives: Array,
 });
 
 const { props: pageProps } = usePage();
@@ -15,9 +15,9 @@ const flashMessage = ref(pageProps.flash?.message || "");
 
 
 // Delete bank function
-const deleteRegulation = (id) => {
-    if (confirm("Дали сигурно сакаш да ја избришеш оваа Регулатива?")) {
-        router.delete("/regulation/delete/" + id, {
+const deleteDirective = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваа Директива?")) {
+        router.delete("/directive/delete/" + id, {
             preserveState: false,
             onSuccess: () => {
                 flashMessage.value = props.flash.message;
@@ -52,10 +52,10 @@ onMounted(() => {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
-                            <h2 class="font-bold text-sky-800">Регулативи</h2>
+                            <h2 class="font-bold text-sky-800">Директиви</h2>
                             <div class="flex">
                                 <Link
-                                    href="regulation/create"
+                                    href="/directive/create"
                                     class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
                                     ><AddIcon
                                 /></Link>
@@ -79,7 +79,7 @@ onMounted(() => {
                                         scope="col"
                                         class="px-6 py-3 text-xs font-medium tracking-wider text-left text-white uppercase bg-sky-700"
                                     >
-                                        Регулатива
+                                        Директива
                                     </th>
                                     <th
                                         scope="col"
@@ -102,15 +102,15 @@ onMounted(() => {
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
                                     class="hover:bg-slate-100"
-                                    v-for="(regulation) in regulations"
-                                    :key="regulation.id"
+                                    v-for="(directive) in directives"
+                                    :key="directive.id"
                                 >
                                     <td class="text-xs text-slate-300">
-                                        {{ regulation.id }} {{}}
+                                        {{ directive.id }} {{}}
                                     </td>
  
-                                    <td class="text-md text-purple-700 font-bold">{{ regulation.regulation }}</td>
-                                    <td class="text-xs text-slate-600 px-2">{{ regulation.description }}</td>
+                                    <td class="text-md text-purple-700 font-bold">{{ directive.directive }}</td>
+                                    <td class="text-xs text-slate-600 px-2">{{ directive.description }}</td>
 
 
                                     <td class="">
@@ -119,14 +119,14 @@ onMounted(() => {
                                                 class="hover:text-green-600 text-slate-300"
                                                 :href="
                                                     route(
-                                                        'regulation.edit',
-                                                        regulation.id
+                                                        'directive.edit',
+                                                        directive.id
                                                     )
                                                 "
                                             >
                                                 <EditIcon v-tippy="{
                                                         content:
-                                                            'Измени Регулатива',
+                                                            'Измени Директива',
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"/>
@@ -136,12 +136,12 @@ onMounted(() => {
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
-                                                        deleteRegulation(regulation.id)
+                                                        deleteDirective(directive.id)
                                                 "
                                             >
                                                 <DeleteIcon v-tippy="{
                                                         content:
-                                                            'Избриши Регулатива',
+                                                            'Избриши Директива',
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"/>

@@ -227,13 +227,25 @@ Route::middleware('auth')->group(function () {
 
     //Regulations
 
-    Route::get('/regulations', [RegulationController::class, 'index'])->name('regulations.index');
+    Route::get( '/regulations', [RegulationController::class, 'index'])->name('regulations.index');
     Route::get('/regulation/edit/{regulation}', [RegulationController::class, 'edit'])->name('regulation.edit');
 
     Route::get('/regulation/create', [RegulationController::class, 'create'])->name('regulation.create');
     Route::post('/regulation/store', [RegulationController::class, 'store'])->name('regulation.store');
     Route::delete('/regulation/delete/{regulation}', [RegulationController::class, 'destroy'])->name('regulation.delete');
     Route::put('/regulation/update/{regulation}', [RegulationController::class, 'update'])->name('regulation.update');
+
+     //Directives
+
+     Route::get( '/directives/index', [DirectiveController::class, 'directivesAll'])->name('directivesAll.index');
+     Route::get('/directive/create', [DirectiveController::class, 'create'])->name('directive.create');
+     Route::post('/directive/store', [DirectiveController::class, 'store'])->name('directive.store');
+     Route::get('/directive/edit/{directive}', [DirectiveController::class, 'edit'])->name('directive.edit');
+     Route::put('/directive/update/{directive}', [DirectiveController::class, 'update'])->name('directive.update');
+     Route::delete('/directive/delete/{directive}', [DirectiveController::class, 'destroy'])->name('directive.delete');
+
+
+
 
 });
 

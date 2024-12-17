@@ -97,7 +97,7 @@ const showingNavigationDropdown = ref(false);
                                             ЕУ Регулативи
                                         </DropdownLink>
                                         <DropdownLink
-                                            :href="route('directives.index')"
+                                            :href="route('directivesAll.index')"
                                         >
                                             ЕУ Директиви
                                         </DropdownLink>

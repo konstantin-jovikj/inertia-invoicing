@@ -82,6 +82,6 @@ class RegulationController extends Controller
         if ($regulation) {
             $regulation->delete();
         }
-        return redirect()->route('regulations.index');
+        return redirect()->route('regulations.index')->with('message', 'Регулативата е успешно избришана');
     }
 }

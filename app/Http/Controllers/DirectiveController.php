@@ -20,12 +20,20 @@ class DirectiveController extends Controller
         ]);
     }
 
+    public function directivesAll()
+    {
+        $directives = Directive::all();
+        return inertia('Directives/DirectivesIndex', [
+            'directives' => $directives,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return inertia('Directives/DirectiveAdd');
     }
 
     /**
@@ -33,7 +41,14 @@ class DirectiveController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'directive' => 'required|max:50',
+            'description' => 'required|max:255',
+        ]);
+
+        Directive::create($validated);
+
+        return redirect()->route('directivesAll.index')->with('message', 'Директивата е успешно додадена');
     }
 
     /**
@@ -49,7 +64,9 @@ class DirectiveController extends Controller
      */
     public function edit(Directive $directive)
     {
-        //
+        return inertia('Directives/DirectiveEdit', [
+            'directive' => $directive,
+        ]);
     }
 
     /**
@@ -57,7 +74,14 @@ class DirectiveController extends Controller
      */
     public function update(Request $request, Directive $directive)
     {
-        //
+        $validated = $request->validate([
+            'directive' => 'required|max:50',
+            'description' => 'required|max:255',
+        ]);
+
+        $directive->update($validated);
+
+        return redirect()->route('directivesAll.index')->with('message', 'Директивата е успешно Ажурирана');
     }
 
     /**
@@ -65,6 +89,9 @@ class DirectiveController extends Controller
      */
     public function destroy(Directive $directive)
     {
-        //
+        if ($directive) {
+            $directive->delete();
+        }
+        return redirect()->route('directivesAll.index')->with('message', 'Директивата е успешно избришана');
     }
 }
