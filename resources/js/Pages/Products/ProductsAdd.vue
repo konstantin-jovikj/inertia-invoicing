@@ -9,6 +9,7 @@ import AddContactIcon from "@/Components/AddContactIcon.vue";
 import AddRowIcon from "@/Components/AddRowIcon.vue";
 import EditIcon from "@/Components/EditIcon.vue";
 import PackageIcon from "@/Components/PackageIcon.vue";
+import CertificateIcon from "@/Components/CertificateIcon.vue";
 import { onMounted } from "vue";
 import { debounce } from "lodash";
 import { Tippy } from "vue-tippy";
@@ -565,7 +566,7 @@ const createPackingList = () => {
                                                                 </button>
 
                                                                 <a
-                                                                    class="px-4 hover:text-green-600 text-slate-300"
+                                                                    class="px-2 hover:text-green-600 text-slate-300"
                                                                     :href="`/product/warranty/${product.id}`"
                                                                     target="_blank"
                                                                 >
@@ -578,6 +579,24 @@ const createPackingList = () => {
                                                                         }"
                                                                     />
                                                                 </a>
+
+                                                                <!-- CE Declaration -->
+
+                                                                <a
+                                                                    class="px-2 hover:text-orange-300 text-slate-300"
+                                                                    :href="`/product/warranty/${product.id}`"
+                                                                    target="_blank"
+                                                                >
+                                                                    <CertificateIcon
+                                                                        v-tippy="{
+                                                                            content:
+                                                                                'CE Certificate',
+                                                                            arrow: true,
+                                                                            theme: 'light',
+                                                                        }"
+                                                                    />
+                                                                </a>
+
                                                             </div>
                                                         </td>
                                                     </tr>
