@@ -12,7 +12,10 @@ class RegulationController extends Controller
      */
     public function index()
     {
-        //
+        $regulations = Regulation::all();
+        return inertia('Regulations/RegulationsIndex', [
+            'regulations' => $regulations,
+        ]);
     }
 
     /**
@@ -20,7 +23,7 @@ class RegulationController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Regulations/RegulationAdd');
     }
 
     /**
@@ -28,7 +31,14 @@ class RegulationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'regulation' => 'required|max:50',
+            'description' => 'required|max:255',
+        ]);
+
+        Regulation::create($validated);
+
+        return redirect()->route('regulations.index')->with('message', 'Регулативата е успешно додадена');
     }
 
     /**
@@ -44,7 +54,9 @@ class RegulationController extends Controller
      */
     public function edit(Regulation $regulation)
     {
-        //
+        return inertia('Regulations/RegulationEdit', [
+            'regulation' => $regulation,
+        ]);
     }
 
     /**
@@ -52,7 +64,14 @@ class RegulationController extends Controller
      */
     public function update(Request $request, Regulation $regulation)
     {
-        //
+        $validated = $request->validate([
+            'regulation' => 'required|max:50',
+            'description' => 'required|max:255',
+        ]);
+
+        $regulation->update($validated);
+
+        return redirect()->route('regulations.index')->with('message', 'Регулативата е успешно додадена');
     }
 
     /**
@@ -60,6 +79,9 @@ class RegulationController extends Controller
      */
     public function destroy(Regulation $regulation)
     {
-        //
+        if ($regulation) {
+            $regulation->delete();
+        }
+        return redirect()->route('regulations.index');
     }
 }

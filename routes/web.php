@@ -5,6 +5,7 @@ use App\Http\Controllers\DeclarationController;
 use App\Http\Controllers\DirectiveController;
 use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\RegulationController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -223,6 +224,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/category/edit/{category}', [CategoryController::class, 'edit'])->name('categoryDirectivesAndRegulations.edit');
     Route::post('/categories/{category}/toggle-regulation', [CategoryController::class, 'toggleRegulation']);
     Route::post('/categories/{category}/toggle-directive', [CategoryController::class, 'toggleDirective']);
+
+    //Regulations
+
+    Route::get('/regulations', [RegulationController::class, 'index'])->name('regulations.index');
+    Route::get('/regulation/edit/{regulation}', [RegulationController::class, 'edit'])->name('regulation.edit');
+
+    Route::get('/regulation/create', [RegulationController::class, 'create'])->name('regulation.create');
+    Route::post('/regulation/store', [RegulationController::class, 'store'])->name('regulation.store');
+    Route::delete('/regulation/delete/{regulation}', [RegulationController::class, 'destroy'])->name('regulation.delete');
+    Route::put('/regulation/update/{regulation}', [RegulationController::class, 'update'])->name('regulation.update');
+
 });
 
 require __DIR__ . '/auth.php';
