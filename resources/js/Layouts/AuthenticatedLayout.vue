@@ -5,6 +5,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ArrowDown from "@/Components/ArrowDown.vue";
+import SettingsIcon from "@/Components/SettingsIcon.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
 
@@ -43,7 +44,7 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <div class="relative flex mt-4 ms-3">
-                                <!-- PODESUVANJA -->
+                                <!-- DOKUMENTI -->
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
@@ -51,7 +52,69 @@ const showingNavigationDropdown = ref(false);
                                                 type="button"
                                                 class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
                                             >
-                                                Подесувања
+                                                Документи
+
+                                                <ArrowDown />
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('document.type.index')"
+                                        >
+                                            Нов Документ
+                                        </DropdownLink>
+
+                                        <DropdownLink
+                                            :href="route('document.index')"
+                                        >
+                                            Листа на Документи
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
+
+                                <!-- END DOKUMENTI -->
+
+                                <!-- //Komintenti (customers) -->
+
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <span class="inline-flex rounded-md">
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
+                                            >
+                                                Коминтенти
+
+                                                <ArrowDown />
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('customer.create')"
+                                        >
+                                            Додај нов Коминтент
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('companies.index')"
+                                        >
+                                            Листа на Коминтенти
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
+
+                                <!-- PODESUVANJA -->
+                                <Dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <span class="inline-flex rounded-md">
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center px-3 py-1 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
+                                            >
+                                                <SettingsIcon />
 
                                                 <ArrowDown />
                                             </button>
@@ -89,7 +152,8 @@ const showingNavigationDropdown = ref(false);
                                         <DropdownLink
                                             :href="route('directives.index')"
                                         >
-                                            Асоцијација на ЕУ Регулативи и Директиви со Категории
+                                            Асоцијација на ЕУ Регулативи и
+                                            Директиви со Категории
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('regulations.index')"
@@ -111,24 +175,24 @@ const showingNavigationDropdown = ref(false);
                                         <DropdownLink
                                             :href="route('currency.index')"
                                         >
-                                           Валути
+                                            Валути
                                         </DropdownLink>
                                         <hr />
                                         <DropdownLink
                                             :href="route('drivers.index')"
                                         >
-                                           Возачи
+                                            Возачи
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('vehicles.index')"
                                         >
-                                           Возила
+                                            Возила
                                         </DropdownLink>
                                         <hr />
                                         <DropdownLink
                                             :href="
                                                 route(
-                                                    'companies.notcustomer.index'
+                                                    'companies.notcustomer.index',
                                                 )
                                             "
                                         >
@@ -138,70 +202,6 @@ const showingNavigationDropdown = ref(false);
                                 </Dropdown>
 
                                 <!-- END PODESUVANJA -->
-
-                                <!-- DOKUMENTI -->
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
-                                            >
-                                                Документи
-
-                                                <ArrowDown />
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <DropdownLink
-                                            :href="route('document.type.index')"
-                                        >
-                                            Нов Документ
-                                        </DropdownLink>
-
-                                        <DropdownLink
-                                            :href="route('document.index')"
-                                        >
-                                            Листа на Документи
-                                        </DropdownLink>
-
-                                    </template>
-
-                                </Dropdown>
-
-                                <!-- END DOKUMENTI -->
-
-                                <!-- //Komintenti (customers) -->
-
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
-                                            >
-                                                Коминтенти
-
-                                                <ArrowDown />
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <DropdownLink
-                                            :href="route('customer.create')"
-                                        >
-                                            Додај нов Коминтент
-                                        </DropdownLink>
-                                        <DropdownLink
-                                            :href="route('companies.index')"
-                                        >
-                                            Листа на Коминтенти
-                                        </DropdownLink>
-                                    </template>
-                                </Dropdown>
                             </div>
                         </div>
 
