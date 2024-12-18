@@ -111,4 +111,18 @@ class PDFController extends Controller
             ->name('invoice.pdf');
     }
 
+    public function printCe(Product $product)
+    {
+        $product->load('categories', 'model','document.owner');
+        // dd($product);
+        return Pdf::view('Pdf.ce', compact('product'))
+        ->withBrowsershot(function (Browsershot $browsershot) {
+            $browsershot->transparentBackground();
+            $browsershot->writeOptionsToFile();
+        })
+        ->margins(10, 0, 14, 0)
+        ->format(Format::A4)
+        ->name('ce.pdf');
+    }
+
 }

@@ -9,6 +9,7 @@ use App\Models\PackingList;
 use App\Models\Refrigerant;
 use App\Models\Temperature;
 use App\Models\Manufacturer;
+use App\Models\ProductModel;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -68,11 +69,16 @@ class Product extends Model
 
     public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function refrigerant()
     {
         return $this->belongsTo(Refrigerant::class);
+    }
+
+    public function model()
+    {
+        return $this->belongsTo(ProductModel::class, 'model_id');
     }
 }

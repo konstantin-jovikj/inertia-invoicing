@@ -584,7 +584,7 @@ const createPackingList = () => {
 
                                                                 <a
                                                                     class="px-2 hover:text-orange-300 text-slate-300"
-                                                                    :href="`/product/warranty/${product.id}`"
+                                                                    :href="`/ce/print/${product.id}`"
                                                                     target="_blank"
                                                                 >
                                                                     <CertificateIcon

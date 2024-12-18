@@ -188,6 +188,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/product/warranty/{product}', [PDFController::class, 'createWarranty'])->name('warranty');
     Route::get('/document/print/{document}', [PDFController::class, 'printDocument'])->name('print.document');
+    Route::get('/ce/print/{product}', [PDFController::class, 'printCe'])->name('print.ce');
+
 
     //Packing List
 

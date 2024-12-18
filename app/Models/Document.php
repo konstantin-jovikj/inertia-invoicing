@@ -125,4 +125,9 @@ class Document extends Model
     {
         return $this->hasOne(PackingList::class);
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(Company::class, 'owner_id');
+    }
 }
