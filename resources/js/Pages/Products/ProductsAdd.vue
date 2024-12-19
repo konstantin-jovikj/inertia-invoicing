@@ -10,14 +10,13 @@ import AddRowIcon from "@/Components/AddRowIcon.vue";
 import EditIcon from "@/Components/EditIcon.vue";
 import PackageIcon from "@/Components/PackageIcon.vue";
 import CertificateIcon from "@/Components/CertificateIcon.vue";
+import FreonIcon from "@/Components/FreonIcon.vue";
 import { onMounted } from "vue";
 import { debounce } from "lodash";
 import { Tippy } from "vue-tippy";
 import WarrantyIcon from "@/Components/WarrantyIcon.vue";
 import PrintIcon from "@/Components/PrintIcon.vue";
 import { latinToCyrillic } from "@/helpers/latinToCyrillic";
-
-
 
 // Props from the parent
 const props = defineProps({
@@ -230,8 +229,6 @@ const createPackingList = () => {
                                         }"
                                     />
                                 </a>
-
-                                
                             </div>
                             <!-- Izmeni Dokument end-->
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
@@ -239,7 +236,10 @@ const createPackingList = () => {
                                     <div>
                                         <span class="italic text-md">
                                             {{
-                                                latinToCyrillic(props.document.document_type.type)
+                                                latinToCyrillic(
+                                                    props.document.document_type
+                                                        .type,
+                                                )
                                             }}
                                         </span>
                                         <span class="italic text-md">
@@ -253,23 +253,22 @@ const createPackingList = () => {
                                         >
 
                                         <span
-                                    class="ps-4 text-red-800"
-                                    v-if="document.packing_list"
-                                >
-                                    <Link
-                                        :href="`/packinglist/create/${document.packing_list.id}`"
-                                    >
-                                        {{
-                                            `со пакинг листа бр: ${document.packing_list.document_no}`
-                                        }}
-                                    </Link>
-                                </span>
+                                            class="ps-4 text-red-800"
+                                            v-if="document.packing_list"
+                                        >
+                                            <Link
+                                                :href="`/packinglist/create/${document.packing_list.id}`"
+                                            >
+                                                {{
+                                                    `со пакинг листа бр: ${document.packing_list.document_no}`
+                                                }}
+                                            </Link>
+                                        </span>
                                     </div>
                                     <div>
                                         <span class="italic text-md"
                                             >Kлиент:
                                         </span>
- 
 
                                         <Link
                                             class="hover:text-green-600 text-slate-300 content-center"
@@ -597,6 +596,22 @@ const createPackingList = () => {
                                                                     />
                                                                 </a>
 
+                                                                <!-- Freon Certificate -->
+
+                                                                <a
+                                                                    class="px-2 hover:text-green-700 text-slate-300"
+                                                                    :href="`/freon/print/${product.id}`"
+                                                                    target="_blank"
+                                                                >
+                                                                    <FreonIcon
+                                                                        v-tippy="{
+                                                                            content:
+                                                                                'Freon Certificate',
+                                                                            arrow: true,
+                                                                            theme: 'light',
+                                                                        }"
+                                                                    />
+                                                                </a>
                                                             </div>
                                                         </td>
                                                     </tr>

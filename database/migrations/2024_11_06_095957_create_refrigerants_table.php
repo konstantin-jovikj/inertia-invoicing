@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('oxidizing')->nullable();
             $table->string('vapour_pressure')->nullable();
             $table->string('relative_density')->nullable();
-            $table->text('other')->nullable();
+            $table->text('evaporating_temp')->nullable();
             $table->timestamps();
         });
     }

@@ -125,4 +125,18 @@ class PDFController extends Controller
         ->name('ce.pdf');
     }
 
+    public function freonCert(Product $product)
+    {
+        $product->load('categories', 'model','document.owner', 'refrigerant');
+        // dd($product);
+        return Pdf::view('Pdf.freon', compact('product'))
+        ->withBrowsershot(function (Browsershot $browsershot) {
+            $browsershot->transparentBackground();
+            $browsershot->writeOptionsToFile();
+        })
+        ->margins(10, 0, 14, 0)
+        ->format(Format::A4)
+        ->name('freon.pdf');
+    }
+
 }

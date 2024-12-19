@@ -26,8 +26,8 @@ class RefrigerantSeeder extends Seeder
                 'flammability' => 'The product is not flammable',
                 'oxidizing' => 'The product is not oxidizing',
                 'vapour_pressure' => 'at 25 °C (77 °F) kPa 666.1 bar 6.661 psia 96.61',
-                'relative_density' => '4.24 at 20 °C',
-                'other' => '',
+                'relative_density' => '0.00425 g/cm3, gas',
+                'evaporating_temp' => '-26.11°C at 0 psig',
             ],
 
             [
@@ -41,7 +41,7 @@ class RefrigerantSeeder extends Seeder
                 'oxidizing' => '',
                 'vapour_pressure' => '12 546 hPa at 25 °C, 23 100 hPa at 50 °C',
                 'relative_density' => '1,05 g/cm3 at 25 °C, (as liquid)',
-                'other' => '',
+                'evaporating_temp' => '-29°C at 0 psig',
             ],
 
             [
@@ -55,7 +55,7 @@ class RefrigerantSeeder extends Seeder
                 'oxidizing' => 'Extremely reactive or incompatible with oxidizing agents',
                 'vapour_pressure' => ' at 25°C 853.9 kPa',
                 'relative_density' => 'at 25°C 516.1 kg/m3',
-                'other' => 'Evaporating temperature:-42.1°C',
+                'evaporating_temp' => 'Evaporating temperature:-42.1°C',
             ],
 
         ];
