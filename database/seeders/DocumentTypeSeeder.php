@@ -20,7 +20,7 @@ class DocumentTypeSeeder extends Seeder
             array('type' => 'Proforma-Invoice'),
             array('type' => 'Invoice'),
             array('type' => 'Ispratnica'),
-            array('type' => 'Kasa-Primi'),
+            array('type' => 'Сметко Потврда'),
             array('type' => 'Priemnica'),
             array('type' => 'Tovaren List'),
         );

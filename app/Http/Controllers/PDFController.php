@@ -97,7 +97,10 @@ class PDFController extends Controller
             $headerData['logo'] = null; // Ensure logo is defined even if it doesn't exist
         }
 
-        return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations'))
+        if($document->documentType->id != 5) {
+
+            
+            return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations'))
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot->transparentBackground();
                 $browsershot->writeOptionsToFile();
@@ -106,9 +109,23 @@ class PDFController extends Controller
             ->headerView('Pdf.header', $headerData)
             ->footerView('Pdf.footer', [
                 'document' => $document,
-            ])
-            ->format(Format::A4)
-            ->name('invoice.pdf');
+                ])
+                ->format(Format::A4)
+                ->name('invoice.pdf');
+            } else {
+                return Pdf::view('Pdf.smetkopotvrda', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations'))
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot->transparentBackground();
+                $browsershot->writeOptionsToFile();
+            })
+            ->margins(35, 0, 14, 0)
+            ->headerView('Pdf.header', $headerData)
+            ->footerView('Pdf.footer', [
+                'document' => $document,
+                ])
+                ->format(Format::A4)
+                ->name('smetkopotvrda.pdf');
+            }
     }
 
     public function printCe(Product $product)
