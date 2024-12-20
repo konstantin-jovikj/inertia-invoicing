@@ -57,111 +57,76 @@ onMounted(() => {
     }
 });
 
-function convertToMacedonianWords(number) {
-    if (number == null || isNaN(number)) {
-        return "Непозната сума"; // "Unknown amount" in Macedonian
-    }
+function numberToWordsMK(number) {
+      const units = ["", "еден", "два", "три", "четири", "пет", "шест", "седум", "осум", "девет"];
+      const teens = ["десет", "единаесет", "дванаесет", "тринаесет", "четиринаесет", "петнаесет", "шеснаесет", "седумнаесет", "осумнаесет", "деветнаесет"];
+      const tens = ["", "", "дваесет", "триесет", "четириесет", "педесет", "шеесет", "седумдесет", "осумдесет", "деведесет"];
+      const hundreds = ["", "сто", "двеста", "триста", "четиристотини", "петстотини", "шестотини", "седумстотини", "осумстотини", "деветстотини"];
+      const thousands = ["", "илјада", "илјади"];
+      const millions = ["", "милион", "милиони"];
 
-    const ones = [
-        "",
-        "еден",
-        "два",
-        "три",
-        "четири",
-        "пет",
-        "шест",
-        "седум",
-        "осум",
-        "девет",
-    ];
-    const tens = [
-        "",
-        "десет",
-        "дваесет",
-        "триесет",
-        "четириесет",
-        "педесет",
-        "шеесет",
-        "седумдесет",
-        "осумдесет",
-        "деведесет",
-    ];
-    const teens = [
-        "единаесет",
-        "дванаесет",
-        "тринаесет",
-        "четиринаесет",
-        "петнаесет",
-        "шеснаесет",
-        "седумнаесет",
-        "осумнаесет",
-        "деветнаесет",
-    ];
-    const thousands = ["", "илјада", "милиони", "милијарди"];
+      if (number === 0) {
+        return "нула";
+      }
 
-    function numberToWords(n) {
-        if (n === 0) return "нула";
+      let words = "";
 
-        let words = "";
-        let groupIndex = 0;
+      // Handle millions
+      if (number >= 1000000) {
+        const millionPart = Math.floor(number / 1000000);
+        number %= 1000000;
 
-        while (n > 0) {
-            const group = n % 1000;
-            if (group > 0) {
-                let groupWords = "";
+        words += this.numberToWordsMK(millionPart) + " ";
+        words += millionPart === 1 ? millions[1] : millions[2];
+        if (number > 0) {
+          words += " и ";
+        }
+      }
 
-                const hundreds = Math.floor(group / 100);
-                const remainder = group % 100;
+      // Handle thousands
+      if (number >= 1000) {
+        const thousandPart = Math.floor(number / 1000);
+        number %= 1000;
 
-                if (hundreds > 0) {
-                    groupWords += `${ones[hundreds]} сто `;
-                }
+        words += this.numberToWordsMK(thousandPart) + " ";
+        words += thousandPart === 1 ? thousands[1] : thousands[2];
+        if (number > 0) {
+          words += " и ";
+        }
+      }
 
-                if (remainder > 10 && remainder < 20) {
-                    groupWords += `${teens[remainder - 11]} `;
-                } else {
-                    const tensValue = Math.floor(remainder / 10);
-                    const onesValue = remainder % 10;
+      // Handle hundreds
+      if (number >= 100) {
+        const hundredPart = Math.floor(number / 100);
+        number %= 100;
 
-                    if (tensValue > 0) {
-                        groupWords += `${tens[tensValue]} `;
-                    }
+        words += hundreds[hundredPart];
+        if (number > 0) {
+          words += " и ";
+        }
+      }
 
-                    if (onesValue > 0) {
-                        groupWords += `${ones[onesValue]} `;
-                    }
-                }
+      // Handle tens and units
+      if (number >= 10 && number < 20) {
+        words += teens[number - 10];
+      } else {
+        const tenPart = Math.floor(number / 10);
+        const unitPart = number % 10;
 
-                if (groupIndex > 0) {
-                    groupWords += `${thousands[groupIndex]} `;
-                }
-
-                words = `${groupWords}${words}`.trim();
-            }
-
-            n = Math.floor(n / 1000);
-            groupIndex++;
+        if (tenPart > 0) {
+          words += tens[tenPart];
+          if (unitPart > 0) {
+            words += " и ";
+          }
         }
 
-        return words.trim();
+        if (unitPart > 0) {
+          words += units[unitPart];
+        }
+      }
+
+      return words;
     }
-
-    // Split the number into integer and decimal parts
-    const [integerPart, decimalPart] = number.toString().split(".");
-
-    // Convert integer part
-    let result = numberToWords(parseInt(integerPart, 10));
-
-    // Convert decimal part (if exists)
-    if (decimalPart > 0) {
-        result += ` запирка ${decimalPart
-            .split("")
-            .map((digit) => ones[parseInt(digit, 10)])
-            .join(" ")}`;
-    }
-
-    return result;
-}
 
 console.log("packingListExists", props.packingListExists);
 
@@ -1000,7 +965,7 @@ const createPackingList = () => {
                             <!-- WORDS -->
                             <div class="text-xs text-purple-400 italic">
                                 {{
-                                    convertToMacedonianWords(
+                                    numberToWordsMK(
                                         props.document
                                             .total_with_tax_and_discount ?? 0,
                                     )
