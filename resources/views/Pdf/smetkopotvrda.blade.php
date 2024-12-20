@@ -13,26 +13,18 @@
 <body class="w-11/12 m-auto py-t px-4 pb-20">
 
     <main>
-        <div class="border-y-2 border-sky-700 mt-2 pb-1 font-bold flex flex-row justify-around">
+        <div class="border-y-2 border-sky-700 mt-2 py-2 font-bold flex flex-row justify-around">
             <div>
-                @if ($type === 'packingList')
-                    <span class="text-sm">Пакинг Листа Бр: / Packing List Nr: </span>
-                    <span class="text-sm">{{ $packingList->document_no }}</span>
-                @else
-                    @if ($document->is_for_advanced_payment)
-                        <span>Авансна</span>
+                <span class="text-xl">
+                    @if (!$document->is_for_export)
+                        {{ $convertedDocumentName }} Бр:
+                    @else
+                        {{ $convertedDocumentName }} / {{ $document->documentType->type }} No:
                     @endif
-                    <span class="text-sm">
-                        @if (!$document->is_for_export)
-                            {{ $convertedDocumentName }} Бр: 
-                        @else
-                            {{ $convertedDocumentName }} / {{ $document->documentType->type }} No: 
-                        @endif
-                    </span>
-                    <span class="text-lg">{{ $document->document_no }}</span>
-                @endif
+                </span>
+                <span class="text-xl">{{ $document->document_no }}</span>
             </div>
-            
+
 
             <div>
                 @if ($type === 'packingList')
@@ -45,17 +37,17 @@
             </div>
         </div>
 
-        <div class="border-b border-gray-500 pb-1 ">
+        <div class=" pb-1 mt-10">
 
             {{-- Pravno Lice --}}
             @if ($client->customer->customerType->id !== 1)
                 @if (!$document->is_for_export)
                     <div>
-                        <span class="text-xs text-purple-700 italic">Фирма:</span>
-                        <span class="text-md font-bold ms-2">{{ $client->name }}</span>
+                        <span class="text-lg text-purple-700 italic">Од:</span>
+                        <span class="text-lg font-bold ms-2">{{ $client->name }}</span>
                     @else
-                        <span class="text-xs text-purple-700 italic">Company: </span>
-                        <span class="text-md font-bold ms-2"> {{ $client->name }}</span>
+                        <span class="text-lg text-purple-700 italic">From: </span>
+                        <span class="text-lg font-bold ms-2"> {{ $client->name }}</span>
                     </div>
                 @endif
             @endif
@@ -64,12 +56,12 @@
             @if ($client->customer->customerType->id == 1)
                 @if (!$document->is_for_export)
                     <div>
-                        <span class="text-md text-md font-bold ms-4"><span class="text-xs text-purple-700 italic">Име и
-                                Презиме:
+                        <span class="text-lg  font-bold ms-4"><span class="text-xs text-purple-700 italic">Име и
+                                Од:
                             </span>{{ $client->name }}</span>
                     @else
-                        <span class="text-md font-bold ms-4"><span class="text-xs text-purple-700 italic">First and Last
-                                Name: </span>
+                        <span class="text-lg font-bold ms-4"><span class="text-xs text-purple-700 italic">First and Last
+                                From: </span>
                             {{ $client->name }}
                         </span>
                     </div>
@@ -77,48 +69,122 @@
             @endif
         </div>
         </div>
-        <div class="border-b border-gray-500   w-full  ">
-            <div class="">
+        <div class="   w-full  ">
+            <div class="mb-2">
                 @if ($document->is_for_export)
-                    <span class="text-xs text-purple-700 italic">Address:</span>
-                    <span class="text-sm ms-4 font-semibold">{{ $client->address }}</span>
-                    <span class="text-sm font-semibold">-{{ $client->place->zip }} -
+                    <span class="text-lg text-purple-700 italic ">Place / Address:</span>
+                    <span class="text-lg ms-4 font-semibold">{{ $client->address }}</span>
+                    <span class="text-lg font-semibold">-{{ $client->place->zip }} -
                         {{ $client->place->place }}</span>
-                    <span class="text-sm font-semibold">-{{ $client->place->country->name }}</span>
+                    <span class="text-lg font-semibold">-{{ $client->place->country->name }}</span>
                 @else
-                    <span class="text-xs text-purple-700 italic">Адреса:</span>
-                    <span class="text-sm ms-4 font-semibold">{{ $client->address }}</span>
-                    <span class="text-sm font-semibold">{{ $client->place->zip }} - {{ $client->place->place }}</span>
-                    <span class="text-sm font-semibold">{{ $client->place->country->name }}</span>
+                    <span class="text-lg text-purple-700 italic">Место / Адреса:</span>
+                    <span class="text-lg ms-4 font-semibold">{{ $client->address }}</span>
+                    <span class="text-lg font-semibold">{{ $client->place->zip }} - {{ $client->place->place }}</span>
+                    <span class="text-lg font-semibold">{{ $client->place->country->name }}</span>
                 @endif
             </div>
         </div>
-        <div class="border-b border-gray-500   w-full  ">
-            <div class="">
-                @if ($document->is_for_export && $document->incoterm)
-                    <span class="text-xs text-purple-700 italic">Paritet / Delivery / INCOTERMS:</span>
-                    <span class="text-sm font-semibold ms-2">{{ $document->incoterm->shortcut }}
-                        {{ $client->place->place }}</span>
+        <div class="   w-full  ">
+            <div class="mb-2">
+                @if ($document->is_for_export)
+                    <span class="text-lg text-purple-700 italic">Ammount:</span>
+                    <span class="text-lg ms-4 font-semibold">
+                        @foreach ($products as $product)
+                            @if ($product->total_price != 0)
+                                {{ number_format($document->total_with_tax_and_discount, 2, '.', ',') }}
+                                {{ $document->curency->symbol }}
+                            @endif
+                        @endforeach
+                    </span>
+                @else
+                    <span class="text-lg text-purple-700 italic">Сума од:</span>
+                    <span class="text-lg ms-4 font-semibold">
+                        @foreach ($products as $product)
+                            @if ($product->total_price != 0)
+                                {{ number_format($document->total_with_tax_and_discount, 2, '.', ',') }}
+                                {{ $document->curency->symbol }}
+                            @endif
+                        @endforeach
+                    </span>
+
                 @endif
             </div>
         </div>
-        @if ($document->delivery)
-            <div class="border-b border-gray-500   w-full  ">
-                <div class="">
-                    @if ($document->is_for_export)
-                        <span class="text-xs text-purple-700 italic">Isporaka:</span>
-                        <span class="text-sm font-semibold ms-2">{{ $document->delivery }}</span>
-                    @endif
-                    @if (!$document->is_for_export)
-                        <span class="text-xs text-purple-700 italic">Испорака:</span>
-                        <span class="text-sm font-semibold ms-2">{{ $document->delivery }}</span>
-                    @endif
-                </div>
+        {{-- So zborovi --}}
+        <div class="   w-full  ">
+            <div class="mb-2">
+                @if ($document->is_for_export)
+                    <span class="text-lg text-purple-700 italic">With words:</span>
+                    <span class="text-lg ms-4 font-semibold">
+                        With words
+                    </span>
+                @else
+                    <span class="text-lg text-purple-700 italic">Со зборови:</span>
+                    <span class="text-lg ms-4 font-semibold">
+                        Со зборови
+                    </span>
+                @endif
             </div>
-        @endif
+        </div>
 
-SMETKO POTVRDA
+        {{-- Na smetka na --}}
+        <div class="   w-full  ">
+            <div class="mb-2">
+                @if ($document->is_for_export)
+                    <span class="text-lg text-purple-700 italic">To the Account of:</span>
+                    <span class="text-lg ms-4 font-semibold">
+                        {{ $owner->name }} - {{ $owner->place->place }}
+                    </span>
+                @else
+                    <span class="text-lg text-purple-700 italic">На сметка на:</span>
+                    <span class="text-lg ms-4 font-semibold">
+                        {{ $owner->name }} - {{ $owner->place->place }}
+                    </span>
+                @endif
+            </div>
+        </div>
+        {{-- Za --}}
+        <div class="   w-full  ">
+            <div class="mb-2">
+                @if ($document->is_for_export)
+                    <span class="text-lg text-purple-700 italic">For:</span>
+                    <span class="text-lg ms-4 font-semibold">
+                        @foreach ($products as $product)
+                            @if ($product->total_price != 0)
+                                {{ $product->description }}
+                            @endif
+                        @endforeach
+                    </span>
+                @else
+                    <span class="text-lg text-purple-700 italic">За:</span>
+                    <span class="text-lg ms-4 font-semibold">
+                        @foreach ($products as $product)
+                            @if ($product->total_price != 0)
+                            {{ $product->description }}
+                            @endif
+                        @endforeach
+                    </span>
 
+                @endif
+            </div>
+        </div>
+
+
+        <div class="   w-full  border-t-2 border-sky-700 h-[5px] my-10">
+        </div>
+
+
+        <div class="w-full flex">
+            <div class="w-1/2">
+                <p class="italic font-sm mb-4" >Уплатил: </p>
+                <p>____________________________________</p>
+            </div>
+            <div class="w-1/2">
+                <p class="italic font-sm mb-4">Примил: </p>
+                <p>____________________________________</p>
+            </div>
+        </div>
 
 
     </main>
