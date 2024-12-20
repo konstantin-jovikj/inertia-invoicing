@@ -184,8 +184,14 @@ class ProductController extends Controller
         // $document->total += $totalPrice;
         // $document->total_volume += $productTotalVolume;
         // $document->total_weight += $productTotalWeight;
-        $document->discount_amount = $document->total * ($document->discount / 100);
-        $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+  
+        if($document->curency_id == 1){
+            $document->discount_amount = round($document->total * ($document->discount / 100));
+            $document->tax_amount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
+        } else {
+            $document->discount_amount = $document->total * ($document->discount / 100);
+            $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+        }
 
         $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
 
@@ -393,8 +399,13 @@ $document = Document::where('id', $product->document_id)->first();
         // $document->total += $totalPrice;
         // $document->total_volume += $productTotalVolume;
         // $document->total_weight += $productTotalWeight;
-        $document->discount_amount = $document->total * ($document->discount / 100);
-        $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+        if($document->curency_id == 1){
+            $document->discount_amount = round($document->total * ($document->discount / 100));
+            $document->tax_amount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
+        } else {
+            $document->discount_amount = $document->total * ($document->discount / 100);
+            $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+        }
 
         // dd($document->total, $document->discount_amount, $document->tax->tax_rate);
 
