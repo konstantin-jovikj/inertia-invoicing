@@ -16,6 +16,92 @@ use function Spatie\LaravelPdf\Support\pdf;
 
 class PDFController extends Controller
 {
+
+    
+    public function processSegment($number, $units, $teens, $tens, $hundreds) {
+        $words = "";
+    
+        // Handle hundreds
+        if ($number >= 100) {
+            $hundredPart = intdiv($number, 100);
+            $number %= 100;
+    
+            $words .= $hundreds[$hundredPart];
+            if ($number > 0) {
+                $words .= " и ";
+            }
+        }
+    
+        // Handle tens and units
+        if ($number >= 10 && $number < 20) {
+            $words .= $teens[$number - 10];
+        } else {
+            $tenPart = intdiv($number, 10);
+            $unitPart = $number % 10;
+    
+            if ($tenPart > 0) {
+                $words .= $tens[$tenPart];
+                if ($unitPart > 0) {
+                    $words .= " и ";
+                }
+            }
+    
+            if ($unitPart > 0) {
+                $words .= $units[$unitPart];
+            }
+        }
+    
+        return $words;
+    }
+
+    public function numberToWordsMK($number) {
+        $units = ["", "еден", "два", "три", "четири", "пет", "шест", "седум", "осум", "девет"];
+        $teens = ["десет", "единаесет", "дванаесет", "тринаесет", "четиринаесет", "петнаесет", "шеснаесет", "седумнаесет", "осумнаесет", "деветнаесет"];
+        $tens = ["", "", "дваесет", "триесет", "четириесет", "педесет", "шеесет", "седумдесет", "осумдесет", "деведесет"];
+        $hundreds = ["", "сто", "двеста", "триста", "четиристотини", "петстотини", "шестотини", "седумстотини", "осумстотини", "деветстотини"];
+        $thousands = ["", "илјада", "илјади"];
+        $millions = ["", "милион", "милиони"];
+    
+        if ($number == 0) {
+            return "нула";
+        }
+    
+        $words = "";
+    
+        // Handle millions
+        if ($number >= 1000000) {
+            $millionPart = intdiv($number, 1000000);
+            $number %= 1000000;
+    
+            $words .= $this->processSegment($millionPart, $units, $teens, $tens, $hundreds) . " ";
+            $words .= $millionPart == 1 ? $millions[1] : $millions[2];
+            if ($number > 0) {
+                $words .= " и ";
+            }
+        }
+    
+        // Handle thousands
+        if ($number >= 1000) {
+            $thousandPart = intdiv($number, 1000);
+            $number %= 1000;
+    
+            $words .= $this->processSegment($thousandPart, $units, $teens, $tens, $hundreds) . " ";
+            $words .= $thousandPart == 1 ? $thousands[1] : $thousands[2];
+            if ($number > 0) {
+                $words .= " и ";
+            }
+        }
+    
+        // Handle hundreds, tens, and units
+        if ($number > 0) {
+            $words .= $this->processSegment($number, $units, $teens, $tens, $hundreds);
+        }
+    
+        return $words;
+    }
+
+
+
     public function createWarranty(Product $product)
     {
         $documentId = $product->document_id;
@@ -97,10 +183,13 @@ class PDFController extends Controller
             $headerData['logo'] = null; // Ensure logo is defined even if it doesn't exist
         }
 
+        $words = $this->numberToWordsMK($document->grand_total);
+        // dd($words);
+
         if($document->documentType->id != 5) {
 
             
-            return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations'))
+            return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations', 'words'))
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot->transparentBackground();
                 $browsershot->writeOptionsToFile();
@@ -113,7 +202,7 @@ class PDFController extends Controller
                 ->format(Format::A4)
                 ->name('invoice.pdf');
             } else {
-                return Pdf::view('Pdf.smetkopotvrda', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations'))
+                return Pdf::view('Pdf.smetkopotvrda', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations', 'words'))
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot->transparentBackground();
                 $browsershot->writeOptionsToFile();
@@ -155,5 +244,8 @@ class PDFController extends Controller
         ->format(Format::A4)
         ->name('freon.pdf');
     }
+
+
+
 
 }

@@ -24,15 +24,15 @@
                     @endif
                     <span class="text-sm">
                         @if (!$document->is_for_export)
-                            {{ $convertedDocumentName }} Бр: 
+                            {{ $convertedDocumentName }} Бр:
                         @else
-                            {{ $convertedDocumentName }} / {{ $document->documentType->type }} No: 
+                            {{ $convertedDocumentName }} / {{ $document->documentType->type }} No:
                         @endif
                     </span>
                     <span class="text-lg">{{ $document->document_no }}</span>
                 @endif
             </div>
-            
+
 
             <div>
                 @if ($type === 'packingList')
@@ -484,188 +484,199 @@
 
             {{-- Calculated Fields --}}
             @if ($document->print_price)
-                
-            
-            <div class="w-2/5">
-                <div class=" ">
-                    @if ($type !== 'packingList')
 
-                        <table class="table-auto w-full border-collapse border border-gray-600 py-4 text-md">
-                            <tbody>
-                                <tr class="">
-                                    <th
-                                        class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-sm font-normal italic">
-                                        @if ($document->is_for_export)
-                                            Total
-                                        @else
-                                            Основица
-                                        @endif
-                                    </th>
-                                    <td
-                                        class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
-                                        {{ number_format($document->total, 2, '.', ',') }}
-                                        {{ $document->curency->symbol }}
-                                    </td>
-                                </tr>
 
-                                @if ($document->discount !== '0.00' && $document->discount !== null)
+                <div class="w-2/5">
+                    <div class=" ">
+                        @if ($type !== 'packingList')
+
+                            <table class="table-auto w-full border-collapse border border-gray-600 py-4 text-md">
+                                <tbody>
                                     <tr class="">
                                         <th
                                             class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-sm font-normal italic">
                                             @if ($document->is_for_export)
-                                                Discount {{ $document->discount }} %
-                                            @else
-                                                Попуст {{ $document->discount }} %
-                                            @endif
-                                        </th>
-                                        <td
-                                            class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
-                                            {{ number_format($document->discount_amount, 2, '.', ',') }}
-                                            {{ $document->curency->symbol }}
-                                        </td>
-                                    </tr>
-                                @endif
-
-                                @if ($document->tax_id !== 1 && $document->tax_id !== null)
-                                    <tr class="">
-                                        <th
-                                            class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-sm font-normal italic">
-                                            @if ($document->is_for_export)
-                                                Tax / DDV {{ $document->tax->tax_rate }} %
-                                            @else
-                                                ДДВ {{ $document->tax->tax_rate }} %
-                                            @endif
-                                        </th>
-                                        <td
-                                            class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
-                                            {{ number_format($document->tax_amount, 2, '.', ',') }}
-                                            {{ $document->curency->symbol }}
-                                        </td>
-                                    </tr>
-                                @endif
-
-
-
-                                <tr class="">
-                                    <th
-                                        class="border border-gray-600 px-2 py-1 text-left leading-none  bg-red-200 text-md font-normal italic">
-                                        @if ($document->is_for_export)
-                                            Grand Total
-                                        @else
-                                            Вкупно
-                                        @endif
-                                    </th>
-                                    <td
-                                        class="border border-gray-600 px-2 py-1 text-right text-md font-semibold align-middle whitespace-nowrap">
-                                        <span
-                                            class="pe-1">{{ number_format($document->total_with_tax_and_discount, 2, '.', ',') }}</span>
-                                        <span>{{ $document->curency->symbol }}</span>
-                                    </td>
-                                </tr>
-
-                                @if (!is_null($document->advance_payment) && $document->advance_payment != 0)
-                                    <tr class="  w-full justify-stretch flex-grow">
-                                        <th
-                                            class="border border-gray-600 px-2 py-1 text-left leading-none  bg-green-200 text-xs font-normal italic">
-
-                                            Вкупно Aванс
-
-                                        </th>
-                                        <td
-                                            class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
-                                            {{ number_format($document->advance_payment, 2, '.', ',') }}
-                                            {{ $document->curency->symbol }}
-                                        </td>
-                                    </tr>
-
-                                    <tr class="">
-                                        <th
-                                            class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-xs font-normal italic">
-                                            @if ($document->is_for_export)
                                                 Total
                                             @else
-                                                Преостанато Основица
+                                                Основица
                                             @endif
                                         </th>
                                         <td
                                             class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
-                                            {{ number_format($document->advanced_payment_base, 2, '.', ',') }}
+                                            {{ number_format($document->total, 2, '.', ',') }}
                                             {{ $document->curency->symbol }}
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                        <th
-                                            class="border border-gray-600 px-2 py-1 text-left leading-tight bg-sky-200 text-xs font-normal italic align-top">
-                                            @if ($document->is_for_export)
-                                                Total
-                                            @else
-                                                Преостанато ДДВ {{ $document->tax->tax_rate }} %
-                                            @endif
-                                        </th>
-                                        <td
-                                            class="border border-gray-600 px-2 py-1 text-right text-md font-semibold align-middle">
-                                            {{ number_format($document->advanced_payment_tax, 2, '.', ',') }}
-                                            {{ $document->curency->symbol }}
-                                        </td>
-                                    </tr>
+                                    @if ($document->discount !== '0.00' && $document->discount !== null)
+                                        <tr class="">
+                                            <th
+                                                class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-sm font-normal italic">
+                                                @if ($document->is_for_export)
+                                                    Discount {{ $document->discount }} %
+                                                @else
+                                                    Попуст {{ $document->discount }} %
+                                                @endif
+                                            </th>
+                                            <td
+                                                class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
+                                                {{ number_format($document->discount_amount, 2, '.', ',') }}
+                                                {{ $document->curency->symbol }}
+                                            </td>
+                                        </tr>
+                                    @endif
+
+                                    @if ($document->tax_id !== 1 && $document->tax_id !== null)
+                                        <tr class="">
+                                            <th
+                                                class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-sm font-normal italic">
+                                                @if ($document->is_for_export)
+                                                    Tax / DDV {{ $document->tax->tax_rate }} %
+                                                @else
+                                                    ДДВ {{ $document->tax->tax_rate }} %
+                                                @endif
+                                            </th>
+                                            <td
+                                                class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
+                                                {{ number_format($document->tax_amount, 2, '.', ',') }}
+                                                {{ $document->curency->symbol }}
+                                            </td>
+                                        </tr>
+                                    @endif
+
 
 
                                     <tr class="">
                                         <th
-                                            class="border border-gray-600 px-2 py-1 text-left leading-none  bg-red-200 font-normal italic text-sm">
-
-                                            Преостанато Вкупно
-
+                                            class="border border-gray-600 px-2 py-1 text-left leading-none  bg-red-200 text-md font-normal italic">
+                                            @if ($document->is_for_export)
+                                                Grand Total
+                                            @else
+                                                Вкупно
+                                            @endif
                                         </th>
                                         <td
-                                            class=" px-2 py-1  flex justify-end font-semibold text-md  align-middle items-center whitespace-nowrap">
-                                            {{ number_format($document->grand_total, 2, '.', ',') }}
-                                            {{ $document->curency->symbol }}
+                                            class="border border-gray-600 px-2 py-1 text-right text-md font-semibold align-middle whitespace-nowrap">
+                                            <span
+                                                class="pe-1">{{ number_format($document->total_with_tax_and_discount, 2, '.', ',') }}</span>
+                                            <span>{{ $document->curency->symbol }}</span>
                                         </td>
                                     </tr>
-                                @endif
 
-                            </tbody>
-                        </table>
-                    @else
-                        <table class="table-auto w-full border-collapse border border-gray-600 py-4 text-md">
-                            <tbody>
-                                <tr class="border-t border-b border-indigo-300 border-e border-s">
-                                    <th class="border-indigo-300 bg-indigo-50 border-e">
-                                        <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
-                                            Вкупно Маса
-                                        </span>
-                                    </th>
-                                    <td class="text-lg font-bold text-right text-indigo-600">
-                                        {{ $packingList->total_weight }}
-                                        <span class="pe-2 text-sm">
-                                            Kg
-                                        </span>
-                                    </td>
-                                </tr>
+                                    @if (!is_null($document->advance_payment) && $document->advance_payment != 0)
+                                        <tr class="  w-full justify-stretch flex-grow">
+                                            <th
+                                                class="border border-gray-600 px-2 py-1 text-left leading-none  bg-green-200 text-xs font-normal italic">
+
+                                                Вкупно Aванс
+
+                                            </th>
+                                            <td
+                                                class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
+                                                {{ number_format($document->advance_payment, 2, '.', ',') }}
+                                                {{ $document->curency->symbol }}
+                                            </td>
+                                        </tr>
+
+                                        <tr class="">
+                                            <th
+                                                class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-xs font-normal italic">
+                                                @if ($document->is_for_export)
+                                                    Total
+                                                @else
+                                                    Преостанато Основица
+                                                @endif
+                                            </th>
+                                            <td
+                                                class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
+                                                {{ number_format($document->advanced_payment_base, 2, '.', ',') }}
+                                                {{ $document->curency->symbol }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th
+                                                class="border border-gray-600 px-2 py-1 text-left leading-tight bg-sky-200 text-xs font-normal italic align-top">
+                                                @if ($document->is_for_export)
+                                                    Total
+                                                @else
+                                                    Преостанато ДДВ {{ $document->tax->tax_rate }} %
+                                                @endif
+                                            </th>
+                                            <td
+                                                class="border border-gray-600 px-2 py-1 text-right text-md font-semibold align-middle">
+                                                {{ number_format($document->advanced_payment_tax, 2, '.', ',') }}
+                                                {{ $document->curency->symbol }}
+                                            </td>
+                                        </tr>
 
 
-                                <tr class="border-t border-b border-indigo-300 border-e border-s">
-                                    <th class="border-indigo-300 bg-indigo-50 border-e">
-                                        <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
-                                            Вкупно Волумен
-                                        </span>
-                                    </th>
-                                    <td class="text-lg font-bold text-right text-indigo-600">
-                                        {{ $packingList->total_volume }}
-                                        <span class="pe-2 text-sm">
-                                            m<sup>3</sup>
-                                        </span>
-                                    </td>
-                                </tr>
+                                        <tr class="">
+                                            <th
+                                                class="border border-gray-600 px-2 py-1 text-left leading-none  bg-red-200 font-normal italic text-sm">
 
-                            </tbody>
-                        </table>
-                    @endif
+                                                Преостанато Вкупно
+
+                                            </th>
+                                            <td
+                                                class=" px-2 py-1  flex justify-end font-semibold text-md  align-middle items-center whitespace-nowrap">
+                                                {{ number_format($document->grand_total, 2, '.', ',') }}
+                                                {{ $document->curency->symbol }}
+                                            </td>
+                                        </tr>
+
+
+                                    @endif
+                                    @if ($document->curency_id == 1 && $document->document_type_id == 3)
+                                        <tr class="">
+                                            <th class="w-full border border-gray-600 px-2 py-1 text-left leading-none bg-green-200 text-[8px]"
+                                                colspan="2">
+
+                                                {{ $words }} {{ $document->curency->symbol }}
+                                            </th>
+                                        </tr>
+                                    @endif
+
+                                </tbody>
+                            </table>
+                        @else
+                            <table class="table-auto w-full border-collapse border border-gray-600 py-4 text-md">
+                                <tbody>
+                                    <tr class="border-t border-b border-indigo-300 border-e border-s">
+                                        <th class="border-indigo-300 bg-indigo-50 border-e">
+                                            <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
+                                                Вкупно Маса
+                                            </span>
+                                        </th>
+                                        <td class="text-lg font-bold text-right text-indigo-600">
+                                            {{ $packingList->total_weight }}
+                                            <span class="pe-2 text-sm">
+                                                Kg
+                                            </span>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr class="border-t border-b border-indigo-300 border-e border-s">
+                                        <th class="border-indigo-300 bg-indigo-50 border-e">
+                                            <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
+                                                Вкупно Волумен
+                                            </span>
+                                        </th>
+                                        <td class="text-lg font-bold text-right text-indigo-600">
+                                            {{ $packingList->total_volume }}
+                                            <span class="pe-2 text-sm">
+                                                m<sup>3</sup>
+                                            </span>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        @endif
+                    </div>
+
                 </div>
-
-            </div>
             @endif
         </div>
     </main>

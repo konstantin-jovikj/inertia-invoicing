@@ -117,12 +117,12 @@
                 @if ($document->is_for_export)
                     <span class="text-lg text-purple-700 italic">With words:</span>
                     <span class="text-lg ms-4 font-semibold">
-                        With words
+                        {{$words}} {{ $document->curency->symbol }}
                     </span>
                 @else
                     <span class="text-lg text-purple-700 italic">Со зборови:</span>
                     <span class="text-lg ms-4 font-semibold">
-                        Со зборови
+                        {{$words}} {{ $document->curency->symbol }}
                     </span>
                 @endif
             </div>
@@ -171,7 +171,7 @@
         </div>
 
 
-        <div class="   w-full  border-t-2 border-sky-700 h-[5px] my-10">
+        <div class="   w-full  border-t border-sky-700 h-[5px] my-14">
         </div>
 
 
@@ -185,6 +185,8 @@
                 <p>____________________________________</p>
             </div>
         </div>
+
+
 
 
     </main>
