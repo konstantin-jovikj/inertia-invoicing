@@ -333,6 +333,7 @@ console.log(props.documents);
 
                                     <td class="px-2 text-right">
                                         <span
+                                        v-if="document.document_type.id !== 7"
                                             class="pr-2 text-base font-semibold text-red-600"
                                         >
                                             {{
@@ -345,6 +346,7 @@ console.log(props.documents);
                                             }}
                                         </span>
                                         <span
+                                        v-if="document.document_type.id !== 7"
                                             class="px-1 text-left text-base font-semibold text-red-600"
                                         >
                                             {{
@@ -358,6 +360,26 @@ console.log(props.documents);
                                     <td class="px-4">
                                         <div class="flex gap-2">
                                             <Link
+                                                v-if="document.document_type.id == 7"
+                                                class="hover:text-green-600 text-slate-300 content-center"
+                                                :href="
+                                                    route(
+                                                        'travelorder.view',
+                                                        document.id,
+                                                    )
+                                                "
+                                            >
+                                                <EditIcon
+                                                    v-tippy="{
+                                                        content:  `Измени Патен Налог`,
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"
+                                                />
+                                            </Link>
+
+                                            <Link
+                                            v-else
                                                 class="hover:text-green-600 text-slate-300 content-center"
                                                 :href="
                                                     route(
