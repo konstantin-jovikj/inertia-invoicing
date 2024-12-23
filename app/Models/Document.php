@@ -53,6 +53,18 @@ class Document extends Model
         'advanced_payment_base',
         'advanced_payment_tax',
         'delivery',
+        'place_id',           
+        'load_place_id',
+        'unload_place_id',
+        'load_date',
+        'unload_date',
+        'marking',
+        'boxes_nr',
+        'packaging_type',
+        'goods_type',
+        'note',
+        'instruction',
+        'picked_up_by',
     ];
 
     // protected $casts = [
@@ -129,5 +141,20 @@ class Document extends Model
     public function owner()
     {
         return $this->belongsTo(Company::class, 'owner_id');
+    }
+
+    public function load_place()
+    {
+        return $this->belongsTo(Place::class, 'load_place_id');
+    }
+
+    public function unload_place()
+    {
+        return $this->belongsTo(Place::class, 'unload_place_id');
+    }
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class, 'place_id');
     }
 }

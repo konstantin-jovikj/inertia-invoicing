@@ -246,6 +246,29 @@ class PDFController extends Controller
     }
 
 
+    public function printTravelOrder(Document $document)
+    {
+        $ownerId = $document->owner_id;
+        $clientId = $document->client_id;
+        $client = Company::findOrFail($clientId);
+        $owner = Company::findOrFail($ownerId);
+
+        $client->load('place.country');
+        $owner->load('place.country');
+
+        $document->load('company', 'vehicle', 'place.country', 'load_place', 'unload_place');
+        // dd($product);
+        return Pdf::view('Pdf.travelorder', compact('document', 'client', 'owner'))
+        ->withBrowsershot(function (Browsershot $browsershot) {
+            $browsershot->transparentBackground();
+            $browsershot->writeOptionsToFile();
+        })
+        ->margins(10, 0, 14, 0)
+        ->format(Format::A4)
+        ->name('PatenNalog.pdf');
+    }
+
+
 
 
 }

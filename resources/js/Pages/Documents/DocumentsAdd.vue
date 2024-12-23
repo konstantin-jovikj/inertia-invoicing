@@ -18,6 +18,7 @@ const props = defineProps({
     incoterms: Array,
     vehicles: Array,
     drivers: Array,
+    places: Array,
 });
 
 console.log(props.documentType);

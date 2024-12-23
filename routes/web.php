@@ -37,7 +37,9 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -77,8 +79,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/add', [CustomerController::class, 'create'])->name('customer.create');
     Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
 
-
-
     // COMPANIES
     Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
 
@@ -94,7 +94,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/companies/store', [CompanyController::class, 'store'])->name('company.store');
     Route::get('/companies/show/{company}', [CompanyController::class, 'show'])->name('company.show');
     Route::delete('/companies/delete/{company}', [CompanyController::class, 'destroy'])->name('company.delete');
-
 
     // CONTACTS
 
@@ -120,7 +119,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/accounts/edit/{account}', [AccountController::class, 'edit'])->name('account.edit');
     Route::put('/accounts/update/{account}', [AccountController::class, 'update'])->name('account.update');
     Route::delete('/accounts/delete/{account}', [AccountController::class, 'destroy'])->name('account.delete');
-
 
     // TAXES
 
@@ -167,7 +165,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/document/update/{document}', [DocumentController::class, 'update'])->name('document.update');
     Route::delete('/document/delete/{document}', [DocumentController::class, 'destroy'])->name('document.delete');
 
-
     Route::get('/documents/add/row/{document}/{product}', [DocumentController::class, 'addEmptyRow'])->name('documents.addrow');
 
     // CONVERT DOCUMENTS
@@ -183,14 +180,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/products/delete/{product}', [ProductController::class, 'destroy'])->name('products.delete');
     Route::get('/products/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
 
-
     // PDF
 
     Route::get('/product/warranty/{product}', [PDFController::class, 'createWarranty'])->name('warranty');
     Route::get('/document/print/{document}', [PDFController::class, 'printDocument'])->name('print.document');
     Route::get('/ce/print/{product}', [PDFController::class, 'printCe'])->name('print.ce');
     Route::get('/freon/print/{product}', [PDFController::class, 'freonCert'])->name('print.freon');
-
+    Route::get('/travelorder/print/{document}', [PDFController::class, 'printTravelOrder'])->name('print.travelorder');
 
     //Packing List
 
@@ -204,12 +200,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/packinglist/edit/{product}', [ProductController::class, 'editPackingListProduct'])->name('product.packinglist.edit');
     Route::put('/products/packinglist/update/{product}', [ProductController::class, 'updatePackingListProducts'])->name('product.packinglist.update');
 
-    Route::get('/packinglist/add/row/{packingList}/{product}', [PackingListController::class, 'addEmptyRow'])
-    ->name('packinglist.addrow');
+    Route::get('/packinglist/add/row/{packingList}/{product}', [PackingListController::class, 'addEmptyRow'])->name('packinglist.addrow');
 
     Route::delete('/packinglist/delete/{packingList}', [PackingListController::class, 'destroy'])->name('packinglist.delete');
-
-
 
     //Declarations
 
@@ -221,7 +214,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/declaration/update/{declaration}', [DeclarationController::class, 'update'])->name('declaration.update');
     Route::delete('/declaration/delete/{declaration}', [DeclarationController::class, 'destroy'])->name('declaration.delete');
 
-
     //Regulatives and Directives
     Route::get('/directives', [DirectiveController::class, 'index'])->name('directives.index');
     Route::get('/category/edit/{category}', [CategoryController::class, 'edit'])->name('categoryDirectivesAndRegulations.edit');
@@ -230,7 +222,7 @@ Route::middleware('auth')->group(function () {
 
     //Regulations
 
-    Route::get( '/regulations', [RegulationController::class, 'index'])->name('regulations.index');
+    Route::get('/regulations', [RegulationController::class, 'index'])->name('regulations.index');
     Route::get('/regulation/edit/{regulation}', [RegulationController::class, 'edit'])->name('regulation.edit');
 
     Route::get('/regulation/create', [RegulationController::class, 'create'])->name('regulation.create');
@@ -238,18 +230,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/regulation/delete/{regulation}', [RegulationController::class, 'destroy'])->name('regulation.delete');
     Route::put('/regulation/update/{regulation}', [RegulationController::class, 'update'])->name('regulation.update');
 
-     //Directives
+    //Directives
 
-     Route::get( '/directives/index', [DirectiveController::class, 'directivesAll'])->name('directivesAll.index');
-     Route::get('/directive/create', [DirectiveController::class, 'create'])->name('directive.create');
-     Route::post('/directive/store', [DirectiveController::class, 'store'])->name('directive.store');
-     Route::get('/directive/edit/{directive}', [DirectiveController::class, 'edit'])->name('directive.edit');
-     Route::put('/directive/update/{directive}', [DirectiveController::class, 'update'])->name('directive.update');
-     Route::delete('/directive/delete/{directive}', [DirectiveController::class, 'destroy'])->name('directive.delete');
+    Route::get('/directives/index', [DirectiveController::class, 'directivesAll'])->name('directivesAll.index');
+    Route::get('/directive/create', [DirectiveController::class, 'create'])->name('directive.create');
+    Route::post('/directive/store', [DirectiveController::class, 'store'])->name('directive.store');
+    Route::get('/directive/edit/{directive}', [DirectiveController::class, 'edit'])->name('directive.edit');
+    Route::put('/directive/update/{directive}', [DirectiveController::class, 'update'])->name('directive.update');
+    Route::delete('/directive/delete/{directive}', [DirectiveController::class, 'destroy'])->name('directive.delete');
 
-
-
-
+    //Travel Order
+    Route::get('/travelorder/{document}', [DocumentController::class, 'viewTravelOrder'])->name('travelorder.view');
 });
 
 require __DIR__ . '/auth.php';

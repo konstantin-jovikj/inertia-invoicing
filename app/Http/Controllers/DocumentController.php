@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Declaration;
+use App\Models\Place;
 use App\Models\Tax;
 use Inertia\Inertia;
 use App\Models\Terms;
@@ -24,8 +25,6 @@ class DocumentController extends Controller
      */
     public function index(Request $request)
     {
-
-
         $documentTypes = DocumentType::all(); // Fetch all document types for the dropdown
         $clients = Company::where('is_customer', true)->get();
 
@@ -52,15 +51,14 @@ class DocumentController extends Controller
                 }
             })
             ->paginate(20)
-            ->withQueryString();  // Retains query parameters (for pagination)
-            // dd($documents->pluck('packingList'));
+            ->withQueryString(); // Retains query parameters (for pagination)
+        // dd($documents->pluck('packingList'));
         return inertia('Documents/DocumentsIndex', [
             'documents' => $documents,
             'documentTypes' => $documentTypes,
             'clients' => $clients,
         ]);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -74,26 +72,43 @@ class DocumentController extends Controller
         $incoterms = Incoterm::all();
         $vehicles = Vehicle::all();
         $drivers = Driver::all();
+        $places = Place::all();
 
         $companies = Company::select('id', 'name', 'is_customer')
             ->whereIn('is_customer', [true, false])
             ->get()
             ->groupBy('is_customer');
 
-        return inertia('Documents/DocumentsAdd', [
-            'authUser' => $authUser,
-            'documentType' => $documentType,
-            'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
-            'clientCompanies' => $companies->get(true, collect()), // companies where 'is_customer' is true
-            'curencies' => $curencies,
-            'taxes' => $taxes,
-            'terms' => $terms,
-            'incoterms' => $incoterms,
-            'vehicles' => $vehicles,
-            'drivers' => $drivers,
-        ]);
+        if ($documentType->id == 7) {
+            return inertia('Documents/TravelOrderAdd', [
+                'authUser' => $authUser,
+                'documentType' => $documentType,
+                'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
+                'clientCompanies' => $companies->get(true, collect()), // companies where 'is_customer' is true
+                'curencies' => $curencies,
+                'taxes' => $taxes,
+                'terms' => $terms,
+                'incoterms' => $incoterms,
+                'vehicles' => $vehicles,
+                'drivers' => $drivers,
+                'places' => $places,
+            ]);
+        } else {
+            return inertia('Documents/DocumentsAdd', [
+                'authUser' => $authUser,
+                'documentType' => $documentType,
+                'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
+                'clientCompanies' => $companies->get(true, collect()), // companies where 'is_customer' is true
+                'curencies' => $curencies,
+                'taxes' => $taxes,
+                'terms' => $terms,
+                'incoterms' => $incoterms,
+                'vehicles' => $vehicles,
+                'drivers' => $drivers,
+                'places' => $places,
+            ]);
+        }
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -127,16 +142,33 @@ class DocumentController extends Controller
             'advance_payment' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
             'delivery' => 'nullable|max:255',
+            'load_date'=>'nullable|date',
+            'unload_date'=>'nullable|date',
+            'load_place_id' => 'nullable|exists:places,id',
+            'unload_place_id' => 'nullable|exists:places,id',
+            'marking' => 'nullable|max:255',
+            'boxes_nr' => 'nullable|numeric',
+            'packaging_type' => 'nullable|max:255',
+            'goods_type' => 'nullable|max:255',
+            'note' => 'nullable|max:255',
+            'instruction' => 'nullable|max:255',
+            'picked_up_by' => 'nullable|max:255',
         ]);
         // $validatedData['user_id'] = auth()->user()->id;
 
         // dd($validatedData);
 
         $document = Document::create($validatedData);
-
-        return redirect()->route('products.create', [
-            'document' => $document->id,
-        ]);
+        // $document->load('company', 'owner', 'company.place.country');
+        if($request->document_type_id ==7){
+            return redirect()->route('travelorder.view', [
+                'document' => $document,
+            ]);
+        }else{   
+            return redirect()->route('products.create', [
+                'document' => $document->id,
+            ]);
+        }
     }
 
     /**
@@ -231,33 +263,34 @@ class DocumentController extends Controller
         // Recalculate fields
         $discountAmount = $document->total * ($discountRate / 100);
 
-
         $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
         $docTotal = $document->total - $discountAmount + $taxAmount;
         $docGrandTotal = $docTotal - $validatedData['advance_payment'];
-        $docAdvancedBase = $docGrandTotal/(1+($taxRate / 100));
+        $docAdvancedBase = $docGrandTotal / (1 + $taxRate / 100);
         $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
         // dd($validatedData['advance_payment']);
 
         // Merge recalculated fields with validated data
-        $document->update(array_merge($validatedData, [
-            'discount_amount' => $discountAmount,
-            'tax_amount' => $taxAmount,
-            'total_with_tax_and_discount' => $docTotal,
-            'grand_total' => $docGrandTotal,
-            'advanced_payment_tax' => $docAdvancedTax,
-            'advanced_payment_base' => $docAdvancedBase,
-        ]));
+        $document->update(
+            array_merge($validatedData, [
+                'discount_amount' => $discountAmount,
+                'tax_amount' => $taxAmount,
+                'total_with_tax_and_discount' => $docTotal,
+                'grand_total' => $docGrandTotal,
+                'advanced_payment_tax' => $docAdvancedTax,
+                'advanced_payment_base' => $docAdvancedBase,
+            ]),
+        );
 
         // dd($document);
 
         // Redirect to products creation page
-        return Inertia::location(route('products.create', [
-            'document' => $document->id,
-        ]));
+        return Inertia::location(
+            route('products.create', [
+                'document' => $document->id,
+            ]),
+        );
     }
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -268,9 +301,6 @@ class DocumentController extends Controller
         return redirect()->route('document.index')->with('message', 'Документот е успешно избришан.');
     }
 
-
-
-
     public function addEmptyRow(Document $document, Product $product)
     {
         // Retrieve the existing orders for the specified document as a collection
@@ -278,12 +308,12 @@ class DocumentController extends Controller
 
         // Define the empty row with the necessary values
         $emptyRow = new Product([
-            "id" => $product->id,
-            "document_id" => $document->id,
-            "description" => null,
-            "qty" => null,
-            "single_price" => null,
-            "total_price" => null
+            'id' => $product->id,
+            'document_id' => $document->id,
+            'description' => null,
+            'qty' => null,
+            'single_price' => null,
+            'total_price' => null,
         ]);
 
         // Insert the empty row at the correct position in the collection
@@ -300,8 +330,8 @@ class DocumentController extends Controller
         // Return the new order collection or a success message, if needed
         // return $newOrder;
         return redirect()
-        ->route('products.create', ['document' => $document->id])
-        ->with('message', 'Empty Row inserted successfully!');
+            ->route('products.create', ['document' => $document->id])
+            ->with('message', 'Empty Row inserted successfully!');
     }
 
     public function convert(Document $document, DocumentType $documentTypeNew)
@@ -338,17 +368,17 @@ class DocumentController extends Controller
             'advanced_payment_tax' => $document->advanced_payment_tax,
             'delivery' => $document->delivery,
         ];
-    
+
         // Create the new document
         $convertedDocument = Document::create($documentData);
-    
+
         // Copy associated products
         $products = Product::where('document_id', $document->id)
-        ->whereNull('packing_list_id')
-        ->get();
+            ->whereNull('packing_list_id')
+            ->get();
 
         // dd($products);
-    
+
         foreach ($products as $product) {
             $productData = [
                 'temperature_id' => $product->temperature_id,
@@ -376,24 +406,24 @@ class DocumentController extends Controller
                 'power' => $product->power,
                 'current' => $product->current,
             ];
-    
+
             // Use relationship to create product
             $convertedDocument->products()->create($productData);
         }
-    
+
         return redirect()->route('document.index');
     }
-    
 
-    public function convertCompanyDocument(Document $document, DocumentType $documentTypeNew){
+    public function convertCompanyDocument(Document $document, DocumentType $documentTypeNew)
+    {
         // dd($document, $documentTypeNew);
 
         $products = Product::where('document_id', $document->id)
-        ->whereNull('packing_list_id')
-        ->get();
+            ->whereNull('packing_list_id')
+            ->get();
 
         // dd($products);
-        $documentData = ([
+        $documentData = [
             'user_id' => $document->user_id,
             'owner_id' => $document->owner_id,
             'client_id' => $document->client_id,
@@ -423,12 +453,12 @@ class DocumentController extends Controller
             'advanced_payment_base' => $document->advanced_payment_base,
             'advanced_payment_tax' => $document->advanced_payment_tax,
             'delivery' => $document->delivery,
-        ]);
+        ];
 
         $convertedDocument = Document::create($documentData);
 
-        foreach($products as $product){
-            $productData = ([
+        foreach ($products as $product) {
+            $productData = [
                 'temperature_id' => $product->temperature_id,
                 'voltage_id' => $product->voltage_id,
                 'manufacturer_id' => $product->manufacturer_id,
@@ -453,12 +483,31 @@ class DocumentController extends Controller
                 'co2' => $product->co2,
                 'power' => $product->power,
                 'current' => $product->current,
-            ]);
+            ];
 
             $convertedDocumentProducts = Product::create($productData);
-
         }
 
-        return redirect()->route('company.show', ['company' => $document->client_id]);    }
+        return redirect()->route('company.show', ['company' => $document->client_id]);
+    }
 
+
+    public function viewTravelOrder(Document $document)
+    {
+        // dd($document);
+        $ownerId = $document->owner_id;
+        $clientId = $document->client_id;
+        $client = Company::findOrFail($clientId);
+        $owner = Company::findOrFail($ownerId);
+
+        $client->load('place.country');
+        $owner->load('place.country');
+
+        $document->load('company', 'vehicle', 'place.country', 'load_place', 'unload_place');
+        return inertia('Documents/TravelOrderView',[
+            'document' => $document,
+            'client' => $client,
+            'owner' => $owner,
+        ]);
+    }
 }

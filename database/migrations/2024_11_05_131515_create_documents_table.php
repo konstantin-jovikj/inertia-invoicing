@@ -24,6 +24,23 @@ return new class extends Migration
             $table->foreignId('tax_id')->nullable()->constrained('taxes');
             $table->foreignId('term_id')->nullable()->constrained('terms');
 
+            $table->foreignId('place_id')->nullable()->constrained('terms');//incoterm place for delivery or pickup
+            
+
+            $table->foreignId('load_place_id')->nullable()->constrained('places');
+            $table->foreignId('unload_place_id')->nullable()->constrained('places');
+
+            $table->dateTime('load_date')->nullable();
+            $table->dateTime('unload_date')->nullable();
+            $table->string('marking')->nullable();
+            $table->string('boxes_nr')->nullable();
+            $table->string('packaging_type')->nullable();
+            $table->string('goods_type')->nullable();
+            $table->text('note')->nullable();
+            $table->text('instruction')->nullable();
+            $table->string('picked_up_by')->nullable();
+
+
             $table->boolean('is_translation')->default(false);
             $table->boolean('is_albanian')->default(false);
             $table->boolean('is_for_export')->default(false);

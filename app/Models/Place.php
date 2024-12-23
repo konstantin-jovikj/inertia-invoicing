@@ -28,4 +28,9 @@ class Place extends Model
     {
         return $this->hasMany(Manufacturer::class);
     }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
 }
