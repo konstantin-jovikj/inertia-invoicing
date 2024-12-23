@@ -322,11 +322,22 @@ console.log(props.documents);
                                         {{ document.company.name }}
                                     </td>
                                     <td
+                                    v-if="document.document_type.id !== 7"
                                         class="text-base font-semibold text-purple-600"
                                     >
                                         {{
                                             new Date(
                                                 document.date,
+                                            ).toLocaleDateString("en-GB")
+                                        }}
+                                    </td>
+                                    <td
+                                    v-else
+                                        class="text-base font-semibold text-purple-600"
+                                    >
+                                        {{
+                                            new Date(
+                                                document.load_date,
                                             ).toLocaleDateString("en-GB")
                                         }}
                                     </td>
