@@ -1,14 +1,11 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DeclarationController;
-use App\Http\Controllers\DirectiveController;
-use App\Http\Controllers\PackingListController;
-use App\Http\Controllers\PDFController;
-use App\Http\Controllers\RegulationController;
 use Inertia\Inertia;
+use App\Models\Company;
+use App\Models\Document;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\TaxController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\PlaceController;
@@ -18,13 +15,18 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurencyController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DirectiveController;
+use App\Http\Controllers\RegulationController;
+use App\Http\Controllers\DeclarationController;
+use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\CustomerTypeController;
 use App\Http\Controllers\DocumentTypeController;
-use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -36,7 +38,12 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $clientsCount = Company::whereNotNull('customer_id')->count();
+    $documentsCount = Document::count();
+    return Inertia::render('Dashboard',[
+    'clientsCount' => $clientsCount,
+    'documentsCount' => $documentsCount,
+    ]);
 })
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

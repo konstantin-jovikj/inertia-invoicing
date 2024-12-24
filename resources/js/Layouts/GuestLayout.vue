@@ -5,7 +5,7 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div
-        class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0"
+        class="flex min-h-screen flex-col items-center bg-gradient-to-bl from-neutral-300 via-sky-200 to-slate-300 pt-6 sm:justify-center sm:pt-0"
     >
         <div>
             <Link href="/">
