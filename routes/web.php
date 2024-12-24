@@ -241,6 +241,10 @@ Route::middleware('auth')->group(function () {
 
     //Travel Order
     Route::get('/travelorder/{document}', [DocumentController::class, 'viewTravelOrder'])->name('travelorder.view');
+    Route::get('/travelorder/edit/{document}', action: [DocumentController::class, 'editTravelOrder'])->name('travelorder.edit');
+    Route::put('/travelorder/update/{document}', [DocumentController::class, 'updateTravelOrder'])->name('travelorder.update');
+
+
 });
 
 require __DIR__ . '/auth.php';

@@ -18,6 +18,7 @@ const props = defineProps({
     documentTypes: Array,
     ownerCompanies: Array,
     clientCompanies: Array,
+    places:Array,
     authUser: Object,
     curencies: Array,
     taxes: Array,

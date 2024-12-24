@@ -142,8 +142,8 @@ class DocumentController extends Controller
             'advance_payment' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
             'delivery' => 'nullable|max:255',
-            'load_date'=>'nullable|date',
-            'unload_date'=>'nullable|date',
+            'load_date' => 'nullable|date',
+            'unload_date' => 'nullable|date',
             'load_place_id' => 'nullable|exists:places,id',
             'unload_place_id' => 'nullable|exists:places,id',
             'marking' => 'nullable|max:255',
@@ -160,11 +160,11 @@ class DocumentController extends Controller
 
         $document = Document::create($validatedData);
         // $document->load('company', 'owner', 'company.place.country');
-        if($request->document_type_id ==7){
+        if ($request->document_type_id == 7) {
             return redirect()->route('travelorder.view', [
                 'document' => $document,
             ]);
-        }else{   
+        } else {
             return redirect()->route('products.create', [
                 'document' => $document->id,
             ]);
@@ -247,6 +247,17 @@ class DocumentController extends Controller
             'advance_payment' => 'nullable|numeric',
             'discount' => 'nullable|numeric|min:0|max:100', // Ensure discount is a percentage
             'delivery' => 'nullable|max:255',
+            'load_date' => 'nullable|date',
+            'unload_date' => 'nullable|date',
+            'load_place_id' => 'nullable|exists:places,id',
+            'unload_place_id' => 'nullable|exists:places,id',
+            'marking' => 'nullable|max:255',
+            'boxes_nr' => 'nullable|numeric',
+            'packaging_type' => 'nullable|max:255',
+            'goods_type' => 'nullable|max:255',
+            'note' => 'nullable|max:255',
+            'instruction' => 'nullable|max:255',
+            'picked_up_by' => 'nullable|max:255',
         ]);
 
         // Refresh the document's tax relationship to get the latest tax_rate
@@ -283,12 +294,10 @@ class DocumentController extends Controller
         );
 
         // dd($document);
-
-        // Redirect to products creation page
         return Inertia::location(
-            route('products.create', [
-                'document' => $document->id,
-            ]),
+            $document->document_type_id == 7
+                ? route('travelorder.view', ['document' => $document->id])
+                : route('products.create', ['document' => $document->id])
         );
     }
 
@@ -504,10 +513,63 @@ class DocumentController extends Controller
         $owner->load('place.country');
 
         $document->load('company', 'vehicle', 'place.country', 'load_place', 'unload_place');
-        return inertia('Documents/TravelOrderView',[
+        return inertia('Documents/TravelOrderView', [
             'document' => $document,
             'client' => $client,
             'owner' => $owner,
         ]);
     }
+
+    public function editTravelOrder(Document $document)
+    {
+
+        // Eager load relations for companies
+        $client = Company::with('place.country')->findOrFail($document->client_id);
+        $owner = Company::with('place.country')->findOrFail($document->owner_id);
+        $ownerCompanies = Company::where('customer_id', null)->get();
+        $clientCompanies = Company::whereNotNull('customer_id')->get();
+        $documentType = DocumentType::all();
+        $places = Place::with('country')->get();
+        $vehicles = Vehicle::all();
+        $drivers = Driver::all();
+        $curencies = Curency::all();
+        $taxes = Tax::all();
+        $terms = Terms::all();
+        $incoterms = Incoterm::all();
+
+        // Eager load document relations
+        $document->load([
+            'company',
+            'vehicle',
+            'place.country',
+            'load_place',
+            'unload_place',
+            'tax',
+        ]);
+
+        // dd($document);
+
+        // Return Inertia response
+        return inertia('Documents/TravelOrderEdit', [
+            'document' => $document,
+            'client' => $client,
+            'owner' => $owner,
+            'documentType' => $documentType,
+            'ownerCompanies' => $ownerCompanies,
+            'clientCompanies' => $clientCompanies,
+            'places' => $places,
+            'vehicles' => $vehicles,
+            'drivers' => $drivers,
+            'curencies' => $curencies,
+            'taxes' => $taxes,
+            'terms' => $terms,
+            'incoterms' => $incoterms,
+        ]);
+    }
+
+    public function updateTravelOrder(Request $request, Document $document)
+    {
+
+    }
+
 }
