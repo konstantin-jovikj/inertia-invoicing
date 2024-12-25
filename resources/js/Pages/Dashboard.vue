@@ -14,8 +14,8 @@
     import BuildingIcon from '@/Components/BuildingIcon.vue';
 
     const props = defineProps({
-        clientsCount: Object,
-        documentsCount: Object,
+        clientsCount: Number,
+        documentsCount: Number,
     });
 </script>
 
@@ -51,7 +51,9 @@
                         <div class="mt-10 flex flex-col md:flex-row gap-4">
                             <!-- Drzavi-->
                             <div class="bg-gray-50 w-full md:w-3/12 lg:w-2/12 shadow-md py-4 hover:border-sky-500 border-2 rounded-lg transition duration-200 ease-in-out hover:scale-105 hover:rotate-[3deg]">
-                                <Link  class="flex flex-col items-center justify-center">
+                                <Link :href="route('country.index')"
+                                  class="flex flex-col items-center justify-center">
+
                                     <div class="flex flex-col items-center justify-center">
                                         <MapIcon class="text-gray-700"></MapIcon>
                                         <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">
@@ -62,7 +64,9 @@
                             </div>
                              <!-- Gradovi-->
                              <div class="bg-gray-50 w-full md:w-3/12 lg:w-2/12 shadow-md py-4 hover:border-sky-500 border-2 rounded-lg transition duration-200 ease-in-out hover:scale-105 hover:rotate-[3deg]">
-                                <Link  class="flex flex-col items-center justify-center">
+                                <Link 
+                                :href="route('place.index')"
+                                 class="flex flex-col items-center justify-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <PlaceIcon class="text-gray-700"></PlaceIcon>
                                         <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">
@@ -74,7 +78,9 @@
 
                              <!-- Banki-->
                              <div class="bg-gray-50 w-full md:w-3/12 lg:w-2/12 shadow-md py-4 hover:border-sky-500 border-2 rounded-lg transition duration-200 ease-in-out hover:scale-105 hover:rotate-[3deg]">
-                                <Link  class="flex flex-col items-center justify-center">
+                                <Link 
+                                :href="route('banks.index')"
+                                 class="flex flex-col items-center justify-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <BankIcon class="text-gray-700"></BankIcon>
                                         <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">
@@ -86,7 +92,9 @@
 
                             <!-- Vozila-->
                             <div class="bg-gray-50 w-full md:w-3/12 lg:w-2/12 shadow-md py-4 hover:border-sky-500 border-2 rounded-lg transition duration-200 ease-in-out hover:scale-105 hover:rotate-[3deg]">
-                                <Link  class="flex flex-col items-center justify-center">
+                                <Link 
+                                :href="route('vehicles.index')"
+                                 class="flex flex-col items-center justify-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <CarIcon class="text-gray-700"></CarIcon>
                                         <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">
@@ -99,7 +107,8 @@
 
                              <!-- Valuti-->
                              <div class="bg-gray-50 w-full md:w-3/12 lg:w-2/12 shadow-md py-4 hover:border-sky-500 border-2 rounded-lg transition duration-200 ease-in-out hover:scale-105 hover:rotate-[3deg]">
-                                <Link  class="flex flex-col items-center justify-center">
+                                <Link :href="route('currency.index')"
+                                 class="flex flex-col items-center justify-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <CurrencyIcon class="text-gray-700"></CurrencyIcon>
                                         <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">
@@ -111,7 +120,8 @@
 
                             <!-- Firma-->
                             <div class="bg-gray-50 w-full md:w-3/12 lg:w-2/12 shadow-md py-4 hover:border-sky-500 border-2 rounded-lg transition duration-200 ease-in-out hover:scale-105 hover:rotate-[3deg]">
-                                <Link  class="flex flex-col items-center justify-center">
+                                <Link :href="route('companies.notcustomer.index')"
+                                 class="flex flex-col items-center justify-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <BuildingIcon class="text-gray-700"></BuildingIcon>
                                         <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">

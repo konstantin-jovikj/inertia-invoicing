@@ -182,12 +182,12 @@ const isSelected = (declarationId) => {
                                                 >
                                             </div>
 
-                                            <!-- Is For Translation -->
+                                            <!-- Is For Albanian Translation -->
                                             <div
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
                                                 <InputLabel for="is_translation"
-                                                    >Дали е потребен
+                                                    >Албански 
                                                     Превод?</InputLabel
                                                 >
 
@@ -210,6 +210,7 @@ const isSelected = (declarationId) => {
                                             </div>
                                             <!-- Is For Advance Payment -->
                                             <div
+                                            v-if="props.document.document_type.id == 3"
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
                                                 <InputLabel for="is_for_advanced_payment"
