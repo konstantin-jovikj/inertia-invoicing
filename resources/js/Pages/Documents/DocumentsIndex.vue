@@ -266,7 +266,10 @@ console.log(props.documents);
                                     <td
                                         class="text-base font-semibold text-emerald-700"
                                     >
+                                    <Link :href="route('products.create', document.id)"
+                                    class="hover:text-red-600">
                                         {{ document.document_no }}
+                                    </Link>
                                     </td>
                                     <td class="flex text-base font-semibold">
                                         <!-- <span
@@ -316,11 +319,16 @@ console.log(props.documents);
                                             </span>
                                         </span>
                                     </td>
+
                                     <td
                                         class="text-base font-semibold text-sky-600"
                                     >
+                                    <Link :href="route('company.show', document.company.id)"
+                                    class="hover:text-red-800" >
                                         {{ document.company.name }}
+                                    </Link>
                                     </td>
+
                                     <td
                                     v-if="document.document_type.id !== 7"
                                         class="text-base font-semibold text-purple-600"

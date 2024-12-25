@@ -154,6 +154,10 @@ class DocumentController extends Controller
             'instruction' => 'nullable|max:255',
             'picked_up_by' => 'nullable|max:255',
         ]);
+
+        if($request->load_date){
+            $validatedData['date'] = $request->load_date;
+        }
         // $validatedData['user_id'] = auth()->user()->id;
 
         // dd($validatedData);
@@ -346,6 +350,8 @@ class DocumentController extends Controller
     public function convert(Document $document, DocumentType $documentTypeNew)
     {
         // Prepare document data to copy
+        $document->load('load_place', 'unload_place','owner', 'company');
+        
         $documentData = [
             'user_id' => $document->user_id,
             'owner_id' => $document->owner_id,
@@ -376,7 +382,20 @@ class DocumentController extends Controller
             'advanced_payment_base' => $document->advanced_payment_base,
             'advanced_payment_tax' => $document->advanced_payment_tax,
             'delivery' => $document->delivery,
+            'load_date' => $document->date,
+            'unload_date' => $document->date,
+            'load_place_id' => $document->owner->place_id,
+            'unload_place_id' => $document->company->place->id,
+            'marking' => '',
+            'boxes_nr' => '',
+            'packaging_type' => '',
+            'goods_type' => '',
+            'note' => '',
+            'instruction' => '',
+            'picked_up_by' => '',
         ];
+
+
 
         // Create the new document
         $convertedDocument = Document::create($documentData);
@@ -431,6 +450,8 @@ class DocumentController extends Controller
             ->whereNull('packing_list_id')
             ->get();
 
+        $document->load('load_place', 'unload_place','owner', 'company');
+
         // dd($products);
         $documentData = [
             'user_id' => $document->user_id,
@@ -462,6 +483,17 @@ class DocumentController extends Controller
             'advanced_payment_base' => $document->advanced_payment_base,
             'advanced_payment_tax' => $document->advanced_payment_tax,
             'delivery' => $document->delivery,
+            'load_date' => $document->date,
+            'unload_date' => $document->date,
+            'load_place_id' => $document->owner->place_id,
+            'unload_place_id' => $document->company->place->id,
+            'marking' => '',
+            'boxes_nr' => '',
+            'packaging_type' => '',
+            'goods_type' => '',
+            'note' => '',
+            'instruction' => '',
+            'picked_up_by' => '',
         ];
 
         $convertedDocument = Document::create($documentData);

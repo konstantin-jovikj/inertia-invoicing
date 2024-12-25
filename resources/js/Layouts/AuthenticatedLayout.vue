@@ -8,6 +8,7 @@ import ArrowDown from "@/Components/ArrowDown.vue";
 import SettingsIcon from "@/Components/SettingsIcon.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
+import GearIcon from "@/Components/GearIcon.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -32,7 +33,7 @@ const showingNavigationDropdown = ref(false);
                             <!-- Navigation Links -->
                             <!-- START SETTINGS -->
 
-                            <div
+                            <!-- <div
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <NavLink
@@ -41,7 +42,7 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
-                            </div>
+                            </div> -->
 
                             <div class="relative flex mt-4 ms-3">
                                 <!-- DOKUMENTI -->
@@ -85,7 +86,7 @@ const showingNavigationDropdown = ref(false);
                                                 type="button"
                                                 class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
                                             >
-                                                Коминтенти
+                                                Клиенти
 
                                                 <ArrowDown />
                                             </button>
@@ -96,16 +97,27 @@ const showingNavigationDropdown = ref(false);
                                         <DropdownLink
                                             :href="route('customer.create')"
                                         >
-                                            Додај нов Коминтент
+                                            Додај нов Клиент
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('companies.index')"
                                         >
-                                            Листа на Коминтенти
+                                            Листа на Клиенти
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
 
+
+                            </div>
+                        </div>
+
+                        <!-- END SETTINGS -->
+
+                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
+                            <!-- Settings Dropdown -->
+                            <div class="relative ms-3 flex gap-2">
+
+                                
                                 <!-- PODESUVANJA -->
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
@@ -114,7 +126,8 @@ const showingNavigationDropdown = ref(false);
                                                 type="button"
                                                 class="inline-flex items-center px-3 py-1 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
                                             >
-                                                <SettingsIcon />
+                                                <!-- <SettingsIcon /> -->
+                                                 <GearIcon></GearIcon>
 
                                                 <ArrowDown />
                                             </button>
@@ -135,7 +148,7 @@ const showingNavigationDropdown = ref(false);
                                         <DropdownLink
                                             :href="route('customertype.index')"
                                         >
-                                            Тип на Коминтенти
+                                            Тип на Клиенти
                                         </DropdownLink>
 
                                         <DropdownLink
@@ -202,14 +215,6 @@ const showingNavigationDropdown = ref(false);
                                 </Dropdown>
 
                                 <!-- END PODESUVANJA -->
-                            </div>
-                        </div>
-
-                        <!-- END SETTINGS -->
-
-                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
-                            <!-- Settings Dropdown -->
-                            <div class="relative ms-3">
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">

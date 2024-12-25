@@ -58,7 +58,7 @@ const getPaginationLabel = (label) => {
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between mb-4">
                             <h2 class="font-bold text-sky-800">
-                                Тип на Коминтенти
+                                Тип на Клиенти
                             </h2>
                             <div class="flex">
                                 <Link

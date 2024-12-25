@@ -16,17 +16,30 @@
         <div class="border-y-2 border-sky-700 mt-2 pb-1 font-bold flex flex-row justify-around">
             <div>
                 @if ($type === 'packingList')
-                    <span class="text-sm">Пакинг Листа Бр: / Packing List Nr: </span>
-                    <span class="text-sm">{{ $packingList->document_no }}</span>
+                    @if ($document->is_translation)
+                        <span class="text-sm">Lista e Paketimit Nr: </span>
+                        <span class="text-sm">{{ $packingList->document_no }}</span>
+                    @else
+                        <span class="text-sm">Пакинг Листа Бр: / Packing List Nr: </span>
+                        <span class="text-sm">{{ $packingList->document_no }}</span>
+                    @endif
                 @else
                     @if ($document->is_for_advanced_payment)
                         <span>Авансна</span>
                     @endif
                     <span class="text-sm">
                         @if (!$document->is_for_export)
-                            {{ $convertedDocumentName }} Бр:
+                            @if ($document->is_translation && $document->document_type_id == 1)
+                                Oferta Nr:
+                            @else
+                                {{ $convertedDocumentName }} Бр:
+                            @endif
                         @else
-                            {{ $convertedDocumentName }} / {{ $document->documentType->type }} No:
+                            @if ($document->is_translation && $document->document_type_id == 1)
+                                Oferta Nr:
+                            @else
+                                {{ $convertedDocumentName }} / {{ $document->documentType->type }} No:
+                            @endif
                         @endif
                     </span>
                     <span class="text-lg">{{ $document->document_no }}</span>
@@ -36,9 +49,17 @@
 
             <div>
                 @if ($type === 'packingList')
-                    <span class="text-sm">Датум: / Date: {{ date('d.m.Y', strtotime($packingList->date)) }}</span>
+                    @if ($document->is_translation)
+                        <span class="text-sm">Data: {{ date('d.m.Y', strtotime($packingList->date)) }}</span>
+                    @else
+                        <span class="text-sm">Датум: / Date: {{ date('d.m.Y', strtotime($packingList->date)) }}</span>
+                    @endif
                 @elseif (!$document->is_for_export)
-                    <span class="text-sm">Датум: {{ date('d.m.Y', strtotime($document->date)) }}</span>
+                    @if ($document->is_translation)
+                        <span class="text-sm">Data: {{ date('d.m.Y', strtotime($document->date)) }}</span>
+                    @else
+                        <span class="text-sm">Датум: {{ date('d.m.Y', strtotime($document->date)) }}</span>
+                    @endif
                 @else
                     <span class="text-sm">Date: {{ date('d.m.Y', strtotime($document->date)) }} </span>
                 @endif
@@ -51,11 +72,21 @@
             @if ($client->customer->customerType->id !== 1)
                 @if (!$document->is_for_export)
                     <div>
-                        <span class="text-xs text-purple-700 italic">Фирма:</span>
-                        <span class="text-md font-bold ms-2">{{ $client->name }}</span>
+                        @if ($document->is_translation)
+                            <span class="text-xs text-purple-700 italic">Firma:</span>
+                            <span class="text-md font-bold ms-2">{{ $client->name }}</span>
+                        @else
+                            <span class="text-xs text-purple-700 italic">Фирма:</span>
+                            <span class="text-md font-bold ms-2">{{ $client->name }}</span>
+                        @endif
                     @else
-                        <span class="text-xs text-purple-700 italic">Company: </span>
-                        <span class="text-md font-bold ms-2"> {{ $client->name }}</span>
+                        @if ($document->is_translation)
+                            <span class="text-xs text-purple-700 italic">Firma:</span>
+                            <span class="text-md font-bold ms-2">{{ $client->name }}</span>
+                        @else
+                            <span class="text-xs text-purple-700 italic">Company: </span>
+                            <span class="text-md font-bold ms-2"> {{ $client->name }}</span>
+                        @endif
                     </div>
                 @endif
             @endif
@@ -64,14 +95,21 @@
             @if ($client->customer->customerType->id == 1)
                 @if (!$document->is_for_export)
                     <div>
-                        <span class="text-md text-md font-bold ms-4"><span class="text-xs text-purple-700 italic">Име и
-                                Презиме:
-                            </span>{{ $client->name }}</span>
+                        @if ($document->is_translation)
+                            <span class="text-xs text-purple-700 italic">Emri dhe Mbiemri:</span>
+                            <span>{{ $client->name }}</span>
+                        @else
+                            <span class="text-xs text-purple-700 italic">Име и Презиме:</span>
+                            <span>{{ $client->name }}</span>
+                        @endif
                     @else
-                        <span class="text-md font-bold ms-4"><span class="text-xs text-purple-700 italic">First and Last
-                                Name: </span>
-                            {{ $client->name }}
-                        </span>
+                        @if ($document->is_translation)
+                            <span class="text-xs text-purple-700 italic">Emri dhe Mbiemri:</span>
+                            <span>{{ $client->name }}</span>
+                        @else
+                            <span class="text-xs text-purple-700 italic">First and Last Name: </span>
+                            <span>{{ $client->name }}</span>
+                        @endif
                     </div>
                 @endif
             @endif
@@ -80,15 +118,24 @@
         <div class="border-b border-gray-500   w-full  ">
             <div class="">
                 @if ($document->is_for_export)
-                    <span class="text-xs text-purple-700 italic">Address:</span>
+                    @if ($document->is_translation)
+                        <span class="text-xs text-purple-700 italic">Adresa:</span>
+                    @else
+                        <span class="text-xs text-purple-700 italic">Address:</span>
+                    @endif
                     <span class="text-sm ms-4 font-semibold">{{ $client->address }}</span>
                     <span class="text-sm font-semibold">-{{ $client->place->zip }} -
                         {{ $client->place->place }}</span>
                     <span class="text-sm font-semibold">-{{ $client->place->country->name }}</span>
                 @else
-                    <span class="text-xs text-purple-700 italic">Адреса:</span>
+                    @if ($document->is_translation)
+                        <span class="text-xs text-purple-700 italic">Adresa:</span>
+                    @else
+                        <span class="text-xs text-purple-700 italic">Адреса:</span>
+                    @endif
                     <span class="text-sm ms-4 font-semibold">{{ $client->address }}</span>
-                    <span class="text-sm font-semibold">{{ $client->place->zip }} - {{ $client->place->place }}</span>
+                    <span class="text-sm font-semibold">{{ $client->place->zip }} -
+                        {{ $client->place->place }}</span>
                     <span class="text-sm font-semibold">{{ $client->place->country->name }}</span>
                 @endif
             </div>
@@ -122,11 +169,19 @@
 
                 <div class="w-[25%] border-e me-2 border-gray-500">
                     @if ($document->is_for_export)
-                        <span class="text-xs text-purple-700 italic">Currency:</span>
+                        @if ($document->is_translation)
+                            <span class="text-xs text-purple-700 italic">Valutë:</span>
+                        @else
+                            <span class="text-xs text-purple-700 italic">Currency:</span>
+                        @endif
                         <span class="text-sm font-semibold ms-2">{{ $document->curency->symbol }} -
                             {{ $document->curency->code }}</span>
                     @else
-                        <span class="text-xs text-purple-700 italic">Валута:</span>
+                        @if ($document->is_translation)
+                            <span class="text-xs text-purple-700 italic">Valutë:</span>
+                        @else
+                            <span class="text-xs text-purple-700 italic">Валута:</span>
+                        @endif
                         <span class="text-sm font-semibold ms-2">{{ $document->curency->symbol }} -
                             {{ $document->curency->code }}</span>
                     @endif
@@ -139,7 +194,11 @@
                         <span class="text-sm font-semibold mx-1">{{ $packingList->total_weight }} Kg</span>
                     @endif
                 @else
-                    <span class="text-xs text-purple-700 italic ps-1">Маса / Тежина:</span>
+                    @if ($document->is_translation)
+                        <span class="text-xs text-purple-700 italic ps-1">Bruto/Netto Kg:</span>
+                    @else
+                        <span class="text-xs text-purple-700 italic ps-1">Маса / Тежина:</span>
+                    @endif
                     @if (!is_null($packingList))
                         <span class="text-sm font-semibold mx-1">{{ $packingList->total_weight }} Kg</span>
                     @endif
@@ -148,12 +207,20 @@
 
             <div class="w-[28%] border-e border-gray-500">
                 @if ($document->is_for_export)
-                    <span class="text-xs text-purple-700 italic">Total Volume :</span>
+                    @if ($document->is_translation)
+                        <span class="text-xs text-purple-700 italic">Volumi total :</span>
+                    @else
+                        <span class="text-xs text-purple-700 italic">Total Volume :</span>
+                    @endif
                     @if (!is_null($packingList))
                         <span class="text-sm font-semibold mx-1">{{ $packingList->total_volume }} m<sup>3</sup> </span>
                     @endif
                 @else
-                    <span class="text-xs text-purple-700 italic ps-1">Волумен / Зафатнина:</span>
+                    @if ($document->is_translation)
+                        <span class="text-xs text-purple-700 italic">Volumi total :</span>
+                    @else
+                        <span class="text-xs text-purple-700 italic ps-1">Волумен / Зафатнина:</span>
+                    @endif
                     @if (!is_null($packingList))
                         <span class="text-sm font-semibold mx-1">{{ $packingList->total_volume }} m<sup>3</sup></span>
                     @endif
@@ -171,9 +238,17 @@
                         <tr class="bg-sky-200 text-[8px]">
                             <th class="border border-gray-300 px-2 py-1 text-left leading-none w-[30px]">
                                 @if ($document->is_for_export)
-                                    No
+                                    @if ($document->is_translation)
+                                        Nr
+                                    @else
+                                        No
+                                    @endif
                                 @else
-                                    Бр
+                                    @if ($document->is_translation)
+                                        Nr
+                                    @else
+                                        Бр
+                                    @endif
                                 @endif
                             </th>
 
@@ -181,9 +256,17 @@
 
                                 <th class="border border-gray-300 px-2 py-1 text-left leading-none w-[30px]">
                                     @if ($document->is_for_export)
-                                        No.in Invoice
+                                        @if ($document->is_translation)
+                                            Nr në faturë
+                                        @else
+                                            No.in Invoice
+                                        @endif
                                     @else
-                                        Бр.во Фактура
+                                        @if ($document->is_translation)
+                                            Nr në faturë
+                                        @else
+                                            Бр.во Фактура
+                                        @endif
                                     @endif
                                 </th>
                             @endif
@@ -192,37 +275,83 @@
                             @if ($document->drawing_no && $document->document_type_id == 1)
                                 <th class="border border-gray-300 px-2 py-1 text-left leading-none w-[50px]">
                                     @if ($document->is_for_export)
-                                        Position
+                                        @if ($document->is_translation)
+                                            Pozicioni
+                                        @else
+                                            Position
+                                        @endif
                                     @else
-                                        Позиција
+                                        @if ($document->is_translation)
+                                            Pozicioni
+                                        @else
+                                            Позиција
+                                        @endif
                                     @endif
                                 </th>
                             @endif
 
                             <th class="border border-gray-300 px-2 py-1 text-left leading-none">
                                 @if ($document->is_for_export)
-                                    Description
+                                    @if ($document->is_translation)
+                                        Lista
+                                    @else
+                                        Description
+                                    @endif
                                 @else
-                                    Опис
+                                    @if ($document->is_translation)
+                                        Lista
+                                    @else
+                                        Опис
+                                    @endif
                                 @endif
                             </th>
                             <th class="border border-gray-300 px-2 py-1 text-left leading-none w-[60px]">
                                 @if ($document->is_for_export)
-                                    Q-ty
+                                    @if ($document->is_translation)
+                                        Cop
+                                    @else
+                                        Q-ty
+                                    @endif
                                 @else
-                                    Кол
+                                    @if ($document->is_translation)
+                                        Cop
+                                    @else
+                                        Кол
+                                    @endif
                                 @endif
                             </th>
                             @if ($type !== 'packingList' && $document->print_price)
                                 <th class="border border-gray-300 px-2 py-1 text-left leading-none">
                                     @if ($document->is_for_export)
-                                        Price
+                                        @if ($document->is_translation)
+                                            Çmimi
+                                        @else
+                                            Price
+                                        @endif
                                     @else
-                                        Цена
+                                        @if ($document->is_translation)
+                                            Çmimi
+                                        @else
+                                            Цена
+                                        @endif
                                     @endif
                                 </th>
                             @endif
                             @if ($type == 'packingList')
+                                @if ($document->is_translation)
+                                    <th class="border border-gray-300 px-2 py-1 text-left leading-none">
+                                        Prod.Pesha
+                                    </th>
+                                    <th class="border border-gray-300 px-2 py-1 text-left leading-none">
+                                        Tot.Pesha
+                                    </th>
+                                    <th class="border border-gray-300 px-2 py-1 text-left leading-none">
+                                        Prod.Volumi
+                                    </th>
+                                    <th class="border border-gray-300 px-2 py-1 text-left leading-none">
+                                        Tot.Volumi
+                                    </th>
+                                @endif
                                 <th class="border border-gray-300 px-2 py-1 text-left leading-none">
                                     Prod.Weight
                                 </th>
@@ -239,9 +368,17 @@
                             @if ($type !== 'packingList' && $document->print_price)
                                 <th class="border border-gray-300 px-2 py-1 text-left leading-none">
                                     @if ($document->is_for_export)
-                                        Тот.Price
+                                        @if ($document->is_translation)
+                                            Тот.Çmimi
+                                        @else
+                                            Тот.Price
+                                        @endif
                                     @else
-                                        Вк.Цена
+                                        @if ($document->is_translation)
+                                            Тот.Çmimi
+                                        @else
+                                            Вк.Цена
+                                        @endif
                                     @endif
                                 </th>
                             @endif
@@ -496,9 +633,17 @@
                                         <th
                                             class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-sm font-normal italic">
                                             @if ($document->is_for_export)
-                                                Total
+                                                @if ($document->is_translation)
+                                                    Baze
+                                                @else
+                                                    Total
+                                                @endif
                                             @else
-                                                Основица
+                                                @if ($document->is_translation)
+                                                    Baze
+                                                @else
+                                                    Основица
+                                                @endif
                                             @endif
                                         </th>
                                         <td
@@ -513,9 +658,17 @@
                                             <th
                                                 class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-sm font-normal italic">
                                                 @if ($document->is_for_export)
-                                                    Discount {{ $document->discount }} %
+                                                    @if ($document->is_translation)
+                                                        Zbritje {{ $document->discount }} %
+                                                    @else
+                                                        Discount {{ $document->discount }} %
+                                                    @endif
                                                 @else
-                                                    Попуст {{ $document->discount }} %
+                                                    @if ($document->is_translation)
+                                                        Zbritje {{ $document->discount }} %
+                                                    @else
+                                                        Попуст {{ $document->discount }} %
+                                                    @endif
                                                 @endif
                                             </th>
                                             <td
@@ -531,9 +684,17 @@
                                             <th
                                                 class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-sm font-normal italic">
                                                 @if ($document->is_for_export)
-                                                    Tax / DDV {{ $document->tax->tax_rate }} %
+                                                    @if ($document->is_translation)
+                                                        Tax / DDV {{ $document->tax->tax_rate }} %
+                                                    @else
+                                                        Tax / DDV {{ $document->tax->tax_rate }} %
+                                                    @endif
                                                 @else
-                                                    ДДВ {{ $document->tax->tax_rate }} %
+                                                    @if ($document->is_translation)
+                                                        Tax / DDV {{ $document->tax->tax_rate }} %
+                                                    @else
+                                                        ДДВ {{ $document->tax->tax_rate }} %
+                                                    @endif
                                                 @endif
                                             </th>
                                             <td
@@ -552,7 +713,11 @@
                                             @if ($document->is_for_export)
                                                 Grand Total
                                             @else
-                                                Вкупно
+                                                @if ($document->is_translation)
+                                                    Totali
+                                                @else
+                                                    Вкупно
+                                                @endif
                                             @endif
                                         </th>
                                         <td
@@ -565,12 +730,21 @@
 
                                     @if (!is_null($document->advance_payment) && $document->advance_payment != 0)
                                         <tr class="  w-full justify-stretch flex-grow">
-                                            <th
-                                                class="border border-gray-600 px-2 py-1 text-left leading-none  bg-green-200 text-xs font-normal italic">
+                                            @if ($document->is_translation)
+                                                <th
+                                                    class="border border-gray-600 px-2 py-1 text-left leading-none  bg-green-200 text-xs font-normal italic">
 
-                                                Вкупно Aванс
+                                                    Avans total
 
-                                            </th>
+                                                </th>
+                                            @else
+                                                <th
+                                                    class="border border-gray-600 px-2 py-1 text-left leading-none  bg-green-200 text-xs font-normal italic">
+
+                                                    Вкупно Aванс
+
+                                                </th>
+                                            @endif
                                             <td
                                                 class="border border-gray-600 px-2 py-1 text-right text-sm font-semibold align-middle">
                                                 {{ number_format($document->advance_payment, 2, '.', ',') }}
@@ -582,9 +756,17 @@
                                             <th
                                                 class="border border-gray-600 px-2 py-1 text-left leading-none  bg-sky-200 text-xs font-normal italic">
                                                 @if ($document->is_for_export)
-                                                    Total
+                                                    @if ($document->is_translation)
+                                                        Totali
+                                                    @else
+                                                        Total
+                                                    @endif
                                                 @else
-                                                    Преостанато Основица
+                                                    @if ($document->is_translation)
+                                                        Totali
+                                                    @else
+                                                        Преостанато Основица
+                                                    @endif
                                                 @endif
                                             </th>
                                             <td
@@ -598,9 +780,17 @@
                                             <th
                                                 class="border border-gray-600 px-2 py-1 text-left leading-tight bg-sky-200 text-xs font-normal italic align-top">
                                                 @if ($document->is_for_export)
-                                                    Total
+                                                    @if ($document->is_translation)
+                                                        Totali
+                                                    @else
+                                                        Total
+                                                    @endif
                                                 @else
-                                                    Преостанато ДДВ {{ $document->tax->tax_rate }} %
+                                                    @if ($document->is_translation)
+                                                        DDV e mbetur {{ $document->tax->tax_rate }} %
+                                                    @else
+                                                        Преостанато ДДВ {{ $document->tax->tax_rate }} %
+                                                    @endif
                                                 @endif
                                             </th>
                                             <td
@@ -612,12 +802,21 @@
 
 
                                         <tr class="">
-                                            <th
-                                                class="border border-gray-600 px-2 py-1 text-left leading-none  bg-red-200 font-normal italic text-sm">
+                                            @if ($document->is_translation)
+                                                <th
+                                                    class="border border-gray-600 px-2 py-1 text-left leading-none  bg-red-200 font-normal italic text-sm">
 
-                                                Преостанато Вкупно
+                                                    Totali i mbetur
 
-                                            </th>
+                                                </th>
+                                            @else
+                                                <th
+                                                    class="border border-gray-600 px-2 py-1 text-left leading-none  bg-red-200 font-normal italic text-sm">
+
+                                                    Преостанато Вкупно
+
+                                                </th>
+                                            @endif
                                             <td
                                                 class=" px-2 py-1  flex justify-end font-semibold text-md  align-middle items-center whitespace-nowrap">
                                                 {{ number_format($document->grand_total, 2, '.', ',') }}
@@ -644,9 +843,17 @@
                                 <tbody>
                                     <tr class="border-t border-b border-indigo-300 border-e border-s">
                                         <th class="border-indigo-300 bg-indigo-50 border-e">
-                                            <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
-                                                Вкупно Маса
-                                            </span>
+                                            @if ($document->is_translation)
+                                                <span
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md">
+                                                    Masa Totale
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md">
+                                                    Вкупно Маса
+                                                </span>
+                                            @endif
                                         </th>
                                         <td class="text-lg font-bold text-right text-indigo-600">
                                             {{ $packingList->total_weight }}
@@ -659,9 +866,17 @@
 
                                     <tr class="border-t border-b border-indigo-300 border-e border-s">
                                         <th class="border-indigo-300 bg-indigo-50 border-e">
-                                            <span class="italic font-normal text-right text-indigo-600 pe-4 text-md">
-                                                Вкупно Волумен
-                                            </span>
+                                            @if ($document->is_translation)
+                                                <span
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md">
+                                                    Vëllimi Total
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md">
+                                                    Вкупно Волумен
+                                                </span>
+                                            @endif
                                         </th>
                                         <td class="text-lg font-bold text-right text-indigo-600">
                                             {{ $packingList->total_volume }}

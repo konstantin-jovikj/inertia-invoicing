@@ -78,7 +78,7 @@ const websiteDomain = computed(() => {
         };
     }
 });
-console.log(props.company.web);
+// console.log(props.company.web);
 
 const toggleActive = (id) => {
     router.patch(
@@ -391,6 +391,7 @@ const chartOptions = ref({
 
                                     <td class="px-2 text-right">
                                         <span
+                                        v-if="document.document_type.id !== 7"
                                             class="pr-2 font-bold text-red-600"
                                         >
                                             {{
@@ -400,7 +401,9 @@ const chartOptions = ref({
                                                 }).format(document.total_with_tax_and_discount)
                                             }}
                                         </span>
-                                        <span class="px-1 text-left">
+                                        <span 
+                                        v-if="document.document_type.id !== 7"
+                                         class="px-1 text-left">
                                             {{
                                                 document.curency_id
                                                     ? document.curency.symbol
@@ -412,6 +415,26 @@ const chartOptions = ref({
                                     <td class="px-4">
                                         <div class="flex gap-2">
                                             <Link
+                                            v-if="document.document_type.id == 7"
+                                                class="hover:text-green-600 text-slate-300 content-center"
+                                                :href="
+                                                    route(
+                                                        'travelorder.view',
+                                                        document.id,
+                                                    )
+                                                "
+                                            >
+                                                <EditIcon
+                                                    v-tippy="{
+                                                        content: `Измени ${document.document_type.type}`,
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"
+                                                />
+                                            </Link>
+
+                                            <Link
+                                            v-else
                                                 class="hover:text-green-600 text-slate-300 content-center"
                                                 :href="
                                                     route(

@@ -85,7 +85,9 @@
                 <div class="flex border-b border-black w-full">
                     <div class="w-1/3 px-2 border-e border-black">
                         <p class="text-xs text-gray-500">Регистарски Број на Возило:</p>
-                        <p class="text-center py-6">{{ $document->vehicle->register_plate_number }}</p>
+                        @if ($document->vehicle)
+                            <p class="text-center py-6">{{ $document->vehicle->register_plate_number }}</p>
+                        @endif
                     </div>
                     <div class="w-1/3 border-e border-black">
                         <div class="border-b border-black">
@@ -110,26 +112,26 @@
 
                 </div>
                 {{-- Broj, paketi tezina Volumen --}}
-                <div class="flex border-b border-black w-full">
-                    <div class="w-1/5 px-2 border-e border-black">
-                        <p class="text-xs text-gray-500">Ознака/Број</p>
-                        <p class="text-center py-6">{{ $document->marking }}</p>
+                <div class="flex border-b border-black w-full py-0">
+                    <div class="w-1/5 px-2 border-e border-black py-0">
+                        <p class="text-xs text-gray-500 py-0">Ознака/Број</p>
+                        <p class="text-center  py-0">{{ $document->marking }}</p>
                     </div>
-                    <div class="w-1/5 border-e border-black">
-                        <p class="text-xs text-gray-500 px-2">Број на Пакети</p>
-                        <p class="text-center py-2">{{ $document->boxes_nr }}</p>
+                    <div class="w-1/5 border-e border-black py-0">
+                        <p class="text-xs text-gray-500 px-2 py-0">Број на Пакети</p>
+                        <p class="text-center py-0">{{ $document->boxes_nr }}</p>
                     </div>
-                    <div class="w-1/5 border-e border-black">
-                        <p class="text-xs text-gray-500 px-2">Вид на Амбалажа</p>
-                        <p class="text-center py-2">{{ $document->packaging_type }}</p>
+                    <div class="w-1/5 border-e border-black py-0">
+                        <p class="text-xs text-gray-500 px-2 py-0">Вид на Амбалажа</p>
+                        <p class="text-center py-0">{{ $document->packaging_type }}</p>
                     </div>
-                    <div class="w-1/5 border-e border-black">
-                        <p class="text-xs text-gray-500 px-2">Бруто тежина</p>
-                        <p class="text-center py-2">{{ $document->total_weight }}</p>
+                    <div class="w-1/5 border-e border-black py-0">
+                        <p class="text-xs text-gray-500 px-2 py-0">Бруто тежина</p>
+                        <p class="text-center py-0">{{ $document->total_weight }}</p>
                     </div>
-                    <div class="w-1/5 ">
-                        <p class="text-xs text-gray-500 px-2">Зафатнина m<sup>3</p>
-                        <p class="text-center py-2">{{ $document->total_volume }}</p>
+                    <div class="w-1/5 py-0">
+                        <p class="text-xs text-gray-500 px-2 py-0">Зафатнина m<sup>3</p>
+                        <p class="text-center py-0">{{ $document->total_volume }}</p>
                     </div>
 
                 </div>
@@ -149,7 +151,9 @@
                 </div>
                 <div class="flex  w-full px-2">
                     <p class="text-xs text-gray-500">Робата за Презема</p>
-                    <p class="text-center py-6">{{ $document->picked_up_by }} на {{ date('d.m.Y', strtotime($document->unload_date)) }} во {{$document->unload_place->place}}</p>
+                    <p class="text-center py-6">{{ $document->picked_up_by }} на
+                        {{ date('d.m.Y', strtotime($document->unload_date)) }} во {{ $document->unload_place->place }}
+                    </p>
                 </div>
             </div>
 
@@ -157,7 +161,7 @@
 
 
         </main>
-        <footer class="w-full flex justify-between p-4" style="margin-top: 120px;">
+        <footer class="w-full flex justify-between p-4" style="margin-top: 80px;">
             <div class="w-1/3 flex flex-col items-center gap-2 text-xs">
                 <p>_________________________________</p>
                 <p>Печат и потпис на испраќачот</p>

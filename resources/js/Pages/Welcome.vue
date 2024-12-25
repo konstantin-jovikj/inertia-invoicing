@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import DashboardIcon from '@/Components/DashboardIcon.vue';
 
 defineProps({
     canLogin: {
@@ -47,7 +48,7 @@ function handleImageError() {
                             :href="route('dashboard')"
                             class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                         >
-                            Dashboard
+                            <DashboardIcon></DashboardIcon>
                         </Link>
 
                         <template v-else>
@@ -72,7 +73,7 @@ function handleImageError() {
                 <main class="w-full  mt-80">
                     <div class="text-center  text-6xl md:text-7xl lg:text-9xl">
                         
-                        <h1>File Manager</h1>
+                        <h1>Document Manager</h1>
 
                     </div>
                 </main>

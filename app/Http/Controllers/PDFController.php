@@ -188,7 +188,6 @@ class PDFController extends Controller
 
         if($document->documentType->id != 5) {
 
-            
             return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations', 'words'))
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot->transparentBackground();

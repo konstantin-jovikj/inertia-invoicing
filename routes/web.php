@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PackingList;
 use Inertia\Inertia;
 use App\Models\Company;
 use App\Models\Document;
@@ -39,10 +40,14 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $clientsCount = Company::whereNotNull('customer_id')->count();
+    $packingListCount = PackingList::count();
     $documentsCount = Document::count();
+    $totalDocs = $packingListCount + $documentsCount;
     return Inertia::render('Dashboard',[
     'clientsCount' => $clientsCount,
     'documentsCount' => $documentsCount,
+    'totalDocs' => $totalDocs,
+    'packingListCount' => $packingListCount,
     ]);
 })
     ->middleware(['auth', 'verified'])
