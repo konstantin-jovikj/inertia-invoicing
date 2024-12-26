@@ -363,10 +363,13 @@ const chartOptions = ref({
                                     <td class="">
                                         {{ documents.from + index }}
                                     </td>
-                                    <td class="">
+                                    <td class="text-base font-semibold text-emerald-700">
+                                        <Link :href="route('products.create', document.id)"
+                                    class="hover:text-red-600">
                                         {{ document.document_no }}
+                                    </Link>
                                     </td>
-                                    <td class="">
+                                    <td class="flex text-base font-semibold">
                                         {{
                                             latinToCyrillic(
                                                 document.document_type.type,
@@ -381,7 +384,7 @@ const chartOptions = ref({
                                         </span>
                                     </td>
 
-                                    <td class="">
+                                    <td class="text-base font-semibold text-purple-600">
                                         {{
                                             new Date(
                                                 document.date,
@@ -392,12 +395,12 @@ const chartOptions = ref({
                                     <td class="px-2 text-right">
                                         <span
                                         v-if="document.document_type.id !== 7"
-                                            class="pr-2 font-bold text-red-600"
+                                            class="pr-2 text-base font-bold text-red-600"
                                         >
                                             {{
                                                 new Intl.NumberFormat("en-US", {
-                                                    minimumFractionDigits: 2,
-                                                    maximumFractionDigits: 2,
+                                                    minimumFractionDigits: 0,
+                                                    maximumFractionDigits: 4,
                                                 }).format(document.total_with_tax_and_discount)
                                             }}
                                         </span>
