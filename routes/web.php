@@ -182,6 +182,8 @@ Route::middleware('auth')->group(function () {
     // CONVERT DOCUMENTS
     Route::post('/convert/document/{document}/{documentTypeNew}', action: [DocumentController::class, 'convert'])->name('documents.convert');
     Route::post('/convert/document/{document}/{documentTypeNew}', action: [DocumentController::class, 'convertCompanyDocument'])->name('documents.convertCompany');
+   
+   
     // PRODUCTS
 
     Route::get('/products/add/{document}', [ProductController::class, 'create'])->name('products.create');

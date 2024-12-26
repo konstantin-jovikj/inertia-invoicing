@@ -14,6 +14,8 @@ import { debounce } from "lodash";
 import { Tippy } from "vue-tippy";
 import WarrantyIcon from "@/Components/WarrantyIcon.vue";
 import PrintIcon from "@/Components/PrintIcon.vue";
+import { latinToCyrillic } from "@/helpers/latinToCyrillic";
+
 // import {Modal, ModalLink } from "@/Components/ModalLink.vue";
 
 // Props from the parent
@@ -153,7 +155,14 @@ onMounted(() => {
                                             }}</span
                                         >
                                         <span class="italic text-md ps-4">
-                                            За Фактура Бр:
+                                            За {{ latinToCyrillic(props.packingList.document.document_type.type) }}
+                                            <span 
+                                            v-if="props.packingList.document.is_for_export"
+                                            class="text-green-600"
+                                            >
+                                                EXPORT
+                                            </span>
+                                            Бр: 
                                         </span>
                                         <Link
                                         :href="route('products.create',

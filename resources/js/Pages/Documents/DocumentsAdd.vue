@@ -19,9 +19,10 @@ const props = defineProps({
     vehicles: Array,
     drivers: Array,
     places: Array,
+    latestDoc: Object,
 });
 
-console.log(props.documentType);
+// console.log(props.latestDoc.document_no);
 
 const form = useForm({
     user_id: props.authUser.id,
@@ -79,15 +80,26 @@ const submit = () => {
                                 <div
                                     class="grid grid-cols-1 gap-4 text-sm gap-y-2 lg:grid-cols-2"
                                 >
-                                    <div class="text-gray-600">
-                                        <p class="text-lg font-medium">
-                                            Додај Нова
+                                    <div class="text-gray-600 flex justify-between w-full ">
+                                        <div>
+                                            <p class="text-lg font-medium">
+                                                Додај Нова
+                                                {{ latinToCyrillic(props.documentType.type) }}
+                                            </p>
+                                            <p>
+                                                Внеси податоци за новата
+                                                {{ latinToCyrillic(props.documentType.type) }}
+                                            </p>
+                                        </div>
+                                        <div v-if="props.latestDoc" class="text-red-500">
+                                            Последна 
                                             {{ latinToCyrillic(props.documentType.type) }}
-                                        </p>
-                                        <p>
-                                            Внеси податоци за новата
-                                            {{ latinToCyrillic(props.documentType.type) }}
-                                        </p>
+                                            Бр: 
+                                            {{ props.latestDoc.document_no }}
+                                        </div>
+                                        <div v-else class="text-red-500">
+                                            Ова е Прв документ од овој тип
+                                        </div>
                                     </div>
                                     <div class="lg:col-span-2">
                                         <hr />

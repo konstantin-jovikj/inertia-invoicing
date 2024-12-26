@@ -132,6 +132,7 @@ class CompanyController extends Controller
                     $query->where('is_for_export', false);
                 }
             })
+            ->orderBy('created_at', 'desc')
             ->paginate(20)
             ->withQueryString(); 
         // Eager load the place and place->country relationship

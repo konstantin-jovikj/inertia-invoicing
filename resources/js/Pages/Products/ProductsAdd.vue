@@ -17,12 +17,15 @@ import { Tippy } from "vue-tippy";
 import WarrantyIcon from "@/Components/WarrantyIcon.vue";
 import PrintIcon from "@/Components/PrintIcon.vue";
 import { latinToCyrillic } from "@/helpers/latinToCyrillic";
+import AlbanianFlag from "@/Components/AlbanianFlag.vue";
+import MacedonianFlag from "@/Components/MacedonianFlag.vue";
 
 // Props from the parent
 const props = defineProps({
     document: Object,
     products: Array,
     packingListExists: Boolean,
+    secondLatestDoc: Object
 });
 
 console.log(props.products);
@@ -58,75 +61,119 @@ onMounted(() => {
 });
 
 function numberToWordsMK(number) {
-      const units = ["", "еден", "два", "три", "четири", "пет", "шест", "седум", "осум", "девет"];
-      const teens = ["десет", "единаесет", "дванаесет", "тринаесет", "четиринаесет", "петнаесет", "шеснаесет", "седумнаесет", "осумнаесет", "деветнаесет"];
-      const tens = ["", "", "дваесет", "триесет", "четириесет", "педесет", "шеесет", "седумдесет", "осумдесет", "деведесет"];
-      const hundreds = ["", "сто", "двеста", "триста", "четиристотини", "петстотини", "шестотини", "седумстотини", "осумстотини", "деветстотини"];
-      const thousands = ["", "илјада", "илјади"];
-      const millions = ["", "милион", "милиони"];
+    const units = [
+        "",
+        "еден",
+        "два",
+        "три",
+        "четири",
+        "пет",
+        "шест",
+        "седум",
+        "осум",
+        "девет",
+    ];
+    const teens = [
+        "десет",
+        "единаесет",
+        "дванаесет",
+        "тринаесет",
+        "четиринаесет",
+        "петнаесет",
+        "шеснаесет",
+        "седумнаесет",
+        "осумнаесет",
+        "деветнаесет",
+    ];
+    const tens = [
+        "",
+        "",
+        "дваесет",
+        "триесет",
+        "четириесет",
+        "педесет",
+        "шеесет",
+        "седумдесет",
+        "осумдесет",
+        "деведесет",
+    ];
+    const hundreds = [
+        "",
+        "сто",
+        "двеста",
+        "триста",
+        "четиристотини",
+        "петстотини",
+        "шестотини",
+        "седумстотини",
+        "осумстотини",
+        "деветстотини",
+    ];
+    const thousands = ["", "илјада", "илјади"];
+    const millions = ["", "милион", "милиони"];
 
-      if (number === 0) {
+    if (number === 0) {
         return "нула";
-      }
+    }
 
-      let words = "";
+    let words = "";
 
-      // Handle millions
-      if (number >= 1000000) {
+    // Handle millions
+    if (number >= 1000000) {
         const millionPart = Math.floor(number / 1000000);
         number %= 1000000;
 
         words += this.numberToWordsMK(millionPart) + " ";
         words += millionPart === 1 ? millions[1] : millions[2];
         if (number > 0) {
-          words += " и ";
+            words += " и ";
         }
-      }
+    }
 
-      // Handle thousands
-      if (number >= 1000) {
+    // Handle thousands
+    if (number >= 1000) {
         const thousandPart = Math.floor(number / 1000);
         number %= 1000;
 
         words += this.numberToWordsMK(thousandPart) + " ";
         words += thousandPart === 1 ? thousands[1] : thousands[2];
         if (number > 0) {
-          words += " и ";
+            words += " и ";
         }
-      }
+    }
 
-      // Handle hundreds
-      if (number >= 100) {
+    // Handle hundreds
+    if (number >= 100) {
         const hundredPart = Math.floor(number / 100);
         number %= 100;
 
         words += hundreds[hundredPart];
         if (number > 0) {
-          words += " и ";
+            words += " и ";
         }
-      }
+    }
 
-      // Handle tens and units
-      if (number >= 10 && number < 20) {
+    // Handle tens and units
+    if (number >= 10 && number < 20) {
         words += teens[number - 10];
-      } else {
+    } else {
         const tenPart = Math.floor(number / 10);
         const unitPart = number % 10;
 
         if (tenPart > 0) {
-          words += tens[tenPart];
-          if (unitPart > 0) {
-            words += " и ";
-          }
+            words += tens[tenPart];
+            if (unitPart > 0) {
+                words += " и ";
+            }
         }
 
         if (unitPart > 0) {
-          words += units[unitPart];
+            words += units[unitPart];
         }
-      }
-
-      return words;
     }
+
+    return words;
+}
 
 console.log("packingListExists", props.packingListExists);
 
@@ -144,10 +191,13 @@ const createPackingList = () => {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div
-                            class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
+                        class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
                         >
+                        <span v-if="props.secondLatestDoc" class="">
+                            posledna {{ props.secondLatestDoc.document_no }}
+                        </span>
                             <!-- Izmeni Dokument -->
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 mt-2">
                                 <ModalLink
                                     class="hover:text-green-600 text-slate-300"
                                     :href="
@@ -165,9 +215,8 @@ const createPackingList = () => {
                                         }"
                                     />
                                 </ModalLink>
-                                
 
-                                <a 
+                                <a
                                     class="px-4 hover:text-sky-600 text-slate-300"
                                     :href="`/document/print/${props.document.id}`"
                                     target="_blank"
@@ -199,7 +248,8 @@ const createPackingList = () => {
                             <!-- Izmeni Dokument end-->
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
                                 <div class="flex-col text-gray-500">
-                                    <div>
+                                    
+                                    <div class="flex items-center">
                                         <span class="italic text-md">
                                             {{
                                                 latinToCyrillic(
@@ -208,27 +258,46 @@ const createPackingList = () => {
                                                 )
                                             }}
                                         </span>
+                                        <span
+                                            v-if="props.document.is_for_export"
+                                            class="italic text-md text-green-600 font-semibold px-2"
+                                        >
+                                            EXPORT
+                                        </span>
                                         <span class="italic text-md">
                                             Бр:
                                         </span>
                                         <span
-                                            class="text-lg font-bold text-black"
+                                            class="text-lg font-bold text-black px-2"
                                             >{{
                                                 props.document.document_no
                                             }}</span
                                         >
 
                                         <span
-                                            class="ps-4 text-red-800"
+                                            class="ps-4 text-black"
                                             v-if="document.packing_list"
                                         >
                                             <Link
                                                 :href="`/packinglist/create/${document.packing_list.id}`"
+                                                class="text-md font-semibold px-4"
                                             >
                                                 {{
                                                     `со пакинг листа бр: ${document.packing_list.document_no}`
                                                 }}
                                             </Link>
+                                        </span>
+                                        <span
+                                            v-if="props.document.is_translation"
+                                            class=""
+                                        >
+                                            <AlbanianFlag></AlbanianFlag>
+                                        </span>
+                                        <span
+                                            v-else
+                                            class=""
+                                        >
+                                            <MacedonianFlag></MacedonianFlag>
                                         </span>
                                     </div>
                                     <div>
@@ -429,7 +498,16 @@ const createPackingList = () => {
                                                         <td
                                                             class="px-2 py-1 text-left whitespace-nowrap border-e"
                                                         >
-                                                            {{ product.qty }}
+                                                        {{new Intl.NumberFormat(
+                                                                    "en-US",
+                                                                    {
+                                                                        minimumFractionDigits: 0,
+                                                                        maximumFractionDigits: 4,
+                                                                    },
+                                                                ).format(
+                                                                    product.qty,
+                                                                )}}
+                                                            
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
@@ -438,8 +516,8 @@ const createPackingList = () => {
                                                                 new Intl.NumberFormat(
                                                                     "en-US",
                                                                     {
-                                                                        minimumFractionDigits: 2,
-                                                                        maximumFractionDigits: 2,
+                                                                        minimumFractionDigits: 0,
+                                                                        maximumFractionDigits: 4,
                                                                     },
                                                                 ).format(
                                                                     product.single_price,

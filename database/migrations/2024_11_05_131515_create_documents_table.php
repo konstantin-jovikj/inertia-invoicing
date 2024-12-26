@@ -42,7 +42,7 @@ return new class extends Migration
 
 
             $table->boolean('is_translation')->default(false);
-            $table->boolean('is_albanian')->default(false);
+        
             $table->boolean('is_for_export')->default(false);
             $table->boolean('is_for_advanced_payment')->default(false);
             $table->boolean('print_price')->default(true);

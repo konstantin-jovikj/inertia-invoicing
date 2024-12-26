@@ -30,17 +30,23 @@ class ProductController extends Controller
     public function create(Document $document)
     {
         $document->load('documentType', 'company', 'curency', 'tax', 'packingList');
-    
+
         $products = Product::where('document_id', $document->id)->whereNull('packing_list_id')->get();
         $isPackingList = PackingList::where('document_id', $document->id)->get();
-        
+
         $packingListExists = count($isPackingList) > 0;
         $products->load('manufacturers.place.country');
-    
+
+        $secondLatestDoc = Document::where('document_type_id', $document->document_type_id)
+            ->latest() // Orders by `created_at` descending
+            ->skip(1)  // Skips the latest document
+            ->first(); // Fetches the next document
+
         return inertia('Products/ProductsAdd', [
             'document' => $document,
             'products' => $products,
             'packingListExists' => $packingListExists,
+            'secondLatestDoc' => $secondLatestDoc,
         ]);
     }
 
@@ -76,7 +82,7 @@ class ProductController extends Controller
         // dd($document);
         $packingList->load('company');
         $manufacturers = Manufacturer::all();
-        
+
         // dd($document->company);
 
         // $products = Product::where('document_id', $document->id)->get();
@@ -174,29 +180,25 @@ class ProductController extends Controller
 
         // Update the document's total
         $docProducts = Product::where('document_id', $document->id)->get();
-        foreach ($docProducts as $docProduct){
+        foreach ($docProducts as $docProduct) {
             $document->total += $docProduct->total_price;
             $document->total_volume += $docProduct->product_total_volume;
             $document->total_weight += $docProduct->product_total_weight;
         }
 
-
-        // $document->total += $totalPrice;
-        // $document->total_volume += $productTotalVolume;
-        // $document->total_weight += $productTotalWeight;
-  
-        if($document->curency_id == 1){
+        if ($document->curency_id == 1) {
             $document->discount_amount = round($document->total * ($document->discount / 100));
             $document->tax_amount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
+            // dd($document->tax_amount);
         } else {
             $document->discount_amount = $document->total * ($document->discount / 100);
-            $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+            // $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
         }
-
+        // dd($document->tax_amount);
         $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
 
         $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
-        $document->advanced_payment_base = $document->grand_total/(1+$document->tax->tax_rate / 100);
+        $document->advanced_payment_base = $document->grand_total / (1 + $document->tax->tax_rate / 100);
         $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
 
         $document->save(); // Save the updated document
@@ -210,50 +212,50 @@ class ProductController extends Controller
 
 
     public function storePackingListProducts(Request $request)
-{
+    {
 
-    // Validate the input
-    $validated = $request->validate([
-        'packing_list_id' => 'required|exists:packing_lists,id',
-        'description' => 'nullable|string|max:255',
-        'qty' => 'required|numeric|min:1',
-        'product_code' => 'nullable|max:20',
-        'serial_no' => 'nullable|max:20',
-        'manufacturer_id' => 'nullable|exists:manufacturers,id',
-        'length' => 'nullable|numeric|min:0',
-        'width' => 'nullable|numeric|min:0',
-        'height' => 'nullable|numeric|min:0',
-        'weight' => 'nullable|numeric|min:0',
-    ]);
+        // Validate the input
+        $validated = $request->validate([
+            'packing_list_id' => 'required|exists:packing_lists,id',
+            'description' => 'nullable|string|max:255',
+            'qty' => 'required|numeric|min:1',
+            'product_code' => 'nullable|max:20',
+            'serial_no' => 'nullable|max:20',
+            'manufacturer_id' => 'nullable|exists:manufacturers,id',
+            'length' => 'nullable|numeric|min:0',
+            'width' => 'nullable|numeric|min:0',
+            'height' => 'nullable|numeric|min:0',
+            'weight' => 'nullable|numeric|min:0',
+        ]);
 
-    // Calculate total volume and weight
-    $length = $request->length ?? 0;
-    $width = $request->width ?? 0;
-    $height = $request->height ?? 0;
-    $weight = $request->weight ?? 0;
+        // Calculate total volume and weight
+        $length = $request->length ?? 0;
+        $width = $request->width ?? 0;
+        $height = $request->height ?? 0;
+        $weight = $request->weight ?? 0;
 
-    $productTotalVolume = $request->qty * (($length * $width * $height) / 1000000);
-    $productTotalWeight = $request->qty * $weight;
+        $productTotalVolume = $request->qty * (($length * $width * $height) / 1000000);
+        $productTotalWeight = $request->qty * $weight;
 
-    // Create the product
-    $product = Product::create(array_merge($validated, [
-        'product_total_volume' => $productTotalVolume,
-        'product_total_weight' => $productTotalWeight,
-    ]));
+        // Create the product
+        $product = Product::create(array_merge($validated, [
+            'product_total_volume' => $productTotalVolume,
+            'product_total_weight' => $productTotalWeight,
+        ]));
 
-    // Update the packing list totals
-    $packingList = PackingList::findOrFail($request->packing_list_id);
-    $docProducts = Product::where('packing_list_id', $packingList->id)->get();
+        // Update the packing list totals
+        $packingList = PackingList::findOrFail($request->packing_list_id);
+        $docProducts = Product::where('packing_list_id', $packingList->id)->get();
 
-    $packingList->total_volume = $docProducts->sum('product_total_volume');
-    $packingList->total_weight = $docProducts->sum('product_total_weight');
-    $packingList->save();
+        $packingList->total_volume = $docProducts->sum('product_total_volume');
+        $packingList->total_weight = $docProducts->sum('product_total_weight');
+        $packingList->save();
 
-    // Redirect with success message
-    return redirect()
-        ->route('packinglist.create', ['packingList' => $request->packing_list_id])
-        ->with('message', 'Product saved successfully!');
-}
+        // Redirect with success message
+        return redirect()
+            ->route('packinglist.create', ['packingList' => $request->packing_list_id])
+            ->with('message', 'Product saved successfully!');
+    }
 
 
     /**
@@ -311,6 +313,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
+            'document_id' => 'required|exists:documents,id',
             'description' => 'nullable|string|max:255',
             'qty' => 'nullable|numeric|min:1',
             'single_price' => 'nullable|numeric|min:0',
@@ -341,7 +344,7 @@ class ProductController extends Controller
 
 
         // Create the product
-        $product ->update([
+        $product->update([
             'document_id' => $request->document_id,
             'description' => $request->description,
             'qty' => $request->qty,
@@ -372,7 +375,7 @@ class ProductController extends Controller
             $product->save();
         }
         // Find the document using the provided document_id
-$document = Document::where('id', $product->document_id)->first();
+        $document = Document::where('id', $product->document_id)->first();
 
 
         // Reset document
@@ -389,33 +392,43 @@ $document = Document::where('id', $product->document_id)->first();
         $document->advanced_payment_tax = 0;
 
         $docProducts = Product::where('document_id', $document->id)->get();
-        foreach ($docProducts as $docProduct){
-            $document->total += $docProduct->total_price;
+        foreach ($docProducts as $docProduct) {
+            $document->total += round($docProduct->total_price);
             $document->total_volume += $docProduct->product_total_volume;
             $document->total_weight += $docProduct->product_total_weight;
         }
 
-        // Update the document's total
-        // $document->total += $totalPrice;
-        // $document->total_volume += $productTotalVolume;
-        // $document->total_weight += $productTotalWeight;
-        if($document->curency_id == 1){
+
+        if ($document->curency_id == 1) {
+            // dd($document->curency_id);
             $document->discount_amount = round($document->total * ($document->discount / 100));
             $document->tax_amount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
+            $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
+            $document->grand_total = round($document->total_with_tax_and_discount - $document->advance_payment);
+            $document->advanced_payment_base = round($document->grand_total / (1 + $document->tax->tax_rate / 100));
+            $document->advanced_payment_tax = round($document->grand_total - $document->advanced_payment_base);
         } else {
             $document->discount_amount = $document->total * ($document->discount / 100);
             $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+            $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;           
+            $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
+            $document->advanced_payment_base = $document->grand_total / (1 + $document->tax->tax_rate / 100);
+            $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
         }
 
-        // dd($document->total, $document->discount_amount, $document->tax->tax_rate);
-
-        $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
-
-        $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
-        $document->advanced_payment_base = $document->grand_total/(1+$document->tax->tax_rate / 100);
-        $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
-
-        $document->update(); // Save the updated document
+        if ($document->curency_id == 1) {
+            $document->save([
+                'discount_amount' => round($document->discount_amount, 2),
+                'tax_amount' => round($document->tax_amount, 2),
+                'total_with_tax_and_discount' => round($document->total_with_tax_and_discount, 2),
+                'grand_total' => round($document->grand_total, 2),
+                'advanced_payment_base' => round($document->advanced_payment_base, 2),
+                'advanced_payment_tax' => round($document->advanced_payment_tax, 2),
+            ]);
+            
+            }else{
+                $document->save();
+            }
 
         // Return a success response with the created product
         return redirect()
@@ -425,42 +438,42 @@ $document = Document::where('id', $product->document_id)->first();
 
 
     public function updatePackingListProducts(Request $request, Product $product)
-{
-    $validated = $request->validate([
-        'description' => 'nullable|string|max:255',
-        'qty' => 'required|numeric|min:1',
-        'product_code' => 'nullable|max:20',
-        'serial_no' => 'nullable|max:20',
-        'manufacturer_id' => 'nullable|exists:manufacturers,id',
-        'length' => 'nullable|numeric|min:0',
-        'width' => 'nullable|numeric|min:0',
-        'height' => 'nullable|numeric|min:0',
-        'weight' => 'nullable|numeric|min:0',
-    ]);
+    {
+        $validated = $request->validate([
+            'description' => 'nullable|string|max:255',
+            'qty' => 'required|numeric|min:1',
+            'product_code' => 'nullable|max:20',
+            'serial_no' => 'nullable|max:20',
+            'manufacturer_id' => 'nullable|exists:manufacturers,id',
+            'length' => 'nullable|numeric|min:0',
+            'width' => 'nullable|numeric|min:0',
+            'height' => 'nullable|numeric|min:0',
+            'weight' => 'nullable|numeric|min:0',
+        ]);
 
-    $length = $request->length ?? 0;
-    $width = $request->width ?? 0;
-    $height = $request->height ?? 0;
-    $weight = $request->weight ?? 0;
+        $length = $request->length ?? 0;
+        $width = $request->width ?? 0;
+        $height = $request->height ?? 0;
+        $weight = $request->weight ?? 0;
 
-    $productTotalVolume = $request->qty * (($length * $width * $height) / 1000000);
-    $productTotalWeight = $request->qty * $weight;
+        $productTotalVolume = $request->qty * (($length * $width * $height) / 1000000);
+        $productTotalWeight = $request->qty * $weight;
 
-    $product->update(array_merge($validated, [
-        'product_total_volume' => $productTotalVolume,
-        'product_total_weight' => $productTotalWeight,
-    ]));
+        $product->update(array_merge($validated, [
+            'product_total_volume' => $productTotalVolume,
+            'product_total_weight' => $productTotalWeight,
+        ]));
 
-    // Use the product's existing packing_list_id
-    $packingList = PackingList::findOrFail($product->packing_list_id);
-    $packingList->total_volume = Product::where('packing_list_id', $packingList->id)->sum('product_total_volume');
-    $packingList->total_weight = Product::where('packing_list_id', $packingList->id)->sum('product_total_weight');
-    $packingList->save();
+        // Use the product's existing packing_list_id
+        $packingList = PackingList::findOrFail($product->packing_list_id);
+        $packingList->total_volume = Product::where('packing_list_id', $packingList->id)->sum('product_total_volume');
+        $packingList->total_weight = Product::where('packing_list_id', $packingList->id)->sum('product_total_weight');
+        $packingList->save();
 
-    return redirect()
-        ->route('packinglist.create', ['packingList' => $product->packing_list_id])
-        ->with('message', 'Product saved successfully!');
-}
+        return redirect()
+            ->route('packinglist.create', ['packingList' => $product->packing_list_id])
+            ->with('message', 'Product saved successfully!');
+    }
 
 
     /**
@@ -468,32 +481,43 @@ $document = Document::where('id', $product->document_id)->first();
      */
     public function destroy(Product $product)
     {
-        
+
         $document = Document::findOrFail($product->document_id);
 
-                // Calculate total price of product
-                $totalPrice = $product->qty * $product->single_price;
-                // Calculate total volume of product
-                $productTotalVolume = $product->qty * (($product->length * $product->width * $product->height) / 1000000);
-                // Calculate total weight of product
-                $productTotalWeight = $product->qty * $product->weight;
+        // Calculate total price of product
+        $totalPrice = $product->qty * $product->single_price;
+        // Calculate total volume of product
+        $productTotalVolume = $product->qty * (($product->length * $product->width * $product->height) / 1000000);
+        // Calculate total weight of product
+        $productTotalWeight = $product->qty * $product->weight;
 
-                // Find the document using the provided document_id
+        // Find the document using the provided document_id
 
-                // Update the document's total
-                $document->total -= $totalPrice;
-                $document->total_volume -= $productTotalVolume;
-                $document->total_weight -= $productTotalWeight;
-                $document->discount_amount = $document->total * ($document->discount / 100);
-                $document->tax_amount = $document->total * ($document->tax->tax_rate / 100);
-                $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
-        
-                $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
-                $document->advanced_payment_base = $document->grand_total/(1+$document->tax->tax_rate / 100);
-                $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
+        // Update the document's total
+        $document->total -= $totalPrice;
+        $document->total_volume -= $productTotalVolume;
+        $document->total_weight -= $productTotalWeight;
+        if ($document->curency_id == 1) {
+            $document->discount_amount = round($document->total * ($document->discount / 100));
+            $document->tax_amount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
+            $document->total_with_tax_and_discount = round($document->total - $document->discount_amount + $document->tax_amount);
 
-                $product->delete();
-                $document->save(); // Save the updated document
+            $document->grand_total = round($document->total_with_tax_and_discount - $document->advance_payment);
+            $document->advanced_payment_base = round($document->grand_total / (1 + $document->tax->tax_rate / 100));
+            $document->advanced_payment_tax = round($document->grand_total - $document->advanced_payment_base);
+
+        } else {
+            $document->discount_amount = $document->total * ($document->discount / 100);
+            $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+            $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
+
+            $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
+            $document->advanced_payment_base = $document->grand_total / (1 + $document->tax->tax_rate / 100);
+            $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
+        }
+
+        $product->delete();
+        $document->save(); // Save the updated document
 
         return Inertia::location(route('products.create', [
             'document' => $product->document_id,

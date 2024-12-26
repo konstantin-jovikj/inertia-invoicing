@@ -50,6 +50,7 @@ class DocumentController extends Controller
                     $query->where('is_for_export', false);
                 }
             })
+            ->orderBy('created_at', 'desc')
             ->paginate(20)
             ->withQueryString(); // Retains query parameters (for pagination)
         // dd($documents->pluck('packingList'));
@@ -78,6 +79,8 @@ class DocumentController extends Controller
             ->whereIn('is_customer', [true, false])
             ->get()
             ->groupBy('is_customer');
+        $latestDoc = Document::where('document_type_id', $documentType->id)->latest()->first();
+
 
         if ($documentType->id == 7) {
             return inertia('Documents/TravelOrderAdd', [
@@ -92,6 +95,7 @@ class DocumentController extends Controller
                 'vehicles' => $vehicles,
                 'drivers' => $drivers,
                 'places' => $places,
+                'latestDoc' => $latestDoc,
             ]);
         } else {
             return inertia('Documents/DocumentsAdd', [
@@ -106,6 +110,7 @@ class DocumentController extends Controller
                 'vehicles' => $vehicles,
                 'drivers' => $drivers,
                 'places' => $places,
+                'latestDoc' => $latestDoc,
             ]);
         }
     }
@@ -155,7 +160,7 @@ class DocumentController extends Controller
             'picked_up_by' => 'nullable|max:255',
         ]);
 
-        if($request->load_date){
+        if ($request->load_date) {
             $validatedData['date'] = $request->load_date;
         }
         // $validatedData['user_id'] = auth()->user()->id;
@@ -276,13 +281,27 @@ class DocumentController extends Controller
         $discountRate = $validatedData['discount'] ?? $document->discount;
 
         // Recalculate fields
-        $discountAmount = $document->total * ($discountRate / 100);
+        // $discountAmount = $document->total * ($discountRate / 100);
 
-        $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
-        $docTotal = $document->total - $discountAmount + $taxAmount;
-        $docGrandTotal = $docTotal - $validatedData['advance_payment'];
-        $docAdvancedBase = $docGrandTotal / (1 + $taxRate / 100);
-        $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
+        // $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
+
+
+
+        if ($document->curency_id == 1) {
+            $discountAmount = round($document->total * ($document->discount / 100));
+            $taxAmount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
+            $docTotal = round($document->total - $discountAmount + $taxAmount);
+            $docGrandTotal = round($docTotal - $validatedData['advance_payment']);
+            $docAdvancedBase = round($docGrandTotal / (1 + $taxRate / 100));
+            $docAdvancedTax = round($docGrandTotal - $docAdvancedBase);
+        } else {
+            $discountAmount = $document->total * ($document->discount / 100);
+            $taxAmount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+            $docTotal = ($document->total - $discountAmount + $taxAmount);
+            $docGrandTotal = ($docTotal - $validatedData['advance_payment']);
+            $docAdvancedBase = ($docGrandTotal / (1 + $taxRate / 100));
+            $docAdvancedTax = ($docGrandTotal - $docAdvancedBase);
+        }
         // dd($validatedData['advance_payment']);
 
         // Merge recalculated fields with validated data
@@ -300,8 +319,8 @@ class DocumentController extends Controller
         // dd($document);
         return Inertia::location(
             $document->document_type_id == 7
-                ? route('travelorder.view', ['document' => $document->id])
-                : route('products.create', ['document' => $document->id])
+            ? route('travelorder.view', ['document' => $document->id])
+            : route('products.create', ['document' => $document->id])
         );
     }
 
@@ -350,8 +369,8 @@ class DocumentController extends Controller
     public function convert(Document $document, DocumentType $documentTypeNew)
     {
         // Prepare document data to copy
-        $document->load('load_place', 'unload_place','owner', 'company');
-        
+        $document->load('load_place', 'unload_place', 'owner', 'company');
+
         $documentData = [
             'user_id' => $document->user_id,
             'owner_id' => $document->owner_id,
@@ -450,7 +469,7 @@ class DocumentController extends Controller
             ->whereNull('packing_list_id')
             ->get();
 
-        $document->load('load_place', 'unload_place','owner', 'company');
+        $document->load('load_place', 'unload_place', 'owner', 'company');
 
         // dd($products);
         $documentData = [

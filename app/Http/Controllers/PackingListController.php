@@ -28,7 +28,7 @@ class PackingListController extends Controller
     {
 // dd($packingList);
         // Load related data for the document
-        $packingList->load('company', 'document');
+        $packingList->load('company', 'document.documentType');
     
         $products = Product::where('packing_list_id', $packingList->id)->get();
         
@@ -36,6 +36,7 @@ class PackingListController extends Controller
 
         $packingList->total_weight = 0;
         $packingList->total_volume = 0;
+        
 
         $packingList->total_weight = $products->sum('product_total_weight');
         $packingList->total_volume = $products->sum('product_total_volume');
