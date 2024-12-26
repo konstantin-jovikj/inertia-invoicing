@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Place;
+use App\Models\Country;
 use App\Models\Manufacturer;
 use Illuminate\Http\Request;
+use Validator;
 
 class ManufacturerController extends Controller
 {
@@ -12,7 +15,12 @@ class ManufacturerController extends Controller
      */
     public function index()
     {
-        //
+        $manufacturers = Manufacturer::all();
+        $manufacturers ->load('place.country');
+
+        return inertia('Manufacturers/ManufacturersIndex',[
+            'manufacturers' => $manufacturers,
+        ]);
     }
 
     /**
@@ -20,7 +28,12 @@ class ManufacturerController extends Controller
      */
     public function create()
     {
-        //
+        $countries = Country::all();
+        $places = Place::with('country')->get();
+        return inertia('Manufacturers/ManufacturerAdd', [
+            'places' => $places,
+            'countries' => $countries,
+        ]);
     }
 
     /**
@@ -28,8 +41,32 @@ class ManufacturerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|max:30',
+            'address' => 'required|max:80',
+            'place_id' => 'required|exists:places,id',
+            'country_id' => 'required|exists:countries,id',
+        ]);
+    
+        // Ensure the place_id belongs to the selected country_id
+        $place = Place::where('id', $validated['place_id'])
+                      ->where('country_id', $validated['country_id'])
+                      ->first();
+    
+        if (!$place) {
+            return back()->withErrors([
+                'place_id' => 'Селектираното место не припаѓа на селектираната земја',
+            ])->withInput();
+        }
+    
+        // Create the manufacturer
+        Manufacturer::create($validated);
+    
+        // Redirect with success message
+        return redirect()->route('manufacturers.index')
+                         ->with('message', 'Производителот е успешно додаден.');
     }
+    
 
     /**
      * Display the specified resource.
@@ -44,7 +81,15 @@ class ManufacturerController extends Controller
      */
     public function edit(Manufacturer $manufacturer)
     {
-        //
+        $countries = Country::all();
+        $places = Place::with('country')->get();
+        $manufacturer ->load('place.country');
+        return inertia('Manufacturers/ManufacturerEdit', [
+            'places' => $places,
+            'countries' => $countries,
+            'manufacturer' => $manufacturer,
+        ]);
+        // dd($manufacturer);
     }
 
     /**
@@ -52,7 +97,30 @@ class ManufacturerController extends Controller
      */
     public function update(Request $request, Manufacturer $manufacturer)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|max:30',
+            'address' => 'required|max:80',
+            'place_id' => 'required|exists:places,id',
+            'country_id' => 'required|exists:countries,id',
+        ]);
+    
+        // Ensure the place_id belongs to the selected country_id
+        $place = Place::where('id', $validated['place_id'])
+                      ->where('country_id', $validated['country_id'])
+                      ->first();
+    
+        if (!$place) {
+            return back()->withErrors([
+                'place_id' => 'Селектираното место не припаѓа на селектираната земја',
+            ])->withInput();
+        }
+    
+        // Create the manufacturer
+        $manufacturer->update($validated);
+    
+        // Redirect with success message
+        return redirect()->route('manufacturers.index')
+                         ->with('message', 'Производителот е успешно ажуриран.');
     }
 
     /**
@@ -60,6 +128,11 @@ class ManufacturerController extends Controller
      */
     public function destroy(Manufacturer $manufacturer)
     {
-        //
+        if($manufacturer){
+            $manufacturer->delete();
+            return redirect()->route('manufacturers.index')->with('message', 'Производителот е успешно избришан');
+        }else{
+            return redirect()->route('manufacturers.index')->with('message', 'Производителот не е пронајден');
+        }
     }
 }

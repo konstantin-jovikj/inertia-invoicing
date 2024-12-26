@@ -66,7 +66,7 @@
             </div>
         </div>
 
-        <div class="border-b border-gray-500 pb-1 ">
+        <div class="border-b border-gray-500 pb-1 px-2 bg-sky-50">
 
             {{-- Pravno Lice --}}
             @if ($client->customer->customerType->id !== 1)
@@ -115,7 +115,7 @@
             @endif
         </div>
         </div>
-        <div class="border-b border-gray-500   w-full  ">
+        <div class="border-b border-gray-500   w-full  bg-sky-50 px-2">
             <div class="">
                 @if ($document->is_for_export)
                     @if ($document->is_translation)
@@ -226,6 +226,28 @@
                     @endif
                 @endif
             </div>
+        </div>
+        <div class="border-b border-gray-500   w-full flex">
+            @if (!is_null($document->term))
+                <div class="w-full">
+                    @if ($document->is_for_export)
+                        @if ($document->is_translation)
+                            <span class="text-xs text-purple-700 italic">Kushtet e pagesës :</span>
+                        @else
+                            <span class="text-xs text-purple-700 italic">Payment Terms :</span>
+                        @endif
+                        <span class="text-sm font-semibold mx-1">{{ $document->term->term }} </sup> </span>
+                    @else
+                        @if ($document->is_translation)
+                            <span class="text-xs text-purple-700 italic">Kushtet e pagesës :</span>
+                        @else
+                            <span class="text-xs text-purple-700 italic ps-1">Услови на Плаќање:</span>
+                        @endif
+                        <span class="text-sm font-semibold mx-1">{{ $document->term->term }} </sup> </span>
+
+                    @endif
+                </div>
+            @endif
         </div>
         </div>
 

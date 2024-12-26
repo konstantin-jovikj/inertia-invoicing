@@ -624,7 +624,11 @@ const createPackingList = () => {
                                                                 </a>
 
                                                                 <!-- CE Declaration -->
+                                                                <div
+                                                                v-if="product.manufacturer_id ==1"
+                                                                class="flex">
 
+                                                                
                                                                 <a
                                                                     class="px-2 hover:text-orange-300 text-slate-300"
                                                                     :href="`/ce/print/${product.id}`"
@@ -656,6 +660,7 @@ const createPackingList = () => {
                                                                         }"
                                                                     />
                                                                 </a>
+                                                            </div>
                                                             </div>
                                                         </td>
                                                     </tr>

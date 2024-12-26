@@ -15,8 +15,9 @@
     import ClientIcon from "@/Components/ClientIcon.vue";
     import FolderIcon from "@/Components/FolderIcon.vue";
     import EuIcon from "@/Components/EuIcon.vue";
-import CategoriesIcon from "@/Components/CategoriesIcon.vue";
-import DeclarationsIcon from "@/Components/DeclarationsIcon.vue";
+    import CategoriesIcon from "@/Components/CategoriesIcon.vue";
+    import DeclarationsIcon from "@/Components/DeclarationsIcon.vue";
+import FactoryIcon from "@/Components/FactoryIcon.vue";
 
     const props = defineProps({
         clientsCount: Number,
@@ -181,7 +182,7 @@ import DeclarationsIcon from "@/Components/DeclarationsIcon.vue";
                                     <CategoriesIcon class="text-gray-700"></CategoriesIcon>
                                     <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">
                                         <h3 class="text-center">
-                                            ЕУ Директиви  Регулативи Поврзување
+                                            ЕУ Директиви Регулативи Поврзување
                                         </h3>
                                     </div>
                                 </div>
@@ -197,6 +198,22 @@ import DeclarationsIcon from "@/Components/DeclarationsIcon.vue";
                                     <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">
                                         <h3 class="text-center">
                                             Изјави за Потекло на Роба
+                                        </h3>
+                                    </div>
+                                </div>
+                                </Link>
+                            </div>
+
+                            <!-- Manufacturers-->
+                            <div
+                                class="bg-gray-50 shadow-md py-4 hover:border-sky-500 border-2 rounded-lg transition duration-200 ease-in-out hover:scale-105 hover:rotate-[3deg]">
+                                <Link :href="route('manufacturers.index')"
+                                    class="flex flex-col items-center justify-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <FactoryIcon class="text-gray-700"></FactoryIcon>
+                                    <div class="bg-gray-50 rounded text-gray-500 px-4 py-2 font-semibold">
+                                        <h3 class="text-center">
+                                            Производители / Добавувачи
                                         </h3>
                                     </div>
                                 </div>

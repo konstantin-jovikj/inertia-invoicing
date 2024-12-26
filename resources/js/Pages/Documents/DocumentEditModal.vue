@@ -52,6 +52,7 @@ const form = useForm({
     tax_id: document.value.tax_id,
     term_id: document.value.term_id,
     incoterm_id: document.value.incoterm_id,
+    delivery: document.value.delivery,
     vehicle_id: document.value.vehicle_id,
     driver_id: document.value.driver_id,
     document_no: document.value.document_no,
@@ -517,8 +518,31 @@ const isSelected = (declarationId) => {
                                                 >
                                             </div>
 
+                                            <!-- Delivery -->
+                                            <div
+                                                class=" mb-4  border-gray-200 md:col-span-2"
+                                            >
+                                                <InputLabel for="drawing_no"
+                                                    >Испорака</InputLabel
+                                                >
+
+                                                <TextInput
+                                                    v-model="form.delivery"
+                                                    type="text"
+                                                    id="delivery"
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                />
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.delivery
+                                                    }}</span
+                                                >
+                                            </div>
+
                                             <!-- Vehicle -->
-                                            <div class="md:col-span-2">
+                                            <div class="md:col-span-1">
                                                 <InputLabel for="vehicle_id"
                                                     >Избери Возило</InputLabel
                                                 >
@@ -552,7 +576,7 @@ const isSelected = (declarationId) => {
                                             </div>
 
                                             <!-- Driver -->
-                                            <div class="md:col-span-2">
+                                            <div class="md:col-span-1">
                                                 <InputLabel for="driver_id"
                                                     >Избери Возач</InputLabel
                                                 >

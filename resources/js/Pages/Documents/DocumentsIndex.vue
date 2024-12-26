@@ -121,7 +121,7 @@ console.log(props.documents);
                                     v-model="selectedExport"
                                     as="select"
                                     id="client"
-                                    class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
+                                    class="w-[150px]  px-8 mt-1 text-base border border-sky-500 rounded bg-gray-50"
                                 >
                                     <option value="" selected>Извоз...</option>
                                     <option
@@ -138,7 +138,7 @@ console.log(props.documents);
                                     v-model="selectedClient"
                                     as="select"
                                     id="client"
-                                    class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
+                                    class="w-[350px]  px-4 mt-1 text-base border rounded bg-gray-50 border-sky-500"
                                 >
                                     <option value="" selected>Клиент...</option>
                                     <option
@@ -155,7 +155,7 @@ console.log(props.documents);
                                     v-model="selectedYear"
                                     as="select"
                                     id="year"
-                                    class="w-full h-10 px-8 mt-1 text-xs border rounded bg-gray-50"
+                                    class="w-[120px]  px-4 mt-1 text-base border rounded bg-gray-50 border-sky-500"
                                 >
                                     <option value="" selected>Година...</option>
                                     <option
@@ -171,7 +171,7 @@ console.log(props.documents);
                                     v-model="selectedType"
                                     as="select"
                                     id="type"
-                                    class="h-10 px-8 mt-1 text-xs border rounded bg-gray-50 w-[150px]"
+                                    class="w-[200px] px-4 py-1 mt-1 text-base border rounded bg-gray-50 border-sky-500"
                                 >
                                     <option value="" selected>
                                         Тип на Документ...

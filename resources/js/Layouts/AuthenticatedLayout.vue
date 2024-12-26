@@ -146,6 +146,11 @@ const showingNavigationDropdown = ref(false);
                                             Места / Градови
                                         </DropdownLink>
                                         <DropdownLink
+                                            :href="route('manufacturers.index')"
+                                        >
+                                            Добавувачи
+                                        </DropdownLink>
+                                        <DropdownLink
                                             :href="route('customertype.index')"
                                         >
                                             Тип на Клиенти
