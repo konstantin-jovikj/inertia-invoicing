@@ -124,7 +124,7 @@ class DocumentController extends Controller
 
         $request->merge([
             'tax_id' => $request->tax_id ?? 1,
-            'curency_id' => $request->tax_id ?? 1,
+            'curency_id' => $request->curency_id ?? 1,
         ]);
 
         $validatedData = $request->validate([
@@ -155,9 +155,10 @@ class DocumentController extends Controller
             'boxes_nr' => 'nullable|numeric',
             'packaging_type' => 'nullable|max:255',
             'goods_type' => 'nullable|max:255',
-            'note' => 'nullable|max:255',
+            'note' => 'nullable',
             'instruction' => 'nullable|max:255',
             'picked_up_by' => 'nullable|max:255',
+
         ]);
 
         if ($request->load_date) {
@@ -264,7 +265,7 @@ class DocumentController extends Controller
             'boxes_nr' => 'nullable|numeric',
             'packaging_type' => 'nullable|max:255',
             'goods_type' => 'nullable|max:255',
-            'note' => 'nullable|max:255',
+            'note' => 'nullable',
             'instruction' => 'nullable|max:255',
             'picked_up_by' => 'nullable|max:255',
         ]);

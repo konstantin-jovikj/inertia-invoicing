@@ -616,6 +616,12 @@
             </div>
 
         </div>
+
+        @if($document->note)
+        <div class="flex w-full mt-4 gap-2 text-xs text-purple-700">
+            {!! nl2br(e($document->note)) !!}
+        </div>
+    @endif
         {{-- Declarations --}}
         <div class="flex w-full mt-4 gap-2">
             <div class="w-3/5 ">

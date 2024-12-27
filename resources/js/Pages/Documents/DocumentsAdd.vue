@@ -45,6 +45,7 @@ const form = useForm({
     advance_payment: 0,
     discount: 0,
     delivery: "",
+    note: "",
 });
 
 // Define computed property to get the currency symbol based on selected currency
@@ -80,21 +81,38 @@ const submit = () => {
                                 <div
                                     class="grid grid-cols-1 gap-4 text-sm gap-y-2 lg:grid-cols-2"
                                 >
-                                    <div class="text-gray-600 flex justify-between w-full ">
+                                    <div
+                                        class="text-gray-600 flex justify-between w-full"
+                                    >
                                         <div>
                                             <p class="text-lg font-medium">
                                                 Додај Нова
-                                                {{ latinToCyrillic(props.documentType.type) }}
+                                                {{
+                                                    latinToCyrillic(
+                                                        props.documentType.type,
+                                                    )
+                                                }}
                                             </p>
                                             <p>
                                                 Внеси податоци за новата
-                                                {{ latinToCyrillic(props.documentType.type) }}
+                                                {{
+                                                    latinToCyrillic(
+                                                        props.documentType.type,
+                                                    )
+                                                }}
                                             </p>
                                         </div>
-                                        <div v-if="props.latestDoc" class="text-red-500">
-                                            Последна 
-                                            {{ latinToCyrillic(props.documentType.type) }}
-                                            Бр: 
+                                        <div
+                                            v-if="props.latestDoc"
+                                            class="text-red-500"
+                                        >
+                                            Последна
+                                            {{
+                                                latinToCyrillic(
+                                                    props.documentType.type,
+                                                )
+                                            }}
+                                            Бр:
                                             {{ props.latestDoc.document_no }}
                                         </div>
                                         <div v-else class="text-red-500">
@@ -162,11 +180,20 @@ const submit = () => {
                                             <!-- Is For Advance Payment -->
 
                                             <div
-                                            v-if="props.documentType.id == 3"
+                                                v-if="
+                                                    props.documentType.id == 3
+                                                "
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
-                                                <InputLabel for="is_for_advanced_payment"
-                                                    >Дали е Авансна {{ latinToCyrillic(props.documentType.type) }}</InputLabel
+                                                <InputLabel
+                                                    for="is_for_advanced_payment"
+                                                    >Дали е Авансна
+                                                    {{
+                                                        latinToCyrillic(
+                                                            props.documentType
+                                                                .type,
+                                                        )
+                                                    }}</InputLabel
                                                 >
 
                                                 <input
@@ -192,14 +219,18 @@ const submit = () => {
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
                                                 <InputLabel for="print_price"
-                                                    >Принтај Цени {{ latinToCyrillic(props.documentType.type) }}</InputLabel
+                                                    >Принтај Цени
+                                                    {{
+                                                        latinToCyrillic(
+                                                            props.documentType
+                                                                .type,
+                                                        )
+                                                    }}</InputLabel
                                                 >
 
                                                 <input
                                                     type="checkbox"
-                                                    v-model="
-                                                        form.print_price
-                                                    "
+                                                    v-model="form.print_price"
                                                     id="print_price"
                                                     class="w-8 h-8 mt-1 border rounded bg-gray-50"
                                                 />
@@ -207,8 +238,7 @@ const submit = () => {
                                                 <span
                                                     class="text-xs italic text-red-600"
                                                     >{{
-                                                        form.errors
-                                                            .print_price
+                                                        form.errors.print_price
                                                     }}</span
                                                 >
                                             </div>
@@ -220,7 +250,10 @@ const submit = () => {
                                                 <InputLabel for="document_no"
                                                     >Број на
                                                     {{
-                                                        latinToCyrillic(props.documentType.type)
+                                                        latinToCyrillic(
+                                                            props.documentType
+                                                                .type,
+                                                        )
                                                     }}
                                                 </InputLabel>
 
@@ -262,9 +295,7 @@ const submit = () => {
                                                 >
                                             </div>
                                             <!-- Date -->
-                                            <div
-                                                class="mb-4  md:col-span-1"
-                                            >
+                                            <div class="mb-4 md:col-span-1">
                                                 <InputLabel
                                                     for="doc_is_for_export"
                                                     >Датум</InputLabel
@@ -470,7 +501,7 @@ const submit = () => {
 
                                             <!-- Delivery -->
                                             <div
-                                                class=" mb-4  border-gray-200 md:col-span-2"
+                                                class="mb-4 border-gray-200 md:col-span-2"
                                             >
                                                 <InputLabel for="drawing_no"
                                                     >Испорака</InputLabel
@@ -624,6 +655,33 @@ const submit = () => {
                                                     class="text-xs italic text-red-600"
                                                     >{{
                                                         form.errors.discount
+                                                    }}</span
+                                                >
+                                            </div>
+
+                                            <!-- note -->
+                                            <div
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-6"
+                                            >
+                                                <InputLabel for="note"
+                                                    >Забелешки</InputLabel
+                                                >
+                                                <div
+                                                    class="flex items-center gap-2"
+                                                >
+                                                    <textarea
+                                                        v-model="form.note"
+                                                        class="w-full border px-4 py-2 rounded focus:border-blue-500 focus:shadow-outline outline-none"
+                                                        rows="15"
+                                                        placeholder="Забелешки ..."
+                                                        id="note"
+                                                    ></textarea>
+                                                </div>
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.note
                                                     }}</span
                                                 >
                                             </div>

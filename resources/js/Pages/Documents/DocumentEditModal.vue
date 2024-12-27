@@ -63,6 +63,7 @@ const form = useForm({
     grand_total: document.value.grand_total,
     advanced_payment_base: document.value.advanced_payment_base,
     advanced_payment_tax: document.value.advanced_payment_tax,
+    note: document.value.note,
     // selectedDeclarations: document.value.selectedDeclarations,
 });
 
@@ -674,6 +675,34 @@ const isSelected = (declarationId) => {
                                                     class="text-xs italic text-red-600"
                                                     >{{
                                                         form.errors.discount
+                                                    }}</span
+                                                >
+                                            </div>
+
+
+                                                                                        <!-- note -->
+                                                                                        <div
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-6"
+                                            >
+                                                <InputLabel for="note"
+                                                    >Забелешки</InputLabel
+                                                >
+                                                <div
+                                                    class="flex items-center gap-2"
+                                                >
+                                                    <textarea
+                                                        v-model="form.note"
+                                                        class="w-full border px-4 py-2 rounded focus:border-blue-500 focus:shadow-outline outline-none"
+                                                        rows="15"
+                                                        placeholder="Забелешки ..."
+                                                        id="note"
+                                                    ></textarea>
+                                                </div>
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.note
                                                     }}</span
                                                 >
                                             </div>
