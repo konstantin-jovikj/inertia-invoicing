@@ -617,15 +617,20 @@
 
         </div>
 
-        @if($document->note)
-        <div class="flex w-full mt-4 gap-2 text-xs text-purple-700">
+        {{-- @if($document->note->isNotEmpty())
+        <div class="my-2  text-xs text-purple-700">
             {!! nl2br(e($document->note)) !!}
         </div>
-    @endif
-        {{-- Declarations --}}
-        <div class="flex w-full mt-4 gap-2">
-            <div class="w-3/5 ">
-
+    @endif --}}
+    <div class="flex w-full mt-4 gap-2">
+        <div class="w-3/5 ">
+            {{-- Note --}}
+            @if($document->note)
+            <div class="mb-2  text-xs text-purple-700 border border-purple-900 p-2 rounded-md">
+                {!! nl2br(e($document->note)) !!}
+            </div>
+        @endif
+            {{-- Declarations --}}
                 @if ($selectedDeclarations->isNotEmpty())
                     <div class="flex flex-col justify-start text-xs">
                         @foreach ($selectedDeclarations as $selectedDeclaration)
