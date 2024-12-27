@@ -30,7 +30,7 @@ return new class extends Migration
             $table->decimal('width',7,2)->nullable();
             $table->decimal('height',7,2)->nullable();
             $table->decimal('weight',7,2)->nullable();
-            $table->decimal('qty',7,4)->nullable();
+            $table->decimal('qty',13,4)->nullable();
             $table->decimal('single_price',13,4)->nullable();
             $table->decimal('total_price',13,4)->nullable();
             $table->decimal('product_total_volume',6,2)->nullable();

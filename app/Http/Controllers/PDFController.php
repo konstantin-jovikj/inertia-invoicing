@@ -134,7 +134,7 @@ class PDFController extends Controller
         
         $owner->load('accounts.bank', 'contacts');
         $client->load('accounts.bank', 'customer.customerType');
-        $document->load('documentType');
+        $document->load('documentType', 'incotermPlace');
         $products = Product::whereNull('packing_list_id')->where('document_id', $document->id)->get();
 
 

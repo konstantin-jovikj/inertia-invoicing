@@ -46,6 +46,7 @@ const form = useForm({
     discount: 0,
     delivery: "",
     note: "",
+    incoterm_place_id: "",
 });
 
 // Define computed property to get the currency symbol based on selected currency
@@ -593,7 +594,7 @@ const submit = () => {
 
                                             <!-- Advanced Payment -->
                                             <div
-                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-3"
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-2"
                                             >
                                                 <InputLabel
                                                     for="advance_payment"
@@ -630,7 +631,7 @@ const submit = () => {
 
                                             <!-- DIscount -->
                                             <div
-                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-3"
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-2"
                                             >
                                                 <InputLabel for="discount"
                                                     >Попуст</InputLabel
@@ -655,6 +656,38 @@ const submit = () => {
                                                     class="text-xs italic text-red-600"
                                                     >{{
                                                         form.errors.discount
+                                                    }}</span
+                                                >
+                                            </div>
+
+                                            <!-- INCOTERM / DELIVERY PLACE -->
+                                            <div
+                                                class="py-4 mb-4 border-b border-gray-200 md:col-span-2"
+                                            >
+                                                <InputLabel for="incoterm_place_id"
+                                                    >INCOTERM Место на/за Испорака</InputLabel
+                                                >
+                                                <select
+                                                    v-model="form.incoterm_place_id "
+                                                    id="incoterm_place_id "
+                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                >
+                                                    <option value="" disabled>
+                                                        Incoterm Delivery Place...
+                                                    </option>
+                                                    <option
+                                                        v-for="place in places"
+                                                        :key="place.id"
+                                                        :value="place.id"
+                                                    >
+                                                        {{ place.place }}
+                                                    </option>
+                                                </select>
+
+                                                <span
+                                                    class="text-xs italic text-red-600"
+                                                    >{{
+                                                        form.errors.incoterm_place_id
                                                     }}</span
                                                 >
                                             </div>

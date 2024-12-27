@@ -154,6 +154,7 @@ const filteredModels = computed(() => {
 
                     <TextInput
                         v-model="form.qty"
+                        step="0.01"
                         type="number"
                         id="qty"
                         class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
@@ -169,6 +170,7 @@ const filteredModels = computed(() => {
                     <TextInput
                         v-model="form.single_price"
                         type="number"
+                        step="0.0001"
                         id="single_price"
                         class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
                     />

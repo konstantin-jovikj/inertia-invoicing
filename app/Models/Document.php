@@ -65,6 +65,7 @@ class Document extends Model
         'note',
         'instruction',
         'picked_up_by',
+        'incoterm_place_id',
     ];
 
     // protected $casts = [
@@ -156,5 +157,10 @@ class Document extends Model
     public function place()
     {
         return $this->belongsTo(Place::class, 'place_id');
+    }
+
+    public function incotermPlace()
+    {
+        return $this->belongsTo(Place::class, 'incoterm_place_id');
     }
 }

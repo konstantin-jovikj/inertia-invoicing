@@ -145,7 +145,10 @@
                 @if ($document->is_for_export && $document->incoterm)
                     <span class="text-xs text-purple-700 italic">Paritet / Delivery / INCOTERMS:</span>
                     <span class="text-sm font-semibold ms-2">{{ $document->incoterm->shortcut }}
-                        {{ $client->place->place }}</span>
+                        @if ($document->incotermPlace)
+                            {{ $document->incotermPlace->place }}
+                        @endif
+                    </span>
                 @endif
             </div>
         </div>
@@ -153,10 +156,9 @@
             <div class="border-b border-gray-500   w-full  ">
                 <div class="">
                     @if ($document->is_for_export)
-                        <span class="text-xs text-purple-700 italic">Isporaka:</span>
+                        <span class="text-xs text-purple-700 italic">Isporaka/Delivery time:</span>
                         <span class="text-sm font-semibold ms-2">{{ $document->delivery }}</span>
-                    @endif
-                    @if (!$document->is_for_export)
+                    @else
                         <span class="text-xs text-purple-700 italic">Испорака:</span>
                         <span class="text-sm font-semibold ms-2">{{ $document->delivery }}</span>
                     @endif
@@ -451,7 +453,7 @@
                                     </td>
                                     <td class="border border-gray-300 px-2 py-1 leading-none">
                                         @if ($showRowNumber)
-                                            {{ $product->qty }}
+                                            {{ $product->qty == (int) $product->qty ? number_format($product->qty, 0) : number_format($product->qty, 2) }}
                                         @endif
                                     </td>
 
@@ -553,7 +555,7 @@
 
                                     <td class="border border-gray-300 px-2 py-1 leading-none">
                                         @if ($showRowNumber)
-                                            {{ $product->qty }}
+                                            {{ $product->qty == (int) $product->qty ? number_format($product->qty, 0) : number_format($product->qty, 2) }}
                                         @endif
                                     </td>
 
@@ -617,20 +619,16 @@
 
         </div>
 
-        {{-- @if($document->note->isNotEmpty())
-        <div class="my-2  text-xs text-purple-700">
-            {!! nl2br(e($document->note)) !!}
-        </div>
-    @endif --}}
-    <div class="flex w-full mt-4 gap-2">
-        <div class="w-3/5 ">
-            {{-- Note --}}
-            @if($document->note)
-            <div class="mb-2  text-xs text-purple-700 border border-purple-900 p-2 rounded-md">
-                {!! nl2br(e($document->note)) !!}
-            </div>
-        @endif
-            {{-- Declarations --}}
+
+        <div class="flex w-full mt-4 gap-2">
+            <div class="w-3/5 ">
+                {{-- Note --}}
+                @if ($document->note)
+                    <div class="mb-2  text-xs text-purple-700 border border-purple-900 p-2 rounded-md">
+                        {!! nl2br(e($document->note)) !!}
+                    </div>
+                @endif
+                {{-- Declarations --}}
                 @if ($selectedDeclarations->isNotEmpty())
                     <div class="flex flex-col justify-start text-xs">
                         @foreach ($selectedDeclarations as $selectedDeclaration)
@@ -859,7 +857,7 @@
 
 
                                     @endif
-                                    @if ($document->curency_id == 1 && $document->document_type_id == 3)
+                                    @if ($document->curency_id == 1 && $document->document_type_id == 3 && !$document->is_for_export)
                                         <tr class="">
                                             <th class="w-full border border-gray-600 px-2 py-1 text-left leading-none bg-green-200 text-[8px]"
                                                 colspan="2">
@@ -927,6 +925,39 @@
                 </div>
             @endif
         </div>
+
+        {{-- Signature --}}
+        <div class="flex w-full mt-4 gap-2 text-xs text-gray-600 justify-between">
+            <div class="border-b border-gray-600 px-12 py-6">
+                <p>Примил</p>
+            </div>
+            <div>
+
+
+                <div class="border-b border-gray-600 px-12 py-6">
+                    <p>Овластено Лице за потпишување на фактури</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end text-xs gap-4 px-4 py-1">
+
+            @if ($firstContact = $owner->contacts->first())
+                <div class="flex gap-2">
+                    <span>{{ $firstContact->first_name }}</span>
+                    <span>{{ $firstContact->last_name }}</span>
+                </div>
+            @endif
+            <div>
+                @if ($document->is_for_export)
+                    <span class="font-bold">{{ $owner->name }}</span>
+                @else
+                    <span class="font-bold">{{ $convertedOwner }}</span>
+                @endif
+            </div>
+        </div>
+
+
+
     </main>
 </body>
 

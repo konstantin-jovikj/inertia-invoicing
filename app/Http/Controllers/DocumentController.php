@@ -155,9 +155,10 @@ class DocumentController extends Controller
             'boxes_nr' => 'nullable|numeric',
             'packaging_type' => 'nullable|max:255',
             'goods_type' => 'nullable|max:255',
-            'note' => 'nullable',
             'instruction' => 'nullable|max:255',
             'picked_up_by' => 'nullable|max:255',
+            'note' => 'nullable',
+            'incoterm_place_id' => 'nullable|exists:places,id'
 
         ]);
 
@@ -203,6 +204,7 @@ class DocumentController extends Controller
         $vehicles = Vehicle::all();
         $drivers = Driver::all();
         $documentTypes = DocumentType::all();
+        $places = Place::all();
 
         $document->load('documentType', 'tax');
 
@@ -227,6 +229,7 @@ class DocumentController extends Controller
             'drivers' => $drivers,
             'declarations' => $declarations,
             'selectedDeclarations' => $selectedDeclarations,
+            'places' => $places,
         ]);
     }
 
@@ -268,6 +271,7 @@ class DocumentController extends Controller
             'note' => 'nullable',
             'instruction' => 'nullable|max:255',
             'picked_up_by' => 'nullable|max:255',
+            'incoterm_place_id' => 'nullable|exists:places,id'
         ]);
 
         // Refresh the document's tax relationship to get the latest tax_rate
@@ -410,9 +414,10 @@ class DocumentController extends Controller
             'boxes_nr' => '',
             'packaging_type' => '',
             'goods_type' => '',
-            'note' => '',
             'instruction' => '',
             'picked_up_by' => '',
+            'note' => $document->note,
+            'incoterm_place_id' => $document->incoterm_place_id,
         ];
 
 
@@ -511,9 +516,10 @@ class DocumentController extends Controller
             'boxes_nr' => '',
             'packaging_type' => '',
             'goods_type' => '',
-            'note' => '',
             'instruction' => '',
             'picked_up_by' => '',
+            'note' => $document->note,
+            'incoterm_place_id' => $document->incoterm_place_id,
         ];
 
         $convertedDocument = Document::create($documentData);

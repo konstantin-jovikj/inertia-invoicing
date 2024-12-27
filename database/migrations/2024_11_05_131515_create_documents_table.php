@@ -29,6 +29,7 @@ return new class extends Migration
 
             $table->foreignId('load_place_id')->nullable()->constrained('places');
             $table->foreignId('unload_place_id')->nullable()->constrained('places');
+            $table->foreignId('incoterm_place_id')->nullable()->constrained('places');
 
             $table->dateTime('load_date')->nullable();
             $table->dateTime('unload_date')->nullable();
