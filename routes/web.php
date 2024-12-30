@@ -113,6 +113,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/contacts/add/{company}', [ContactController::class, 'create'])->name('contacts.create');
     Route::get('/contacts/edit/{contact}', [ContactController::class, 'edit'])->name('contact.edit');
     Route::post('/contacts/store', [ContactController::class, 'store'])->name('contacts.store');
+    Route::put('/contact/update/{contact}', [ContactController::class, 'update'])->name('contact.update');
     Route::delete('/contacts/delete/{contact}', [ContactController::class, 'destroy'])->name('contact.delete');
 
     // BANKS

@@ -63,7 +63,11 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
-        //
+        $contact->load('company.place.country');
+    
+        return inertia('Contacts/ContactEdit', [
+            'contact' => $contact,
+        ]);
     }
 
     /**
@@ -71,7 +75,23 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
-        //
+        $validatedData = $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:50',
+            'mob' => 'nullable|string|max:50',
+            'email' => 'nullable|email',
+            'position' => 'nullable|string|max:50',
+
+        ]);
+
+        $contact->update($validatedData);
+
+        // return inertia('Companies/CompaniesIndex');
+        return redirect()->route('company.show',[
+            'company' => $contact->company_id,
+        ]);
     }
 
     /**
