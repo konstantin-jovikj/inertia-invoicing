@@ -159,11 +159,14 @@
     }
     .logo-height {
         max-height: 61px;
+        z-index: 100;
     }
 
     .cert-height{
         max-height: 94px;
         margin-left: 5px;
+        margin-right: 5px;
         padding: 0 5px;
+        z-index: 100;
     }
 </style>
