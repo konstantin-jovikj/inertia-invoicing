@@ -1,9 +1,9 @@
 <div class="header flex">
     <div class="image-wrapper ">
         @if ($logo)
-            <img class="image-width" src="{{ $logo }}" alt="Logo">
+            <img class="image-width logo-height" src="{{ $logo }}" alt="Logo">
         @else
-            <p></p>
+            <p>Место за Лого</p>
         @endif
         <div class="flex">
             <div class="w-50">
@@ -27,15 +27,15 @@
         </div>
         <p class="text-small font-bold web">{{ $owner->web }}</p>
     </div>
-    <div class="image-wrapper ">
+    <div class="image-wrapper">
         @if ($cert)
-            <img class="image-width" src="{{ $cert }}" alt="Cert">
+            <img class="image-width cert-height" src="{{ $cert }}" alt="Cert">
         @else
-            <p></p>
+            <p>Место за сертификат</p>
         @endif
 
     </div>
-    <div class="image-wrapper bank">
+    <div class="image-wrapper bank ">
         <div id="bank_account">
             @if ($document->is_for_export)
                 <div class="">
@@ -156,5 +156,14 @@
 
     .image-width {
         width: 100%;
+    }
+    .logo-height {
+        max-height: 61px;
+    }
+
+    .cert-height{
+        max-height: 94px;
+        margin-left: 5px;
+        padding: 0 5px;
     }
 </style>

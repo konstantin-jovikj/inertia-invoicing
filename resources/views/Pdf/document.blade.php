@@ -928,15 +928,25 @@
 
         {{-- Signature --}}
         <div class="flex w-full mt-4 gap-2 text-xs text-gray-600 justify-between">
-            <div class="border-b border-gray-600 px-12 py-6">
-                <p>Примил</p>
-            </div>
-            <div>
-
-
-                <div class="border-b border-gray-600 px-12 py-6">
-                    <p>Овластено Лице за потпишување на фактури</p>
+            @if ($document->is_for_export)
+                <div class=" px-12 py-6">
+                    <p> </p>
                 </div>
+            @else
+                <div class="border-b border-gray-600 px-12 py-6">
+                    <p>Примил</p>
+                </div>
+            @endif
+            <div>
+                @if ($document->is_for_export)
+                    <div class="border-b border-gray-600 px-24 py-8">
+                        <p>Manager</p>
+                    </div>
+                @else
+                    <div class="border-b border-gray-600 px-12 py-6">
+                        <p>Овластено Лице за потпишување на фактури</p>
+                    </div>
+                @endif
             </div>
         </div>
         <div class="flex justify-end text-xs gap-4 px-4 py-1">
