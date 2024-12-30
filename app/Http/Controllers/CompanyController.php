@@ -60,7 +60,7 @@ class CompanyController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'customer_id' => 'nullable|exists:customers,id',
-            'place_id' => 'nullable|exists:places,id',
+            'place_id' => 'required|exists:places,id',
             'name' => 'required|string|max:255',
             'reg_number' => 'nullable|string|max:50',
             'tax_number' => 'nullable|string|max:50',

@@ -218,6 +218,7 @@ const clearCert = () => {
                                                     >Одбери Место</InputLabel
                                                 >
                                                 <select
+                                                required
                                                     v-model="form.place_id"
                                                     id="place"
                                                     class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
