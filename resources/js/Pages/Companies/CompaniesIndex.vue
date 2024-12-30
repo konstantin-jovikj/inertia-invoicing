@@ -165,11 +165,17 @@ const getPaginationLabel = (label) => {
                                     </td>
                                     <td class="">{{ company.name }}</td>
                                     <td class="">
-                                        {{ company.place.place }}
-                                        <span class="mx-4">-</span>
-                                        <span class="">{{
+                                        <div v-if="company.place">
+
+                                            {{ company.place.place }}
+                                            <span class="mx-4">-</span>
+                                            <span class="">{{
                                             company.place.country.name
                                         }}</span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="text-red-500 font-semibold">Не е внесено место</span>
+                                        </div>
                                     </td>
                                     <td class="">
                                         <div class="flex gap-2">

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId(column: 'user_id')->constrained('users');
             $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('cascade');
-            $table->foreignId(column: 'place_id')->constrained('places');
+            $table->foreignId(column: 'place_id')->nullable()->constrained('places');
             $table->boolean('is_customer')->default(true);
             $table->string('name');
             $table->index('name');
