@@ -210,7 +210,7 @@ class PDFController extends Controller
                     break;
                 default:
                     // Optional: Handle cases where the documentType id is not recognized
-                    $docName = "Unknown-{$document->document_no}.pdf";
+                    $docName = "DOC-{$document->document_no}.pdf";
                     break;
             }
             
