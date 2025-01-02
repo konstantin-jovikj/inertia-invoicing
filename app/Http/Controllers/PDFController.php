@@ -187,6 +187,34 @@ class PDFController extends Controller
         // dd($words);
 
         if($document->documentType->id != 5) {
+            $docName = "";
+
+            switch ($document->documentType->id) {
+                case 1:
+                    $docName = "PO-{$document->document_no}.pdf";
+                    break;
+                case 2:
+                    $docName = "PI-{$document->document_no}.pdf";
+                    break;
+                case 3:
+                    $docName = "IN-{$document->document_no}.pdf";
+                    break;
+                case 4:
+                    $docName = "IS-{$document->document_no}.pdf";
+                    break;
+                case 6:
+                    $docName = "PR-{$document->document_no}.pdf";
+                    break;
+                case 7:
+                    $docName = "TL-{$document->document_no}.pdf";
+                    break;
+                default:
+                    // Optional: Handle cases where the documentType id is not recognized
+                    $docName = "Unknown-{$document->document_no}.pdf";
+                    break;
+            }
+            
+            
 
             return Pdf::view('Pdf.document', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations', 'words'))
             ->withBrowsershot(function (Browsershot $browsershot) {
@@ -199,7 +227,7 @@ class PDFController extends Controller
                 'document' => $document,
                 ])
                 ->format(Format::A4)
-                ->name('invoice.pdf');
+                ->name($docName);
             } else {
                 return Pdf::view('Pdf.smetkopotvrda', compact('type', 'owner', 'convertedOwner', 'document', 'convertedAddress', 'convertedPlace', 'convertedCountry', 'convertedDocumentName', 'client', 'convertedPlaceClient', 'convertedCountryClient', 'products', 'packingList', 'packingListProducts', 'selectedDeclarations', 'words'))
             ->withBrowsershot(function (Browsershot $browsershot) {

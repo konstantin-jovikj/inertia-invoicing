@@ -145,7 +145,7 @@
     }
 
     .image-wrapper {
-        width: 230px;
+        width: 225px;
         /* height: 250px; */
         background-color: rgb(255, 0, 0);
     }
@@ -167,6 +167,6 @@
         margin-left: 5px;
         margin-right: 5px;
         padding: 0 5px;
-        z-index: 100;
+        z-index: 1000;
     }
 </style>
