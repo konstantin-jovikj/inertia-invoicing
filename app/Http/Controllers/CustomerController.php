@@ -38,7 +38,7 @@ class CustomerController extends Controller
                     'customer_type_id' => ['required', 'integer'],
                 ]);
                 $customer = Customer::create($validated);
-                $places = Place::all();
+                $places = Place::with('country')->get();
                 // dd($customer);
                 // return redirect()->route('company.create', ['customer' => $customer]);
 

@@ -41,14 +41,12 @@ class CompanyController extends Controller
      */
     public function create(Customer $customer)
     {
-        // dd($customer);
 
-        // $isCustomer = request()->routeIs('companies.index') ? 1 : 0;
-        $places = Place::all();
+        $places = Place::with('country')->get();
+        // dd($places);
         return inertia('Companies/CompanyAdd', [
             'places' => $places,
             'customer' => $customer,
-            // 'isCustomer' => $isCustomer,
         ]);
     }
 

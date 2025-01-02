@@ -48,7 +48,7 @@ class PlaceController extends Controller
         // dd($request);
         $data = $request->validate([
             'zip' => ['required', 'max:8'],
-            'place' => ['required', 'max:255', 'unique:places'],
+            'place' => ['required', 'max:255'],
             'country_id' => ['required'],
         ]);
         Place::create($data);

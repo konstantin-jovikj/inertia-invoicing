@@ -172,7 +172,7 @@ console.log("FORM Data : ", form);
                                                         :key="place.id"
                                                         :value="place.id"
                                                     >
-                                                        {{ place.place }}
+                                                    {{ place.place }} - {{ place.zip }} -  <span class="text-sky-500 font-bold">{{ place.country ? place.country.name : 'N/A' }}</span> 
                                                     </option>
                                                 </select>
                                                 <span
