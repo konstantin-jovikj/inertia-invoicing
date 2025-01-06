@@ -196,6 +196,10 @@ const chartOptions = ref({
   }
 });
 
+// Computed property to format notes
+const formattedNotes = computed(() => {
+  return props.company.notes.replace(/\n/g, '<br>');
+});
 // const chartOptions = ref({
 //     responsive: true,
 // });
@@ -641,6 +645,32 @@ const chartOptions = ref({
                                             {{ websiteDomain.href }}
                                         </a>
                                     </p>
+                                    <p v-if="company.mobile">
+                                        <span class="text-sm italic"
+                                            >Мобилен :
+                                        </span>
+                                        {{ company.mobile }}
+                                    </p>
+                                    <p v-if="company.phone">
+                                        <span class="text-sm italic"
+                                            >Телефон :
+                                        </span>
+                                        {{ company.phone }}
+                                    </p>
+
+                                    <p v-if="company.email">
+                                        <span class="text-sm italic"
+                                            >Е-маил :
+                                        </span>
+                                        {{ company.email }}
+                                    </p>
+
+                                    <p class="text-sm italic"
+                                    >забелешки :
+                                </p>
+                                <div v-if="company.notes" class="mb-2 text-xs text-purple-700 border border-purple-900 p-2 rounded-md">
+    <div v-html="formattedNotes"></div>
+  </div>
                                 </div>
                                 <hr class="my-4" />
                                 <div

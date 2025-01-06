@@ -44,10 +44,13 @@ class ContactController extends Controller
 
         ]);
 
-        $company = Contact::create($validatedData);
+        $contact = Contact::create($validatedData);
+        $company = $contact->company_id;
 
-        // return inertia('Companies/CompaniesIndex');
-        return redirect()->route('companies.index');
+          // return inertia('Companies/CompaniesIndex');
+          return redirect()->route('company.show',[
+            'company' => $company,
+        ]);
     }
 
     /**
