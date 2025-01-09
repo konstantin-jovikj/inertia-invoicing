@@ -12,7 +12,13 @@ class ProductModelController extends Controller
      */
     public function index()
     {
-        //
+        $productModels = ProductModel::all();
+        $productModels->load('category');
+        // dd($productModels);
+
+        return inertia('ProductModels/ProductModelsIndex', [
+            'productModels' => $productModels,
+        ]);
     }
 
     /**

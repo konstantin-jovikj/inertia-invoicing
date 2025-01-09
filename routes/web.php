@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ManufacturerController;
+use App\Http\Controllers\ProductModelController;
 use App\Models\PackingList;
 use Inertia\Inertia;
 use App\Models\Company;
@@ -269,6 +270,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/manufacturer/store', [ManufacturerController::class, 'store'])->name('manufacturer.store');
     Route::put('/manufacturer/update/{manufacturer}', [ManufacturerController::class, 'update'])->name('manufacturer.update');
     Route::delete('/manufacturer/delete/{manufacturer}', [ManufacturerController::class, 'destroy'])->name('manufacturer.delete');
+
+    //Product Models
+
+    Route::get('/productmodels', [ProductModelController::class, 'index'])->name('productmodels.index');
 });
 
 require __DIR__ . '/auth.php';

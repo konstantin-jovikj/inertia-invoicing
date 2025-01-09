@@ -184,6 +184,12 @@ const showingNavigationDropdown = ref(false);
                                             ЕУ Директиви
                                         </DropdownLink>
 
+                                        <DropdownLink
+                                            :href="route('productmodels.index')"
+                                        >
+                                            Модели
+                                        </DropdownLink>
+
                                         <hr />
                                         <DropdownLink
                                             :href="route('taxes.index')"
