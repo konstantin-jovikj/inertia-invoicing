@@ -687,6 +687,7 @@ const createPackingList = () => {
                                         <tr
                                             class="border-t border-b border-indigo-300 border-e border-s"
                                         >
+                                        
                                             <th
                                                 class="border-indigo-300 bg-indigo-50 border-e"
                                             >
