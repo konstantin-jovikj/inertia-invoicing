@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\ProductModel;
 use Illuminate\Http\Request;
+use Database\Seeders\CategoryDirectiveRegulationSeeder;
 
 class ProductModelController extends Controller
 {
@@ -26,7 +28,10 @@ class ProductModelController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return inertia('ProductModels/ProductModelAdd', [
+            'categories' => $categories,
+        ]);
     }
 
     /**
@@ -34,7 +39,15 @@ class ProductModelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // dd($request->all());
+        $data = $request->validate([
+            'category_id' => ['required'],
+            'model' => ['required', 'max:255'],
+            'description' => ['required', 'max:255'],
+        ]);
+        ProductModel::create($data);
+        return redirect()->route('productmodels.index')->with('message', 'Моделот е успешно додаден');
     }
 
     /**
@@ -66,6 +79,7 @@ class ProductModelController extends Controller
      */
     public function destroy(ProductModel $productModel)
     {
-        //
+        $productModel->delete();
+        return redirect()->route('productmodels.index')->with('message', 'Моделот е успешно избришан');
     }
 }

@@ -17,9 +17,9 @@ const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
 
 // Delete manufacturer function
-const deleteManufacturer = (id) => {
-    if (confirm("Дали сигурно сакаш да го избришеш овој Производител?")) {
-        router.delete("/manufacturer/delete/" + id, {
+const deleteProductModel = (id) => {
+    if (confirm("Дали сигурно сакаш да го избришеш овој Модел на Производ?")) {
+        router.delete("/productmodels/delete/" + id, {
             preserveState: false,
             onSuccess: () => {
                 flashMessage.value = props.flash.message;
@@ -58,7 +58,7 @@ onMounted(() => {
                             </h2>
                             <div class="flex">
                                 <Link
-                                    href="manufacturer/create"
+                                    href="productmodels/create"
                                     class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500"
                                 >
                                     <AddIcon />
@@ -154,7 +154,7 @@ onMounted(() => {
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
-                                                        deleteManufacturer(
+                                                        deleteProductModel(
                                                             productModel.id,
                                                         )
                                                 "

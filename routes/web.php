@@ -274,6 +274,12 @@ Route::middleware('auth')->group(function () {
     //Product Models
 
     Route::get('/productmodels', [ProductModelController::class, 'index'])->name('productmodels.index');
+    Route::get('/productmodels/create', [ProductModelController::class, 'create'])->name('productmodels.create');
+    Route::post('/productmodels/store', [ProductModelController::class, 'store'])->name('productmodels.store');
+    Route::delete('/productmodels/delete/{product_model}', [ProductModelController::class, 'destroy'])->name('productmodels.delete');
+
+
+
 });
 
 require __DIR__ . '/auth.php';
