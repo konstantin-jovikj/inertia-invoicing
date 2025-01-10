@@ -190,6 +190,12 @@ const showingNavigationDropdown = ref(false);
                                             Модели
                                         </DropdownLink>
 
+                                        <DropdownLink
+                                            :href="route('categories.index')"
+                                        >
+                                            Категории
+                                        </DropdownLink>
+
                                         <hr />
                                         <DropdownLink
                                             :href="route('taxes.index')"

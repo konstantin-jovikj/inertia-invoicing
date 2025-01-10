@@ -280,6 +280,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/productmodels/edit/{product_model}', [ProductModelController::class, 'edit'])->name('productmodels.edit');
     Route::put('/productmodels/update/{product_model}', [ProductModelController::class, 'update'])->name('productmodels.update');
 
+//Categories
+
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
 
 
 });
