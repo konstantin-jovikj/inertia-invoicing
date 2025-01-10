@@ -45,11 +45,11 @@ Route::get('/dashboard', function () {
     $packingListCount = PackingList::count();
     $documentsCount = Document::count();
     $totalDocs = $packingListCount + $documentsCount;
-    return Inertia::render('Dashboard',[
-    'clientsCount' => $clientsCount,
-    'documentsCount' => $documentsCount,
-    'totalDocs' => $totalDocs,
-    'packingListCount' => $packingListCount,
+    return Inertia::render('Dashboard', [
+        'clientsCount' => $clientsCount,
+        'documentsCount' => $documentsCount,
+        'totalDocs' => $totalDocs,
+        'packingListCount' => $packingListCount,
     ]);
 })
     ->middleware(['auth', 'verified'])
@@ -185,8 +185,7 @@ Route::middleware('auth')->group(function () {
     // CONVERT DOCUMENTS
     Route::post('/convert/document/{document}/{documentTypeNew}', action: [DocumentController::class, 'convert'])->name('documents.convert');
     Route::post('/convert/document/{document}/{documentTypeNew}', action: [DocumentController::class, 'convertCompanyDocument'])->name('documents.convertCompany');
-   
-   
+
     // PRODUCTS
 
     Route::get('/products/add/{document}', [ProductController::class, 'create'])->name('products.create');
@@ -261,7 +260,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/travelorder/edit/{document}', action: [DocumentController::class, 'editTravelOrder'])->name('travelorder.edit');
     Route::put('/travelorder/update/{document}', [DocumentController::class, 'updateTravelOrder'])->name('travelorder.update');
 
-
     //Manufacturers
 
     Route::get('/manufacturers', [ManufacturerController::class, 'index'])->name('manufacturers.index');
@@ -280,11 +278,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/productmodels/edit/{product_model}', [ProductModelController::class, 'edit'])->name('productmodels.edit');
     Route::put('/productmodels/update/{product_model}', [ProductModelController::class, 'update'])->name('productmodels.update');
 
-//Categories
+    //Categories
 
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/edit{category}', [CategoryController::class, 'editCatName'])->name('categories.edit');
+    Route::put('/categories/update/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/delete/{category}', [CategoryController::class, 'destroy'])->name('categories.delete');
 
 });
 

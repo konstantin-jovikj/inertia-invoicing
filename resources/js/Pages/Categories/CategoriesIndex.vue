@@ -17,9 +17,9 @@ const { props: pageProps } = usePage();
 const flashMessage = ref(pageProps.flash?.message || "");
 
 // Delete manufacturer function
-const deleteProductModel = (id) => {
-    if (confirm("Дали сигурно сакаш да го избришеш овој Модел на Производ?")) {
-        router.delete("/productmodels/delete/" + id, {
+const deleteCategory = (id) => {
+    if (confirm("Дали сигурно сакаш да ја избришеш оваа Категорија?")) {
+        router.delete("/categories/delete/" + id, {
             preserveState: false,
             onSuccess: () => {
                 flashMessage.value = props.flash.message;
@@ -118,7 +118,7 @@ onMounted(() => {
                                                 class="hover:text-green-600 text-slate-300"
                                                 :href="
                                                     route(
-                                                        'productmodels.edit',
+                                                        'categories.edit',
                                                         category.id,
                                                     )
                                                 "
@@ -136,7 +136,7 @@ onMounted(() => {
                                                 class="hover:text-red-700 text-slate-300"
                                                 @click="
                                                     () =>
-                                                        deleteProductModel(
+                                                        deleteCategory(
                                                             category.id,
                                                         )
                                                 "

@@ -47,7 +47,7 @@
                     <div class="p-6 text-gray-900">
                         <form
                             @submit.prevent="
-                                form.post('/productmodels/store/', {
+                                form.post('/categories/store/', {
                                     onError: () => form.reset(),
                                 })
                             ">

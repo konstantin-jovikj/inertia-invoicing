@@ -33,7 +33,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required'],
+        ]);
+        Category::create($data);
+        return redirect()->route('categories.index')->with('message', 'Категоријата е успешно додадена');
     }
 
     /**
@@ -61,12 +65,25 @@ class CategoryController extends Controller
         ]);
     }
 
+
+    public function editCatName(Category $category)
+    {
+        return inertia('Categories/CategoryEdit', [
+            'category' => $category,
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Category $category)
     {
-        //
+       
+        $data = $request->validate([
+            'name' => ['required'],
+        ]);
+        $category->update($data);
+        return redirect()->route('categories.index')->with('message', 'Категоријата е успешно ажурирана');
     }
 
     /**
@@ -74,7 +91,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route('categories.index')->with('message', 'Категоријата е успешно избришанa');
     }
 
     public function toggleRegulation(Request $request, Category $category)
