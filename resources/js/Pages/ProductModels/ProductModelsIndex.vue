@@ -136,7 +136,7 @@ onMounted(() => {
                                                 class="hover:text-green-600 text-slate-300"
                                                 :href="
                                                     route(
-                                                        'manufacturer.edit',
+                                                        'productmodels.edit',
                                                         productModel.id,
                                                     )
                                                 "

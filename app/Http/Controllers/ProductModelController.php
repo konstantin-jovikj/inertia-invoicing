@@ -63,7 +63,11 @@ class ProductModelController extends Controller
      */
     public function edit(ProductModel $productModel)
     {
-        //
+        $categories = Category::all();
+        return inertia('ProductModels/ProductModelEdit', [
+            'categories' => $categories,
+            'productModel' => $productModel,
+        ]);
     }
 
     /**
@@ -71,7 +75,14 @@ class ProductModelController extends Controller
      */
     public function update(Request $request, ProductModel $productModel)
     {
-        //
+        $data = $request->validate([
+            'id' => ['required'],
+            'category_id' => ['required'],
+            'model' => ['required', 'max:255'],
+            'description' => ['required', 'max:255'],
+        ]);
+        $productModel->update($data);
+        return redirect()->route('productmodels.index')->with('message', 'Моделот е успешно ажуриран');
     }
 
     /**

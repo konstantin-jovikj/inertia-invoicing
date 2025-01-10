@@ -277,6 +277,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/productmodels/create', [ProductModelController::class, 'create'])->name('productmodels.create');
     Route::post('/productmodels/store', [ProductModelController::class, 'store'])->name('productmodels.store');
     Route::delete('/productmodels/delete/{product_model}', [ProductModelController::class, 'destroy'])->name('productmodels.delete');
+    Route::get('/productmodels/edit/{product_model}', [ProductModelController::class, 'edit'])->name('productmodels.edit');
+    Route::put('/productmodels/update/{product_model}', [ProductModelController::class, 'update'])->name('productmodels.update');
 
 
 
