@@ -79,8 +79,9 @@ class DocumentController extends Controller
             ->whereIn('is_customer', [true, false])
             ->get()
             ->groupBy('is_customer');
-        $latestDoc = Document::where('document_type_id', $documentType->id)->latest()->first();
-
+        $latestDoc = Document::where('document_type_id', $documentType->id)
+            ->latest()
+            ->first();
 
         if ($documentType->id == 7) {
             return inertia('Documents/TravelOrderAdd', [
@@ -158,8 +159,7 @@ class DocumentController extends Controller
             'instruction' => 'nullable|max:255',
             'picked_up_by' => 'nullable|max:255',
             'note' => 'nullable',
-            'incoterm_place_id' => 'nullable|exists:places,id'
-
+            'incoterm_place_id' => 'nullable|exists:places,id',
         ]);
 
         if ($request->load_date) {
@@ -271,7 +271,7 @@ class DocumentController extends Controller
             'note' => 'nullable',
             'instruction' => 'nullable|max:255',
             'picked_up_by' => 'nullable|max:255',
-            'incoterm_place_id' => 'nullable|exists:places,id'
+            'incoterm_place_id' => 'nullable|exists:places,id',
         ]);
 
         // Refresh the document's tax relationship to get the latest tax_rate
@@ -290,8 +290,6 @@ class DocumentController extends Controller
 
         // $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
 
-
-
         if ($document->curency_id == 1) {
             $discountAmount = round($document->total * ($document->discount / 100));
             $taxAmount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
@@ -302,10 +300,10 @@ class DocumentController extends Controller
         } else {
             $discountAmount = $document->total * ($document->discount / 100);
             $taxAmount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
-            $docTotal = ($document->total - $discountAmount + $taxAmount);
-            $docGrandTotal = ($docTotal - $validatedData['advance_payment']);
-            $docAdvancedBase = ($docGrandTotal / (1 + $taxRate / 100));
-            $docAdvancedTax = ($docGrandTotal - $docAdvancedBase);
+            $docTotal = $document->total - $discountAmount + $taxAmount;
+            $docGrandTotal = $docTotal - $validatedData['advance_payment'];
+            $docAdvancedBase = $docGrandTotal / (1 + $taxRate / 100);
+            $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
         }
         // dd($validatedData['advance_payment']);
 
@@ -322,11 +320,7 @@ class DocumentController extends Controller
         );
 
         // dd($document);
-        return Inertia::location(
-            $document->document_type_id == 7
-            ? route('travelorder.view', ['document' => $document->id])
-            : route('products.create', ['document' => $document->id])
-        );
+        return Inertia::location($document->document_type_id == 7 ? route('travelorder.view', ['document' => $document->id]) : route('products.create', ['document' => $document->id]));
     }
 
     /**
@@ -419,8 +413,6 @@ class DocumentController extends Controller
             'note' => $document->note,
             'incoterm_place_id' => $document->incoterm_place_id,
         ];
-
-
 
         // Create the new document
         $convertedDocument = Document::create($documentData);
@@ -558,7 +550,6 @@ class DocumentController extends Controller
         return redirect()->route('company.show', ['company' => $document->client_id]);
     }
 
-
     public function viewTravelOrder(Document $document)
     {
         // dd($document);
@@ -580,7 +571,6 @@ class DocumentController extends Controller
 
     public function editTravelOrder(Document $document)
     {
-
         // Eager load relations for companies
         $client = Company::with('place.country')->findOrFail($document->client_id);
         $owner = Company::with('place.country')->findOrFail($document->owner_id);
@@ -596,14 +586,7 @@ class DocumentController extends Controller
         $incoterms = Incoterm::all();
 
         // Eager load document relations
-        $document->load([
-            'company',
-            'vehicle',
-            'place.country',
-            'load_place',
-            'unload_place',
-            'tax',
-        ]);
+        $document->load(['company', 'vehicle', 'place.country', 'load_place', 'unload_place', 'tax']);
 
         // dd($document);
 
@@ -627,7 +610,10 @@ class DocumentController extends Controller
 
     public function updateTravelOrder(Request $request, Document $document)
     {
-
     }
 
+    public function createClientDocument(Company $company, DocumentType $documentType )
+    {
+        dd($company->id, $documentType->id);
+    }
 }

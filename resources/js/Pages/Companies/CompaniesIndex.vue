@@ -4,7 +4,8 @@
         Head,
         Link,
         router,
-        usePage
+        usePage,
+        useForm
     } from "@inertiajs/vue3";
     import TextInput from "../../Components/TextInput.vue";
     import EditIcon from "../../Components/EditIcon.vue";
@@ -14,6 +15,11 @@
     import AddContactIcon from "@/Components/AddContactIcon.vue";
     import ImageIcon from "@/Components/ImageIcon.vue";
     import SecondaryButton from "../../Components/SecondaryButton.vue";
+    import DocumentNewIcon from "@/Components/DocumentNewIcon.vue";
+
+    import {
+        latinToCyrillic
+    } from "@/helpers/latinToCyrillic";
     import {
         computed,
         ref,
@@ -30,42 +36,40 @@
     const props = defineProps({
         companies: Object,
         searchTerm: String,
+        documentTypes: Array,
     });
 
     const search = ref(props.searchTerm || "");
     const {
         url
-    } = usePage(); // Get the current URL directly from usePage()
+    } = usePage();
     const {
         props: pageProps
     } = usePage();
     const flashMessage = ref(pageProps.flash?.message || "");
 
+    const selectedDocumentTypes = ref({}); // Reactive object for document types
 
     const isCompaniesIndex = computed(() => {
-        return window.location.pathname === "/companies"; // Dynamically checks the current path
+        return window.location.pathname === "/companies";
     });
 
-    console.log("PageProps URL", url);
-
-    // Watch for changes in search input
     watch(
         search,
         debounce((query) => {
             router.get(
                 "/companies", {
-                    search: query,
+                    search: query
                 }, {
-                    preserveState: true,
+                    preserveState: true
                 }
             );
         }, 500)
     );
 
-    // Delete place function
     const deleteCompany = (id) => {
         if (confirm("Дали сигурно сакаш да ја избришеш оваа копанија?")) {
-            router.delete("/companies/delete/" + id, {
+            router.delete(`/companies/delete/${id}`, {
                 preserveState: false,
                 onSuccess: () => {
                     flashMessage.value = props.flash.message;
@@ -83,12 +87,28 @@
     });
 
     const getPaginationLabel = (label) => {
-        // Handle special cases for prev/next arrows
         if (label === "&laquo; Previous") return "<<";
         if (label === "Next &raquo;") return ">>";
         return label;
     };
+
+    const createDocument = (companyId) => {
+        const documentTypeId = selectedDocumentTypes.value[companyId];
+        if (!documentTypeId) {
+            alert("Ве молиме изберете тип на документ!");
+            return;
+        }
+
+        router.post(
+            `/documents/client/${companyId}/store/${documentTypeId}`, {}, {
+                onSuccess: () => {
+                    alert("Документот е успешно креиран!");
+                },
+            }
+        );
+    };
 </script>
+
 
 <template>
 
@@ -108,8 +128,6 @@
                                 Компании / Фирми
                             </h2>
                             <div class="flex">
-
-
                                 <Link v-if="isCompaniesIndex" href="/customers/add"
                                     class="mx-4 mt-2 text-5xl hover:text-sky-500 text-slate-500">
                                 <AddIcon />
@@ -157,10 +175,11 @@
                                     <td class="">
                                         {{ companies . from + index }}
                                     </td>
-                                    <td class=" font-bold">{{ company . name }}</td>
+                                    <td class="font-bold">
+                                        {{ company . name }}
+                                    </td>
                                     <td class="">
                                         <div v-if="company.place">
-
                                             {{ company . place . place }}
                                             <span class="mx-4">-</span>
                                             <span class="">{{ company . place . country . name }}</span>
@@ -174,7 +193,7 @@
                                             <Link class="px-4 hover:text-orange-600 text-slate-300"
                                                 :href="route(
                                                     'contacts.create',
-                                                    company.id
+                                                    company.id,
                                                 )">
                                             <AddContactIcon
                                                 v-tippy="{
@@ -188,7 +207,7 @@
                                             <Link class="hover:text-sky-600 text-slate-300"
                                                 :href="route(
                                                     'company.show',
-                                                    company.id
+                                                    company.id,
                                                 )">
                                             <ViewIcon
                                                 v-tippy="{
@@ -202,7 +221,7 @@
                                             <Link class="hover:text-green-600 text-slate-300"
                                                 :href="route(
                                                     'company.edit',
-                                                    company.id
+                                                    company.id,
                                                 )">
                                             <EditIcon
                                                 v-tippy="{
@@ -215,7 +234,7 @@
                                             <Link class="hover:text-pink-400 text-slate-300"
                                                 :href="route(
                                                     'company.logo.edit',
-                                                    company.id
+                                                    company.id,
                                                 )">
                                             <ImageIcon
                                                 v-tippy="{
@@ -229,7 +248,7 @@
                                                 @click="
                                                     () =>
                                                         deleteCompany(
-                                                            company.id
+                                                            company.id,
                                                         )
                                                 ">
                                                 <DeleteIcon
@@ -239,6 +258,31 @@
                                                         theme: 'light',
                                                     }" />
                                             </button>
+
+                                            <div class="flex gap-2">
+                                                <!-- Create New Document -->
+                                                <div class="flex items-center gap-2">
+                                                    <select v-model="selectedDocumentTypes[company.id]"
+                                                        class="w-full h-6 m-0 py-0 px-4 mt-1 text-sm border rounded bg-gray-50">
+                                                        <option value="" disabled>Направи...</option>
+                                                        <option v-for="documentType in documentTypes"
+                                                            :key="documentType.id" :value="documentType.id">
+                                                            {{ latinToCyrillic(documentType . type) }}
+                                                        </option>
+                                                    </select>
+                                                    <button :disabled="!selectedDocumentTypes[company.id]"
+                                                        @click="createDocument(company.id)"
+                                                        :class="{
+                                                            'text-gray-400': !selectedDocumentTypes[company
+                                                            .id], // Style for disabled state
+                                                            'hover:text-sky-500 text-black': selectedDocumentTypes[
+                                                                company.id] // Style for enabled state with hover
+                                                        }">
+                                                        <DocumentNewIcon />
+                                                    </button>
+
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

@@ -19,6 +19,7 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         $isCustomer = request()->routeIs('companies.index') ? 1 : 0;
+        $documentTypes = DocumentType::all();
 
         $companies = Company::with('place.country')->where('is_customer', $isCustomer) // eager load relationships
             ->when($request->search, function ($query) use ($request) {
@@ -32,6 +33,7 @@ class CompanyController extends Controller
 
         return inertia('Companies/CompaniesIndex', [
             'companies' => $companies,
+            'documentTypes' => $documentTypes,
         ]);
     }
 

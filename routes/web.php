@@ -180,6 +180,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/document/update/{document}', [DocumentController::class, 'update'])->name('document.update');
     Route::delete('/document/delete/{document}', [DocumentController::class, 'destroy'])->name('document.delete');
 
+    //Create specific document type for selected Client
+    
+    Route::post('/documents/client/{company}/store/{documentType}', action: [DocumentController::class, 'createClientDocument'])->name('clientDocument.store');
+
     Route::get('/documents/add/row/{document}/{product}', [DocumentController::class, 'addEmptyRow'])->name('documents.addrow');
 
     // CONVERT DOCUMENTS
