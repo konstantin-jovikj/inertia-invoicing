@@ -356,6 +356,12 @@ const createPackingList = () => {
                                                             scope="col"
                                                             class="px-2 py-1"
                                                         >
+                                                            Ред.Бр
+                                                        </th>
+                                                        <th
+                                                            scope="col"
+                                                            class="px-2 py-1"
+                                                        >
                                                             Опис
                                                         </th>
                                                         <th
@@ -405,6 +411,11 @@ const createPackingList = () => {
                                                             class="px-2 py-1 text-left whitespace-nowrap border-e"
                                                         >
                                                             {{ index + 1 }}
+                                                        </td>
+                                                        <td
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                        >
+                                                            {{ product.product_code }}
                                                         </td>
 
                                                         <td
