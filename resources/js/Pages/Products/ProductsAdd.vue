@@ -193,11 +193,14 @@ const createPackingList = () => {
                         <div
                         class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
                         >
-                        <span v-if="props.secondLatestDoc" class="">
-                            posledna {{ props.secondLatestDoc.document_no }}
-                        </span>
+                        <p v-if="props.secondLatestDoc" class=" py-1 px-4 border bg-orange-200 rounded-md shadow-sm border-red-400">
+                            Последно Внесен Документ од Исти тип:
+                            <span class="px-2 text-lg font-bold">
+                                {{ props.secondLatestDoc.document_no }}
+                            </span>
+                        </p>
                             <!-- Izmeni Dokument -->
-                            <div class="flex gap-2 mt-2">
+                            <div class="flex gap-2 mt-2 px-4">
                                 <ModalLink
                                     class="hover:text-green-600 text-slate-300"
                                     :href="
@@ -249,8 +252,8 @@ const createPackingList = () => {
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
                                 <div class="flex-col text-gray-500">
                                     
-                                    <div class="flex items-center">
-                                        <span class="italic text-md">
+                                    <div class="flex items-center  border-y-4 border-red-400 py-2 mt-2 ps-4">
+                                        <span class="italic text-lg font-medium pe-2 text-sky-600">
                                             {{
                                                 latinToCyrillic(
                                                     props.document.document_type
@@ -260,15 +263,15 @@ const createPackingList = () => {
                                         </span>
                                         <span
                                             v-if="props.document.is_for_export"
-                                            class="italic text-md text-green-600 font-semibold px-2"
+                                            class="italic text-lg font-medium text-green-600 px-2"
                                         >
                                             EXPORT
                                         </span>
-                                        <span class="italic text-md">
+                                        <span class="italic text-lg font-medium text-sky-600">
                                             Бр:
                                         </span>
                                         <span
-                                            class="text-lg font-bold text-black px-2"
+                                            class="text-lg font-bold text-red-600 px-2"
                                             >{{
                                                 props.document.document_no
                                             }}</span
@@ -300,13 +303,13 @@ const createPackingList = () => {
                                             <MacedonianFlag></MacedonianFlag>
                                         </span>
                                     </div>
-                                    <div>
-                                        <span class="italic text-md"
+                                    <div class="ps-4  font-medium py-2">
+                                        <span class="italic text-lg text-sky-600"
                                             >Kлиент:
                                         </span>
 
                                         <Link
-                                            class="hover:text-green-600 text-slate-300 content-center"
+                                            class=" text-slate-300 content-center"
                                             :href="
                                                 route(
                                                     'company.show',
@@ -314,7 +317,7 @@ const createPackingList = () => {
                                                 )
                                             "
                                             ><span
-                                                class="text-lg font-bold text-black"
+                                                class="text-lg font-bold text-black hover:text-green-600"
                                             >
                                                 {{
                                                     props.document.company.name
@@ -413,13 +416,13 @@ const createPackingList = () => {
                                                             {{ index + 1 }}
                                                         </td>
                                                         <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e  font-medium text-red-600"
                                                         >
                                                             {{ product.product_code }}
                                                         </td>
 
                                                         <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e flex"
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e flex font-normal"
                                                         >
                                                             {{
                                                                 product.description
@@ -682,7 +685,7 @@ const createPackingList = () => {
                                         <div class="mt-4">
                                             <ModalLink
                                                 :href="`/products/add/modal/${props.document.id}`"
-                                                class="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-900"
+                                                class="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-900 font-medium whitespace-nowrap"
                                             >
                                                 Додај Производ
                                             </ModalLink>

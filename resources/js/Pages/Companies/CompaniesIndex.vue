@@ -157,7 +157,7 @@
                                     <td class="">
                                         {{ companies . from + index }}
                                     </td>
-                                    <td class="font-bold">{{ company . name }}</td>
+                                    <td class=" font-bold">{{ company . name }}</td>
                                     <td class="">
                                         <div v-if="company.place">
 

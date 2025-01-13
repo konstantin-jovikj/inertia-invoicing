@@ -37,10 +37,14 @@ class ProductController extends Controller
         $packingListExists = count($isPackingList) > 0;
         $products->load('manufacturers.place.country');
 
+        // $secondLatestDoc = Document::where('document_type_id', $document->document_type_id)
+        //     ->latest() // Orders by `created_at` descending
+        //     ->skip(1)  // Skips the latest document
+        //     ->first(); // Fetches the next document
         $secondLatestDoc = Document::where('document_type_id', $document->document_type_id)
-            ->latest() // Orders by `created_at` descending
-            ->skip(1)  // Skips the latest document
-            ->first(); // Fetches the next document
+        ->orderBy('date', 'desc') // Orders by `date` column descending
+        ->skip(1)                // Skips the latest document
+        ->first();               // Fetches the next document
 
         return inertia('Products/ProductsAdd', [
             'document' => $document,
