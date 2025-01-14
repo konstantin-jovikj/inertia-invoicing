@@ -612,8 +612,28 @@ class DocumentController extends Controller
     {
     }
 
-    public function createClientDocument(Company $company, DocumentType $documentType )
-    {
-        dd($company->id, $documentType->id);
+    public function createClientDocument(Company $company, DocumentType $documentType)
+{
+    $owner = Company::whereNull('customer_id')->first();
+
+    if (!$owner) {
+        return back()->with('error', 'Компанијата не е пронајдена.');
     }
+
+    $newDocData = [
+        'user_id' => Auth::id(),
+        'owner_id' => $owner->id,
+        'client_id' => $company->id,
+        'document_type_id' => $documentType->id, 
+        'curency_id' => 1,
+        'tax_id' => 1,
+        'document_no' => 'XXX-XX',
+        'date' => now(), 
+    ];
+
+    $document = Document::create($newDocData);
+
+    return redirect()->route('document.index')->with('success', 'Документот е успешно креиран!');
+}
+
 }

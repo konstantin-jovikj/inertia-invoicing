@@ -93,20 +93,18 @@
     };
 
     const createDocument = (companyId) => {
-        const documentTypeId = selectedDocumentTypes.value[companyId];
-        if (!documentTypeId) {
-            alert("Ве молиме изберете тип на документ!");
-            return;
-        }
+    const documentTypeId = selectedDocumentTypes.value[companyId];
+    if (!documentTypeId) {
+        alert("Ве молиме изберете тип на документ!");
+        return;
+    }
 
-        router.post(
-            `/documents/client/${companyId}/store/${documentTypeId}`, {}, {
-                onSuccess: () => {
-                    alert("Документот е успешно креиран!");
-                },
-            }
-        );
-    };
+    router.post(
+        `/documents/client/${companyId}/store/${documentTypeId}`, 
+        {}, 
+    );
+};
+
 </script>
 
 
