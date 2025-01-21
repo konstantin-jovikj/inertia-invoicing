@@ -197,10 +197,10 @@ class DocumentController extends Controller
     public function edit(Document $document, documentService $documentService)
     {
         $resources = $documentService->getDocumentResources();
-    
+
         $document->load('documentType', 'tax');
         $selectedDeclarations = $document->declarations->pluck('id');
-    
+
         return inertia('Documents/DocumentEditModal', [
             'document' => $document,
             'documentTypes' => $resources['documentTypes'],
@@ -217,65 +217,65 @@ class DocumentController extends Controller
             'places' => $resources['places'],
         ]);
     }
-    
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Document $document)
-{
-    // Step 1: Validate the request data
-    $validatedData = $this->validateDocument($request);
+    {
+        // Step 1: Validate the request data
+        $validatedData = $this->validateDocument($request);
 
-    // Step 2: Fetch the updated tax rate
-    $tax = Tax::find($validatedData['tax_id'] ?? $document->tax_id); // Use the new tax_id or fall back to the existing one
-    $taxRate = $tax ? $tax->tax_rate : 0; // Gracefully handle a null tax
+        // Step 2: Fetch the updated tax rate
+        $tax = Tax::find($validatedData['tax_id'] ?? $document->tax_id); // Use the new tax_id or fall back to the existing one
+        $taxRate = $tax ? $tax->tax_rate : 0; // Gracefully handle a null tax
 
-    // Step 3: Use the provided discount or fallback to the current document discount
-    $discountRate = $validatedData['discount'] ?? $document->discount;
+        // Step 3: Use the provided discount or fallback to the current document discount
+        $discountRate = $validatedData['discount'] ?? $document->discount;
 
-    // Initialize variables for recalculations
-    $discountAmount = 0;
-    $taxAmount = 0;
-    $docTotal = 0;
-    $docGrandTotal = 0;
-    $docAdvancedBase = 0;
-    $docAdvancedTax = 0;
+        // Initialize variables for recalculations
+        $discountAmount = 0;
+        $taxAmount = 0;
+        $docTotal = 0;
+        $docGrandTotal = 0;
+        $docAdvancedBase = 0;
+        $docAdvancedTax = 0;
 
-    // Step 4: Perform recalculations based on currency
-    if ($document->curency_id == 1) {
-        $discountAmount = round($document->total * ($discountRate / 100));
-        $taxAmount = round(($document->total - $discountAmount) * ($taxRate / 100));
-        $docTotal = round($document->total - $discountAmount + $taxAmount);
-        $docGrandTotal = round($docTotal - ($validatedData['advance_payment'] ?? 0));
-        $docAdvancedBase = round($docGrandTotal / (1 + $taxRate / 100));
-        $docAdvancedTax = round($docGrandTotal - $docAdvancedBase);
-    } else {
-        $discountAmount = $document->total * ($discountRate / 100);
-        $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
-        $docTotal = $document->total - $discountAmount + $taxAmount;
-        $docGrandTotal = $docTotal - ($validatedData['advance_payment'] ?? 0);
-        $docAdvancedBase = $docGrandTotal / (1 + $taxRate / 100);
-        $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
-    }
+        // Step 4: Perform recalculations based on currency
+        if ($document->curency_id == 1) {
+            $discountAmount = round($document->total * ($discountRate / 100));
+            $taxAmount = round(($document->total - $discountAmount) * ($taxRate / 100));
+            $docTotal = round($document->total - $discountAmount + $taxAmount);
+            $docGrandTotal = round($docTotal - ($validatedData['advance_payment'] ?? 0));
+            $docAdvancedBase = round($docGrandTotal / (1 + $taxRate / 100));
+            $docAdvancedTax = round($docGrandTotal - $docAdvancedBase);
+        } else {
+            $discountAmount = $document->total * ($discountRate / 100);
+            $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
+            $docTotal = $document->total - $discountAmount + $taxAmount;
+            $docGrandTotal = $docTotal - ($validatedData['advance_payment'] ?? 0);
+            $docAdvancedBase = $docGrandTotal / (1 + $taxRate / 100);
+            $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
+        }
 
-    // Step 5: Update the document with recalculated fields
-    $document->update(array_merge($validatedData, [
-        'discount_amount' => $discountAmount,
-        'tax_amount' => $taxAmount,
-        'total_with_tax_and_discount' => $docTotal,
-        'grand_total' => $docGrandTotal,
-        'advanced_payment_tax' => $docAdvancedTax,
-        'advanced_payment_base' => $docAdvancedBase,
-    ]));
+        // Step 5: Update the document with recalculated fields
+        $document->update(array_merge($validatedData, [
+            'discount_amount' => $discountAmount,
+            'tax_amount' => $taxAmount,
+            'total_with_tax_and_discount' => $docTotal,
+            'grand_total' => $docGrandTotal,
+            'advanced_payment_tax' => $docAdvancedTax,
+            'advanced_payment_base' => $docAdvancedBase,
+        ]));
 
-    // Step 6: Redirect to the appropriate route
-    return Inertia::location(
-        $document->document_type_id == 7
+        // Step 6: Redirect to the appropriate route
+        return Inertia::location(
+            $document->document_type_id == 7
             ? route('travelorder.view', ['document' => $document->id])
             : route('products.create', ['document' => $document->id])
-    );
-}
+        );
+    }
 
 
     /**
@@ -321,40 +321,45 @@ class DocumentController extends Controller
     }
 
     public function convert(Document $document, DocumentType $documentTypeNew)
-{
-    $documentService = app(DocumentService::class);
+    {
+        $documentData = $this->documentService->prepareDocumentData($document, $documentTypeNew);
 
-    // Prepare and create the new document
-    $documentData = $documentService->prepareDocumentData($document, $documentTypeNew->id);
-    $convertedDocument = Document::create($documentData);
+        // Create the new document
+        $convertedDocument = Document::create($documentData);
 
-    // Prepare and copy associated products
-    $products = Product::where('document_id', $document->id)->whereNull('packing_list_id')->get();
-    foreach ($products as $product) {
-        $productData = $documentService->prepareProductData($product, $convertedDocument->id);
-        $convertedDocument->products()->create($productData);
+        // Copy associated products
+        $products = Product::where('document_id', $document->id)
+            ->whereNull('packing_list_id')
+            ->get();
+
+        foreach ($products as $product) {
+            $productData = $this->documentService->prepareProductData($product, $convertedDocument->id);
+            $convertedDocument->products()->create($productData);
+        }
+
+        return redirect()->route('document.index');
     }
 
-    return redirect()->route('document.index');
-}
+    public function convertCompanyDocument(Document $document, DocumentType $documentTypeNew)
+    {
+        $documentData = $this->documentService->prepareDocumentData($document, $documentTypeNew);
 
-public function convertCompanyDocument(Document $document, DocumentType $documentTypeNew)
-{
-    $documentService = app(DocumentService::class);
+        // Create the new document
+        $convertedDocument = Document::create($documentData);
 
-    // Prepare and create the new document
-    $documentData = $documentService->prepareDocumentData($document, $documentTypeNew->id);
-    $convertedDocument = Document::create($documentData);
+        // Copy associated products
+        $products = Product::where('document_id', $document->id)
+            ->whereNull('packing_list_id')
+            ->get();
 
-    // Prepare and copy associated products
-    $products = Product::where('document_id', $document->id)->whereNull('packing_list_id')->get();
-    foreach ($products as $product) {
-        $productData = $documentService->prepareProductData($product, $convertedDocument->id);
-        $convertedDocument->products()->create($productData);
+        foreach ($products as $product) {
+            $productData = $this->documentService->prepareProductData($product, $convertedDocument->id);
+            $convertedDocument->products()->create($productData);
+        }
+
+        return redirect()->route('company.show', ['company' => $document->client_id]);
     }
 
-    return redirect()->route('company.show', ['company' => $document->client_id]);
-}
 
     public function viewTravelOrder(Document $document)
     {

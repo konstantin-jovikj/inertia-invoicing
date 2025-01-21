@@ -49,7 +49,7 @@ class documentService
         ];
     }
 
-    public function prepareDocumentData(Document $document, int $newDocumentTypeId): array
+    public function prepareDocumentData(Document $document, DocumentType $documentTypeNew): array
     {
         $document->load('load_place', 'unload_place', 'owner', 'company');
 
@@ -57,7 +57,7 @@ class documentService
             'user_id' => $document->user_id,
             'owner_id' => $document->owner_id,
             'client_id' => $document->client_id,
-            'document_type_id' => $newDocumentTypeId,
+            'document_type_id' => $documentTypeNew->id,
             'vehicle_id' => $document->vehicle_id,
             'driver_id' => $document->driver_id,
             'curency_id' => $document->curency_id,
