@@ -16,10 +16,20 @@ use App\Models\Document;
 use App\Models\Incoterm;
 use App\Models\DocumentType;
 use Illuminate\Http\Request;
+use App\Services\documentService;
 use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
+
+    protected $documentService;
+
+    public function __construct(documentService $documentService)
+    {
+        $this->documentService = $documentService;
+    }
+
+
     /**
      * Display a listing of the resource.
      */
@@ -116,19 +126,14 @@ class DocumentController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    private function validateDocument(Request $request)
     {
-        // dd($request->all());
-
         $request->merge([
             'tax_id' => $request->tax_id ?? 1,
             'curency_id' => $request->curency_id ?? 1,
         ]);
 
-        $validatedData = $request->validate([
+        return $request->validate([
             'user_id' => 'required|exists:users,id',
             'owner_id' => 'required|exists:companies,id',
             'client_id' => 'required|exists:companies,id',
@@ -161,25 +166,21 @@ class DocumentController extends Controller
             'note' => 'nullable',
             'incoterm_place_id' => 'nullable|exists:places,id',
         ]);
+    }
 
-        if ($request->load_date) {
-            $validatedData['date'] = $request->load_date;
-        }
-        // $validatedData['user_id'] = auth()->user()->id;
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
 
-        // dd($validatedData);
+        $validatedData = $this->validateDocument($request);
+        $document = $this->documentService->createDocument($validatedData);
 
-        $document = Document::create($validatedData);
-        // $document->load('company', 'owner', 'company.place.country');
-        if ($request->document_type_id == 7) {
-            return redirect()->route('travelorder.view', [
-                'document' => $document,
-            ]);
-        } else {
-            return redirect()->route('products.create', [
-                'document' => $document->id,
-            ]);
-        }
+        return redirect()->route(
+            $request->document_type_id == 7 ? 'travelorder.view' : 'products.create',
+            ['document' => $document->id]
+        );
     }
 
     /**
@@ -237,91 +238,60 @@ class DocumentController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Document $document)
-    {
-        // Validate all fields coming from the user
-        $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'owner_id' => 'required|exists:companies,id',
-            'client_id' => 'required|exists:companies,id',
-            'document_type_id' => 'required|exists:document_types,id',
-            'vehicle_id' => 'nullable|exists:vehicles,id',
-            'driver_id' => 'nullable|exists:drivers,id',
-            'curency_id' => 'nullable|exists:curencies,id',
-            'incoterm_id' => 'nullable|exists:incoterms,id',
-            'tax_id' => 'nullable|exists:taxes,id',
-            'term_id' => 'nullable|exists:terms,id',
-            'is_translation' => 'boolean',
-            'is_for_export' => 'boolean',
-            'is_for_advanced_payment' => 'boolean',
-            'print_price' => 'boolean',
-            'document_no' => 'required|max:255',
-            'drawing_no' => 'nullable|max:255',
-            'date' => 'nullable|date',
-            'advance_payment' => 'nullable|numeric',
-            'discount' => 'nullable|numeric|min:0|max:100', // Ensure discount is a percentage
-            'delivery' => 'nullable|max:255',
-            'load_date' => 'nullable|date',
-            'unload_date' => 'nullable|date',
-            'load_place_id' => 'nullable|exists:places,id',
-            'unload_place_id' => 'nullable|exists:places,id',
-            'marking' => 'nullable|max:255',
-            'boxes_nr' => 'nullable|numeric',
-            'packaging_type' => 'nullable|max:255',
-            'goods_type' => 'nullable|max:255',
-            'note' => 'nullable',
-            'instruction' => 'nullable|max:255',
-            'picked_up_by' => 'nullable|max:255',
-            'incoterm_place_id' => 'nullable|exists:places,id',
-        ]);
+{
+    // Step 1: Validate the request data
+    $validatedData = $this->validateDocument($request);
 
-        // Refresh the document's tax relationship to get the latest tax_rate
-        if ($validatedData['tax_id']) {
-            $tax = Tax::find($validatedData['tax_id']); // Fetch the updated tax from the database
-            $taxRate = $tax ? $tax->tax_rate : 0; // Handle null gracefully
-        } else {
-            $taxRate = 0; // No tax ID provided
-        }
+    // Step 2: Fetch the updated tax rate
+    $tax = Tax::find($validatedData['tax_id'] ?? $document->tax_id); // Use the new tax_id or fall back to the existing one
+    $taxRate = $tax ? $tax->tax_rate : 0; // Gracefully handle a null tax
 
-        // Use the provided discount or fallback to the current document discount
-        $discountRate = $validatedData['discount'] ?? $document->discount;
+    // Step 3: Use the provided discount or fallback to the current document discount
+    $discountRate = $validatedData['discount'] ?? $document->discount;
 
-        // Recalculate fields
-        // $discountAmount = $document->total * ($discountRate / 100);
+    // Initialize variables for recalculations
+    $discountAmount = 0;
+    $taxAmount = 0;
+    $docTotal = 0;
+    $docGrandTotal = 0;
+    $docAdvancedBase = 0;
+    $docAdvancedTax = 0;
 
-        // $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
-
-        if ($document->curency_id == 1) {
-            $discountAmount = round($document->total * ($document->discount / 100));
-            $taxAmount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
-            $docTotal = round($document->total - $discountAmount + $taxAmount);
-            $docGrandTotal = round($docTotal - $validatedData['advance_payment']);
-            $docAdvancedBase = round($docGrandTotal / (1 + $taxRate / 100));
-            $docAdvancedTax = round($docGrandTotal - $docAdvancedBase);
-        } else {
-            $discountAmount = $document->total * ($document->discount / 100);
-            $taxAmount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
-            $docTotal = $document->total - $discountAmount + $taxAmount;
-            $docGrandTotal = $docTotal - $validatedData['advance_payment'];
-            $docAdvancedBase = $docGrandTotal / (1 + $taxRate / 100);
-            $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
-        }
-        // dd($validatedData['advance_payment']);
-
-        // Merge recalculated fields with validated data
-        $document->update(
-            array_merge($validatedData, [
-                'discount_amount' => $discountAmount,
-                'tax_amount' => $taxAmount,
-                'total_with_tax_and_discount' => $docTotal,
-                'grand_total' => $docGrandTotal,
-                'advanced_payment_tax' => $docAdvancedTax,
-                'advanced_payment_base' => $docAdvancedBase,
-            ]),
-        );
-
-        // dd($document);
-        return Inertia::location($document->document_type_id == 7 ? route('travelorder.view', ['document' => $document->id]) : route('products.create', ['document' => $document->id]));
+    // Step 4: Perform recalculations based on currency
+    if ($document->curency_id == 1) {
+        $discountAmount = round($document->total * ($discountRate / 100));
+        $taxAmount = round(($document->total - $discountAmount) * ($taxRate / 100));
+        $docTotal = round($document->total - $discountAmount + $taxAmount);
+        $docGrandTotal = round($docTotal - ($validatedData['advance_payment'] ?? 0));
+        $docAdvancedBase = round($docGrandTotal / (1 + $taxRate / 100));
+        $docAdvancedTax = round($docGrandTotal - $docAdvancedBase);
+    } else {
+        $discountAmount = $document->total * ($discountRate / 100);
+        $taxAmount = ($document->total - $discountAmount) * ($taxRate / 100);
+        $docTotal = $document->total - $discountAmount + $taxAmount;
+        $docGrandTotal = $docTotal - ($validatedData['advance_payment'] ?? 0);
+        $docAdvancedBase = $docGrandTotal / (1 + $taxRate / 100);
+        $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
     }
+
+    // Step 5: Update the document with recalculated fields
+    $document->update(array_merge($validatedData, [
+        'discount_amount' => $discountAmount,
+        'tax_amount' => $taxAmount,
+        'total_with_tax_and_discount' => $docTotal,
+        'grand_total' => $docGrandTotal,
+        'advanced_payment_tax' => $docAdvancedTax,
+        'advanced_payment_base' => $docAdvancedBase,
+    ]));
+
+    // Step 6: Redirect to the appropriate route
+    return Inertia::location(
+        $document->document_type_id == 7
+            ? route('travelorder.view', ['document' => $document->id])
+            : route('products.create', ['document' => $document->id])
+    );
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -613,27 +583,27 @@ class DocumentController extends Controller
     }
 
     public function createClientDocument(Company $company, DocumentType $documentType)
-{
-    $owner = Company::whereNull('customer_id')->first();
+    {
+        $owner = Company::whereNull('customer_id')->first();
 
-    if (!$owner) {
-        return back()->with('error', 'Компанијата не е пронајдена.');
+        if (!$owner) {
+            return back()->with('error', 'Компанијата не е пронајдена.');
+        }
+
+        $newDocData = [
+            'user_id' => Auth::id(),
+            'owner_id' => $owner->id,
+            'client_id' => $company->id,
+            'document_type_id' => $documentType->id,
+            'curency_id' => 1,
+            'tax_id' => 1,
+            'document_no' => 'XXX-XX',
+            'date' => now(),
+        ];
+
+        $document = Document::create($newDocData);
+
+        return redirect()->route('document.index')->with('success', 'Документот е успешно креиран!');
     }
-
-    $newDocData = [
-        'user_id' => Auth::id(),
-        'owner_id' => $owner->id,
-        'client_id' => $company->id,
-        'document_type_id' => $documentType->id, 
-        'curency_id' => 1,
-        'tax_id' => 1,
-        'document_no' => 'XXX-XX',
-        'date' => now(), 
-    ];
-
-    $document = Document::create($newDocData);
-
-    return redirect()->route('document.index')->with('success', 'Документот е успешно креиран!');
-}
 
 }
