@@ -194,45 +194,30 @@ class DocumentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Document $document)
+    public function edit(Document $document, documentService $documentService)
     {
-        // dd($document);
-
-        $curencies = Curency::all();
-        $taxes = Tax::all();
-        $terms = Terms::all();
-        $incoterms = Incoterm::all();
-        $vehicles = Vehicle::all();
-        $drivers = Driver::all();
-        $documentTypes = DocumentType::all();
-        $places = Place::all();
-
+        $resources = $documentService->getDocumentResources();
+    
         $document->load('documentType', 'tax');
-
-        $companies = Company::select('id', 'name', 'is_customer')
-            ->whereIn('is_customer', [true, false])
-            ->get()
-            ->groupBy('is_customer');
-
-        $declarations = Declaration::all();
         $selectedDeclarations = $document->declarations->pluck('id');
-
+    
         return inertia('Documents/DocumentEditModal', [
             'document' => $document,
-            'documentTypes' => $documentTypes,
-            'ownerCompanies' => $companies->get(false, collect()), // companies where 'is_customer' is false
-            'clientCompanies' => $companies->get(true, collect()), // companies where 'is_customer' is true
-            'curencies' => $curencies,
-            'taxes' => $taxes,
-            'terms' => $terms,
-            'incoterms' => $incoterms,
-            'vehicles' => $vehicles,
-            'drivers' => $drivers,
-            'declarations' => $declarations,
+            'documentTypes' => $resources['documentTypes'],
+            'ownerCompanies' => $resources['companies']->get(false, collect()), // companies where 'is_customer' is false
+            'clientCompanies' => $resources['companies']->get(true, collect()), // companies where 'is_customer' is true
+            'curencies' => $resources['curencies'],
+            'taxes' => $resources['taxes'],
+            'terms' => $resources['terms'],
+            'incoterms' => $resources['incoterms'],
+            'vehicles' => $resources['vehicles'],
+            'drivers' => $resources['drivers'],
+            'declarations' => $resources['declarations'],
             'selectedDeclarations' => $selectedDeclarations,
-            'places' => $places,
+            'places' => $resources['places'],
         ]);
     }
+    
 
     /**
      * Update the specified resource in storage.
@@ -336,189 +321,40 @@ class DocumentController extends Controller
     }
 
     public function convert(Document $document, DocumentType $documentTypeNew)
-    {
-        // Prepare document data to copy
-        $document->load('load_place', 'unload_place', 'owner', 'company');
+{
+    $documentService = app(DocumentService::class);
 
-        $documentData = [
-            'user_id' => $document->user_id,
-            'owner_id' => $document->owner_id,
-            'client_id' => $document->client_id,
-            'document_type_id' => $documentTypeNew->id,
-            'vehicle_id' => $document->vehicle_id,
-            'driver_id' => $document->driver_id,
-            'curency_id' => $document->curency_id,
-            'incoterm_id' => $document->incoterm_id,
-            'tax_id' => $document->tax_id,
-            'term_id' => $document->term_id,
-            'is_translation' => $document->is_translation,
-            'is_for_export' => $document->is_for_export,
-            'is_for_advanced_payment' => $document->is_for_advanced_payment,
-            'print_price' => $document->print_price,
-            'document_no' => $document->document_no,
-            'date' => $document->date,
-            'drawing_no' => $document->drawing_no,
-            'advance_payment' => $document->advance_payment,
-            'discount' => $document->discount,
-            'total' => $document->total,
-            'total_with_tax_and_discount' => $document->total_with_tax_and_discount,
-            'total_volume' => $document->total_volume,
-            'total_weight' => $document->total_weight,
-            'tax_amount' => $document->tax_amount,
-            'discount_amount' => $document->discount_amount,
-            'grand_total' => $document->grand_total,
-            'advanced_payment_base' => $document->advanced_payment_base,
-            'advanced_payment_tax' => $document->advanced_payment_tax,
-            'delivery' => $document->delivery,
-            'load_date' => $document->date,
-            'unload_date' => $document->date,
-            'load_place_id' => $document->owner->place_id,
-            'unload_place_id' => $document->company->place->id,
-            'marking' => '',
-            'boxes_nr' => '',
-            'packaging_type' => '',
-            'goods_type' => '',
-            'instruction' => '',
-            'picked_up_by' => '',
-            'note' => $document->note,
-            'incoterm_place_id' => $document->incoterm_place_id,
-        ];
+    // Prepare and create the new document
+    $documentData = $documentService->prepareDocumentData($document, $documentTypeNew->id);
+    $convertedDocument = Document::create($documentData);
 
-        // Create the new document
-        $convertedDocument = Document::create($documentData);
-
-        // Copy associated products
-        $products = Product::where('document_id', $document->id)
-            ->whereNull('packing_list_id')
-            ->get();
-
-        // dd($products);
-
-        foreach ($products as $product) {
-            $productData = [
-                'temperature_id' => $product->temperature_id,
-                'voltage_id' => $product->voltage_id,
-                'manufacturer_id' => $product->manufacturer_id,
-                'category_id' => $product->category_id,
-                'document_id' => $convertedDocument->id,
-                'packing_list_id' => $product->packing_list_id,
-                'model_id' => $product->model_id,
-                'refrigerant_id' => $product->refrigerant_id,
-                'product_code' => $product->product_code,
-                'serial_no' => $product->serial_no,
-                'description' => $product->description,
-                'length' => $product->length,
-                'width' => $product->width,
-                'height' => $product->height,
-                'weight' => $product->weight,
-                'qty' => $product->qty,
-                'single_price' => $product->single_price,
-                'total_price' => $product->total_price,
-                'product_total_volume' => $product->product_total_volume,
-                'product_total_weight' => $product->product_total_weight,
-                'hfc_qty' => $product->hfc_qty,
-                'co2' => $product->co2,
-                'power' => $product->power,
-                'current' => $product->current,
-            ];
-
-            // Use relationship to create product
-            $convertedDocument->products()->create($productData);
-        }
-
-        return redirect()->route('document.index');
+    // Prepare and copy associated products
+    $products = Product::where('document_id', $document->id)->whereNull('packing_list_id')->get();
+    foreach ($products as $product) {
+        $productData = $documentService->prepareProductData($product, $convertedDocument->id);
+        $convertedDocument->products()->create($productData);
     }
 
-    public function convertCompanyDocument(Document $document, DocumentType $documentTypeNew)
-    {
-        // dd($document, $documentTypeNew);
+    return redirect()->route('document.index');
+}
 
-        $products = Product::where('document_id', $document->id)
-            ->whereNull('packing_list_id')
-            ->get();
+public function convertCompanyDocument(Document $document, DocumentType $documentTypeNew)
+{
+    $documentService = app(DocumentService::class);
 
-        $document->load('load_place', 'unload_place', 'owner', 'company');
+    // Prepare and create the new document
+    $documentData = $documentService->prepareDocumentData($document, $documentTypeNew->id);
+    $convertedDocument = Document::create($documentData);
 
-        // dd($products);
-        $documentData = [
-            'user_id' => $document->user_id,
-            'owner_id' => $document->owner_id,
-            'client_id' => $document->client_id,
-            'document_type_id' => $documentTypeNew->id,
-            'vehicle_id' => $document->vehicle_id,
-            'driver_id' => $document->driver_id,
-            'curency_id' => $document->curency_id,
-            'incoterm_id' => $document->incoterm_id,
-            'tax_id' => $document->tax_id,
-            'term_id' => $document->term_id,
-            'is_translation' => $document->is_translation,
-            'is_for_export' => $document->is_for_export,
-            'is_for_advanced_payment' => $document->is_for_advanced_payment,
-            'print_price' => $document->print_price,
-            'document_no' => $document->document_no,
-            'date' => $document->date,
-            'drawing_no' => $document->drawing_no,
-            'advance_payment' => $document->advance_payment,
-            'discount' => $document->discount,
-            'total' => $document->total,
-            'total_with_tax_and_discount' => $document->total_with_tax_and_discount,
-            'total_volume' => $document->total_volume,
-            'total_weight' => $document->total_weight,
-            'tax_amount' => $document->tax_amount,
-            'discount_amount' => $document->discount_amount,
-            'grand_total' => $document->grand_total,
-            'advanced_payment_base' => $document->advanced_payment_base,
-            'advanced_payment_tax' => $document->advanced_payment_tax,
-            'delivery' => $document->delivery,
-            'load_date' => $document->date,
-            'unload_date' => $document->date,
-            'load_place_id' => $document->owner->place_id,
-            'unload_place_id' => $document->company->place->id,
-            'marking' => '',
-            'boxes_nr' => '',
-            'packaging_type' => '',
-            'goods_type' => '',
-            'instruction' => '',
-            'picked_up_by' => '',
-            'note' => $document->note,
-            'incoterm_place_id' => $document->incoterm_place_id,
-        ];
-
-        $convertedDocument = Document::create($documentData);
-
-        foreach ($products as $product) {
-            $productData = [
-                'temperature_id' => $product->temperature_id,
-                'voltage_id' => $product->voltage_id,
-                'manufacturer_id' => $product->manufacturer_id,
-                'category_id' => $product->category_id,
-                'document_id' => $convertedDocument->id,
-                'packing_list_id' => $product->packing_list_id,
-                'model_id' => $product->model_id,
-                'refrigerant_id' => $product->refrigerant_id,
-                'product_code' => $product->product_code,
-                'serial_no' => $product->serial_no,
-                'description' => $product->description,
-                'length' => $product->length,
-                'width' => $product->width,
-                'height' => $product->height,
-                'weight' => $product->weight,
-                'qty' => $product->qty,
-                'single_price' => $product->single_price,
-                'total_price' => $product->total_price,
-                'product_total_volume' => $product->product_total_volume,
-                'product_total_weight' => $product->product_total_weight,
-                'hfc_qty' => $product->hfc_qty,
-                'co2' => $product->co2,
-                'power' => $product->power,
-                'current' => $product->current,
-            ];
-
-            $convertedDocumentProducts = Product::create($productData);
-        }
-
-        return redirect()->route('company.show', ['company' => $document->client_id]);
+    // Prepare and copy associated products
+    $products = Product::where('document_id', $document->id)->whereNull('packing_list_id')->get();
+    foreach ($products as $product) {
+        $productData = $documentService->prepareProductData($product, $convertedDocument->id);
+        $convertedDocument->products()->create($productData);
     }
+
+    return redirect()->route('company.show', ['company' => $document->client_id]);
+}
 
     public function viewTravelOrder(Document $document)
     {
