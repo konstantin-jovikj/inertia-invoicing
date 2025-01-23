@@ -12,7 +12,10 @@ class TermsController extends Controller
      */
     public function index()
     {
-        //
+        $terms = Terms::all();
+        return inertia('Settings/Terms/TermsIndex', [
+            'terms' => $terms,
+        ]);
     }
 
     /**
@@ -20,7 +23,7 @@ class TermsController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Settings/Terms/TermsAdd');
     }
 
     /**
@@ -28,15 +31,13 @@ class TermsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'term' => 'required|max:255',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Terms $terms)
-    {
-        //
+        Terms::create($validated);
+
+        return redirect()->route('terms.index')->with('message', 'Условот е успешно додаден');
     }
 
     /**
@@ -44,7 +45,9 @@ class TermsController extends Controller
      */
     public function edit(Terms $terms)
     {
-        //
+        return inertia ('Settings/Terms/TermsEdit', [
+            'terms' => $terms,
+        ]);
     }
 
     /**
@@ -52,7 +55,13 @@ class TermsController extends Controller
      */
     public function update(Request $request, Terms $terms)
     {
-        //
+        $validated = $request->validate([
+            'term' => 'required|max:255',
+        ]);
+
+        $terms->update($validated);
+
+        return redirect()->route('terms.index')->with('message', 'Условот е успешно Ажуриран');
     }
 
     /**
@@ -60,6 +69,9 @@ class TermsController extends Controller
      */
     public function destroy(Terms $terms)
     {
-        //
+        if ($terms) {
+            $terms->delete();
+        }
+        return redirect()->route('terms.index')->with('message', 'Условот е успешно избришан');
     }
 }

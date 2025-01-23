@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\ProductModelController;
+use App\Http\Controllers\TermsController;
 use App\Models\PackingList;
 use Inertia\Inertia;
 use App\Models\Company;
@@ -181,7 +182,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/document/delete/{document}', [DocumentController::class, 'destroy'])->name('document.delete');
 
     //Create specific document type for selected Client
-    
+
     Route::post('/documents/client/{company}/store/{documentType}', action: [DocumentController::class, 'createClientDocument'])->name('clientDocument.store');
 
     Route::get('/documents/add/row/{document}/{product}', [DocumentController::class, 'addEmptyRow'])->name('documents.addrow');
@@ -290,6 +291,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/categories/edit{category}', [CategoryController::class, 'editCatName'])->name('categories.edit');
     Route::put('/categories/update/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/delete/{category}', [CategoryController::class, 'destroy'])->name('categories.delete');
+
+    //Terms
+
+    Route::get('/terms/index', [TermsController::class, 'index'])->name('terms.index');
+    Route::get('/terms/create', [TermsController::class, 'create'])->name('term.create');
+    Route::post('/terms/store', [TermsController::class, 'store'])->name('term.store');
+    Route::get('/terms/edit/{terms}', [TermsController::class, 'edit'])->name('term.edit');
+    Route::put('/terms/update/{terms}', [TermsController::class, 'update'])->name('term.update');
+    Route::delete('/terms/delete/{terms}', [TermsController::class, 'destroy'])->name('directive.delete');
+
 
 });
 

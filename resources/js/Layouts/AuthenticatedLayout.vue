@@ -220,6 +220,12 @@ const showingNavigationDropdown = ref(false);
                                         </DropdownLink>
                                         <hr />
                                         <DropdownLink
+                                            :href="route('terms.index')"
+                                        >
+                                            Услови на Плаќање
+                                        </DropdownLink>
+                                        <hr />
+                                        <DropdownLink
                                             :href="
                                                 route(
                                                     'companies.notcustomer.index',
