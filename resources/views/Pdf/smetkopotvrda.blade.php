@@ -56,11 +56,10 @@
             @if ($client->customer->customerType->id == 1)
                 @if (!$document->is_for_export)
                     <div>
-                        <span class="text-lg  font-bold ms-4"><span class="text-xs text-purple-700 italic">Име и
-                                Од:
+                        <span class="text-lg "><span class="text-lg text-purple-700 italic">Од:
                             </span>{{ $client->name }}</span>
                     @else
-                        <span class="text-lg font-bold ms-4"><span class="text-xs text-purple-700 italic">First and Last
+                        <span class="text-lg"><span class="text-xs text-purple-700 italic">First and Last
                                 From: </span>
                             {{ $client->name }}
                         </span>

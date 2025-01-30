@@ -206,8 +206,9 @@ class PDFController extends Controller
                     $docName = "PR-{$document->document_no}.pdf";
                     break;
                 case 7:
-                    $docName = "TL-{$document->document_no}.pdf";
-                    break;
+                    return redirect()->route('print.travelorder', ['document' => $document->id]);
+                    // $docName = "TL-{$document->document_no}.pdf";
+                    // break;
                 default:
                     // Optional: Handle cases where the documentType id is not recognized
                     $docName = "DOC-{$document->document_no}.pdf";
