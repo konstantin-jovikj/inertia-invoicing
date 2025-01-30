@@ -28,6 +28,7 @@ class CompanyController extends Controller
                         $query->where('place', 'like', '%' . $request->search . '%');
                     });
             })
+            ->orderBy('created_at', 'desc')
             ->paginate(20)
             ->withQueryString();
 
