@@ -121,7 +121,7 @@ console.log(props.documents);
                                     v-model="selectedExport"
                                     as="select"
                                     id="client"
-                                    class="w-[150px]  px-8 mt-1 text-base border border-sky-500 rounded bg-gray-50"
+                                    class="w-[150px] px-8 mt-1 text-base border border-sky-500 rounded bg-gray-50"
                                 >
                                     <option value="" selected>Извоз...</option>
                                     <option
@@ -138,7 +138,7 @@ console.log(props.documents);
                                     v-model="selectedClient"
                                     as="select"
                                     id="client"
-                                    class="w-[350px]  px-4 mt-1 text-base border rounded bg-gray-50 border-sky-500"
+                                    class="w-[350px] px-4 mt-1 text-base border rounded bg-gray-50 border-sky-500"
                                 >
                                     <option value="" selected>Клиент...</option>
                                     <option
@@ -155,7 +155,7 @@ console.log(props.documents);
                                     v-model="selectedYear"
                                     as="select"
                                     id="year"
-                                    class="w-[120px]  px-4 mt-1 text-base border rounded bg-gray-50 border-sky-500"
+                                    class="w-[120px] px-4 mt-1 text-base border rounded bg-gray-50 border-sky-500"
                                 >
                                     <option value="" selected>Година...</option>
                                     <option
@@ -266,10 +266,17 @@ console.log(props.documents);
                                     <td
                                         class="text-base font-semibold text-emerald-700"
                                     >
-                                    <Link :href="route('products.create', document.id)"
-                                    class="hover:text-red-600">
-                                        {{ document.document_no }}
-                                    </Link>
+                                        <Link
+                                            :href="
+                                                route(
+                                                    'products.create',
+                                                    document.id,
+                                                )
+                                            "
+                                            class="hover:text-red-600"
+                                        >
+                                            {{ document.document_no }}
+                                        </Link>
                                     </td>
                                     <td class="flex text-base font-semibold">
                                         <!-- <span
@@ -301,19 +308,18 @@ console.log(props.documents);
                                         /></span>
                                         <span>
                                             <span
-                                                class=" text-lime-600 hover:bg-gray-800"
+                                                class="text-lime-600 hover:bg-gray-800"
                                                 v-if="document.packing_list"
                                             >
-                                            <!-- <TruckIcon > -->
-                                                <Link 
-                                                v-tippy="{
-                                                    content: `Пакинг Листа Бр: ${document.packing_list.document_no}`,
-                                                    arrow: true,
-                                                    theme: 'light',
-                                                }"
+                                                <!-- <TruckIcon > -->
+                                                <Link
+                                                    v-tippy="{
+                                                        content: `Пакинг Листа Бр: ${document.packing_list.document_no}`,
+                                                        arrow: true,
+                                                        theme: 'light',
+                                                    }"
                                                     :href="`/packinglist/create/${document.packing_list.id}`"
-                                                ><TruckIcon ></TruckIcon>
- 
+                                                    ><TruckIcon></TruckIcon>
                                                 </Link>
                                                 <!-- </TruckIcon> -->
                                             </span>
@@ -323,36 +329,54 @@ console.log(props.documents);
                                     <td
                                         class="text-base font-semibold text-sky-600"
                                     >
-                                    <Link :href="route('company.show', document.company.id)"
-                                    class="hover:text-red-800" >
-                                        {{ document.company.name }}
-                                    </Link>
+                                        <Link
+                                            :href="
+                                                route(
+                                                    'company.show',
+                                                    document.company.id,
+                                                )
+                                            "
+                                            class="hover:text-red-800"
+                                        >
+                                            {{ document.company.name }}
+                                        </Link>
                                     </td>
 
                                     <td
-                                    v-if="document.document_type.id !== 7"
+                                        v-if="document.document_type.id !== 7"
                                         class="text-base font-semibold text-purple-600"
                                     >
                                         {{
-                                            new Date(
-                                                document.date,
-                                            ).toLocaleDateString("en-GB")
+                                            new Date(document.date)
+                                                .toLocaleDateString("en-GB", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric",
+                                                })
+                                                .replace(/\//g, ".")
                                         }}
                                     </td>
                                     <td
-                                    v-else
+                                        v-else
                                         class="text-base font-semibold text-purple-600"
                                     >
                                         {{
                                             new Date(
                                                 document.load_date,
-                                            ).toLocaleDateString("en-GB")
+                                            ).toLocaleDateString("en-GB", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric",
+                                                })
+                                                .replace(/\//g, ".")
                                         }}
                                     </td>
 
                                     <td class="px-2 text-right">
                                         <span
-                                        v-if="document.document_type.id !== 7"
+                                            v-if="
+                                                document.document_type.id !== 7
+                                            "
                                             class="pr-2 text-base font-semibold text-red-600"
                                         >
                                             {{
@@ -365,7 +389,9 @@ console.log(props.documents);
                                             }}
                                         </span>
                                         <span
-                                        v-if="document.document_type.id !== 7"
+                                            v-if="
+                                                document.document_type.id !== 7
+                                            "
                                             class="px-1 text-left text-base font-semibold text-red-600"
                                         >
                                             {{
@@ -379,7 +405,10 @@ console.log(props.documents);
                                     <td class="px-4">
                                         <div class="flex gap-2">
                                             <Link
-                                                v-if="document.document_type.id == 7"
+                                                v-if="
+                                                    document.document_type.id ==
+                                                    7
+                                                "
                                                 class="hover:text-green-600 text-slate-300 content-center"
                                                 :href="
                                                     route(
@@ -390,7 +419,7 @@ console.log(props.documents);
                                             >
                                                 <EditIcon
                                                     v-tippy="{
-                                                        content:  `Измени Патен Налог`,
+                                                        content: `Измени Патен Налог`,
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"
@@ -398,7 +427,7 @@ console.log(props.documents);
                                             </Link>
 
                                             <Link
-                                            v-else
+                                                v-else
                                                 class="hover:text-green-600 text-slate-300 content-center"
                                                 :href="
                                                     route(
@@ -409,9 +438,11 @@ console.log(props.documents);
                                             >
                                                 <EditIcon
                                                     v-tippy="{
-                                                        content:  `Измени ${latinToCyrillic(
-                                                document.document_type.type,
-                                            )}`,
+                                                        content: `Измени ${latinToCyrillic(
+                                                            document
+                                                                .document_type
+                                                                .type,
+                                                        )}`,
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"
@@ -429,10 +460,11 @@ console.log(props.documents);
                                             >
                                                 <DeleteIcon
                                                     v-tippy="{
-                                                        content:
-                                                            `Избриши ${latinToCyrillic(
-                                                document.document_type.type,
-                                            )}`,
+                                                        content: `Избриши ${latinToCyrillic(
+                                                            document
+                                                                .document_type
+                                                                .type,
+                                                        )}`,
                                                         arrow: true,
                                                         theme: 'light',
                                                     }"
