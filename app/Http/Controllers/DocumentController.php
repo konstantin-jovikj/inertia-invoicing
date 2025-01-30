@@ -165,6 +165,7 @@ class DocumentController extends Controller
             'picked_up_by' => 'nullable|max:255',
             'note' => 'nullable',
             'incoterm_place_id' => 'nullable|exists:places,id',
+            'print_price' => 'boolean',
         ]);
     }
 

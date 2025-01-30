@@ -53,7 +53,7 @@ class Document extends Model
         'advanced_payment_base',
         'advanced_payment_tax',
         'delivery',
-        'place_id',           
+        'place_id',
         'load_place_id',
         'unload_place_id',
         'load_date',
@@ -66,6 +66,7 @@ class Document extends Model
         'instruction',
         'picked_up_by',
         'incoterm_place_id',
+        'print_price',
     ];
 
     // protected $casts = [
