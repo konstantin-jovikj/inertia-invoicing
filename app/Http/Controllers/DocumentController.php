@@ -133,6 +133,8 @@ class DocumentController extends Controller
             'curency_id' => $request->curency_id ?? 1,
         ]);
 
+        
+
         return $request->validate([
             'user_id' => 'required|exists:users,id',
             'owner_id' => 'required|exists:companies,id',

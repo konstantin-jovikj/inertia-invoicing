@@ -185,26 +185,42 @@ class ProductController extends Controller
         // Update the document's total
         $docProducts = Product::where('document_id', $document->id)->get();
         foreach ($docProducts as $docProduct) {
-            $document->total += $docProduct->total_price;
+            // $document->total += $docProduct->total_price;
             $document->total_volume += $docProduct->product_total_volume;
             $document->total_weight += $docProduct->product_total_weight;
-        }
+        // }
+        // if ($document->curency_id == 1) {
+        //     $discountAmount = round($document->total * ($discountRate / 100));
+        //     $taxAmount = round(($document->total - $discountAmount) * ($document->taxRate / 100));
+        //     $docTotal = round($document->total - $discountAmount + $taxAmount);
+        //     $docGrandTotal = round($docTotal - ($document->advance_payment ?? 0));
+        //     $docAdvancedBase = round($docGrandTotal / (1 + $document->taxRate / 100));
+        //     $docAdvancedTax = round($docGrandTotal - $docAdvancedBase);
+        // } else {
+        //     $discountAmount = $document->total * ($discountRate / 100);
+        //     $taxAmount = ($document->total - $discountAmount) * ($document->taxRate / 100);
+        //     $docTotal = $document->total - $discountAmount + $taxAmount;
+        //     $docGrandTotal = $docTotal - ($document->validatedData->advance_payment ?? 0);
+        //     $docAdvancedBase = $docGrandTotal / (1 + $document->taxRate / 100);
+        //     $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
+        // }
 
         if ($document->curency_id == 1) {
+            $document->total += round($docProduct->total_price);
             $document->discount_amount = round($document->total * ($document->discount / 100));
             $document->tax_amount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
-            // dd($document->tax_amount);
         } else {
+            $document->total += $docProduct->total_price;
             $document->discount_amount = $document->total * ($document->discount / 100);
-            // $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
+ 
         }
-        // dd($document->tax_amount);
+ 
         $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
 
         $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
         $document->advanced_payment_base = $document->grand_total / (1 + $document->tax->tax_rate / 100);
         $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
-
+    }
         $document->save(); // Save the updated document
 
         // Return a success response with the created product
