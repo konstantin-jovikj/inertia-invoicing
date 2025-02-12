@@ -188,22 +188,8 @@ class ProductController extends Controller
             // $document->total += $docProduct->total_price;
             $document->total_volume += $docProduct->product_total_volume;
             $document->total_weight += $docProduct->product_total_weight;
-        // }
-        // if ($document->curency_id == 1) {
-        //     $discountAmount = round($document->total * ($discountRate / 100));
-        //     $taxAmount = round(($document->total - $discountAmount) * ($document->taxRate / 100));
-        //     $docTotal = round($document->total - $discountAmount + $taxAmount);
-        //     $docGrandTotal = round($docTotal - ($document->advance_payment ?? 0));
-        //     $docAdvancedBase = round($docGrandTotal / (1 + $document->taxRate / 100));
-        //     $docAdvancedTax = round($docGrandTotal - $docAdvancedBase);
-        // } else {
-        //     $discountAmount = $document->total * ($discountRate / 100);
-        //     $taxAmount = ($document->total - $discountAmount) * ($document->taxRate / 100);
-        //     $docTotal = $document->total - $discountAmount + $taxAmount;
-        //     $docGrandTotal = $docTotal - ($document->validatedData->advance_payment ?? 0);
-        //     $docAdvancedBase = $docGrandTotal / (1 + $document->taxRate / 100);
-        //     $docAdvancedTax = $docGrandTotal - $docAdvancedBase;
-        // }
+
+
 
         if ($document->curency_id == 1) {
             $document->total += round($docProduct->total_price);

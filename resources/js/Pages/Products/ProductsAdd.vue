@@ -396,7 +396,7 @@ const createPackingList = () => {
 
                                                 <tbody>
                                                     <tr
-                                                        class="border-b border-neutral-200 border-e"
+                                                        class="border-b border-neutral-200 border-e hover:bg-blue-50"
                                                         v-for="(
                                                             product, index
                                                         ) in products"
@@ -511,6 +511,7 @@ const createPackingList = () => {
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                            :class="product.qty > 0 ? 'font-bold text-orange-500' : ''"
                                                         >
                                                         {{new Intl.NumberFormat(
                                                                     "en-US",
@@ -525,6 +526,7 @@ const createPackingList = () => {
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                                             :class="product.single_price > 0 ? 'font-bold text-red-500' : ''"
                                                         >
                                                             {{
                                                                 new Intl.NumberFormat(
@@ -545,6 +547,7 @@ const createPackingList = () => {
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                                            :class="product.total_price > 0 ? 'font-bold text-purple-500' : ''"
                                                         >
                                                             {{
                                                                 new Intl.NumberFormat(
@@ -565,6 +568,7 @@ const createPackingList = () => {
                                                         </td>
                                                         <td
                                                             class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                                            
                                                         >
                                                             <div></div>
                                                             <div
