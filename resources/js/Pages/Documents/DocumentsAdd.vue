@@ -370,7 +370,7 @@ const submit = () => {
                                                     v-model="form.client_id"
                                                     :options="clientCompanies"
                                                     :track-by="'id'"
-                                                    class="w-full"
+                                                    class="w-full bg-red-400"
                                                     label="name"
                                                     placeholder="Клиент..."
                                                 />
