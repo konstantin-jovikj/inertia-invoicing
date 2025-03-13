@@ -7,7 +7,8 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { latinToCyrillic } from "@/helpers/latinToCyrillic";
 import Multiselect from "vue-multiselect";
-import "vue-multiselect/dist/vue-multiselect.css";
+// import "vue-multiselect/dist/vue-multiselect.css";
+import "/resources/css/vue-multiselect-custom.css";
 
 const props = defineProps({
     documentType: Object,
