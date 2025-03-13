@@ -6,6 +6,8 @@ import InputLabel from "../../Components/InputLabel.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { latinToCyrillic } from "@/helpers/latinToCyrillic";
+import Multiselect from "vue-multiselect";
+import "vue-multiselect/dist/vue-multiselect.css";
 
 const props = defineProps({
     documentType: Object,
@@ -47,6 +49,7 @@ const form = useForm({
     delivery: "",
     note: "",
     incoterm_place_id: "",
+    // errors: {},
 });
 
 // Define computed property to get the currency symbol based on selected currency
@@ -59,6 +62,12 @@ const selectedCurrencySymbol = computed(() => {
 const submit = () => {
     console.log(form);
 };
+
+// const props = defineProps(["clientCompanies"]);
+// const form = ref({
+//     client_id: "",
+//     errors: {},
+// });
 </script>
 
 <template>
@@ -71,9 +80,16 @@ const submit = () => {
                     <div class="p-6 text-gray-900">
                         <form
                             @submit.prevent="
-                                form.post('/documents/store', {
-                                    onError: () => form.reset(),
-                                })
+                                form
+                                    .transform((data) => ({
+                                        ...data,
+                                        client_id: data.client_id
+                                            ? data.client_id.id
+                                            : null, // Ensure only the ID is sent
+                                    }))
+                                    .post('/documents/store', {
+                                        onError: () => form.reset(),
+                                    })
                             "
                         >
                             <div
@@ -131,15 +147,14 @@ const submit = () => {
                                             >
                                                 <InputLabel
                                                     for="doc_is_for_export"
-                                                    >Дали е за
-                                                    Извоз?</InputLabel
-                                                >
+                                                    >Дали е за Извоз?
+                                                </InputLabel>
 
                                                 <input
-                                                    type="checkbox"
-                                                    v-model="form.is_for_export"
                                                     id="doc_is_for_export"
+                                                    v-model="form.is_for_export"
                                                     class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                                    type="checkbox"
                                                 />
 
                                                 <span
@@ -156,17 +171,16 @@ const submit = () => {
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
                                                 <InputLabel for="is_translation"
-                                                    >Албански
-                                                    Превод?</InputLabel
-                                                >
+                                                    >Албански Превод?
+                                                </InputLabel>
 
                                                 <input
-                                                    type="checkbox"
+                                                    id="is_translation"
                                                     v-model="
                                                         form.is_translation
                                                     "
-                                                    id="is_translation"
                                                     class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                                    type="checkbox"
                                                 />
 
                                                 <span
@@ -194,16 +208,16 @@ const submit = () => {
                                                             props.documentType
                                                                 .type,
                                                         )
-                                                    }}</InputLabel
-                                                >
+                                                    }}
+                                                </InputLabel>
 
                                                 <input
-                                                    type="checkbox"
+                                                    id="is_for_advanced_payment"
                                                     v-model="
                                                         form.is_for_advanced_payment
                                                     "
-                                                    id="is_for_advanced_payment"
                                                     class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                                    type="checkbox"
                                                 />
 
                                                 <span
@@ -226,14 +240,14 @@ const submit = () => {
                                                             props.documentType
                                                                 .type,
                                                         )
-                                                    }}</InputLabel
-                                                >
+                                                    }}
+                                                </InputLabel>
 
                                                 <input
-                                                    type="checkbox"
-                                                    v-model="form.print_price"
                                                     id="print_price"
+                                                    v-model="form.print_price"
                                                     class="w-8 h-8 mt-1 border rounded bg-gray-50"
+                                                    type="checkbox"
                                                 />
 
                                                 <span
@@ -259,10 +273,10 @@ const submit = () => {
                                                 </InputLabel>
 
                                                 <TextInput
-                                                    v-model="form.document_no"
-                                                    type="text"
                                                     id="document_no"
+                                                    v-model="form.document_no"
                                                     class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                                                    type="text"
                                                 />
 
                                                 <span
@@ -278,14 +292,14 @@ const submit = () => {
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-1"
                                             >
                                                 <InputLabel for="drawing_no"
-                                                    >Број на Цртеж</InputLabel
-                                                >
+                                                    >Број на Цртеж
+                                                </InputLabel>
 
                                                 <TextInput
-                                                    v-model="form.drawing_no"
-                                                    type="text"
                                                     id="drawing_no"
+                                                    v-model="form.drawing_no"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                    type="text"
                                                 />
 
                                                 <span
@@ -299,14 +313,14 @@ const submit = () => {
                                             <div class="mb-4 md:col-span-1">
                                                 <InputLabel
                                                     for="doc_is_for_export"
-                                                    >Датум</InputLabel
-                                                >
+                                                    >Датум
+                                                </InputLabel>
 
                                                 <TextInput
-                                                    v-model="form.date"
-                                                    type="date"
                                                     id="date"
+                                                    v-model="form.date"
                                                     class="w-full h-10 px-4 mt-1 border rounded bg-gray-50"
+                                                    type="date"
                                                 />
 
                                                 <span
@@ -320,14 +334,14 @@ const submit = () => {
                                             <!-- Firma Domakin -->
                                             <div class="md:col-span-2">
                                                 <InputLabel for="owner_id"
-                                                    >Избери фирма</InputLabel
-                                                >
+                                                    >Избери фирма
+                                                </InputLabel>
                                                 <select
-                                                    v-model="form.owner_id"
                                                     id="owner_id"
+                                                    v-model="form.owner_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
-                                                    <option value="" disabled>
+                                                    <option disabled value="">
                                                         Фирма...
                                                     </option>
                                                     <option
@@ -347,28 +361,19 @@ const submit = () => {
                                             </div>
 
                                             <!-- Firma Klient -->
+
                                             <div class="md:col-span-3">
                                                 <InputLabel for="client_id"
                                                     >Избери Клиент</InputLabel
                                                 >
-                                                <select
+                                                <Multiselect
                                                     v-model="form.client_id"
-                                                    id="client_id"
-                                                    class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
-                                                >
-                                                    <option value="" disabled>
-                                                        Клиент ...
-                                                    </option>
-                                                    <option
-                                                        v-for="clientCompany in clientCompanies"
-                                                        :key="clientCompany.id"
-                                                        :value="
-                                                            clientCompany.id
-                                                        "
-                                                    >
-                                                        {{ clientCompany.name }}
-                                                    </option>
-                                                </select>
+                                                    :options="clientCompanies"
+                                                    :track-by="'id'"
+                                                    class="w-full"
+                                                    label="name"
+                                                    placeholder="Клиент..."
+                                                />
                                                 <span
                                                     class="text-xs italic text-red-600"
                                                     >{{
@@ -380,14 +385,14 @@ const submit = () => {
                                             <!-- Valuta -->
                                             <div class="md:col-span-2">
                                                 <InputLabel for="curency_id"
-                                                    >Избери Валута</InputLabel
-                                                >
+                                                    >Избери Валута
+                                                </InputLabel>
                                                 <select
-                                                    v-model="form.curency_id"
                                                     id="curency_id"
+                                                    v-model="form.curency_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
-                                                    <option value="" disabled>
+                                                    <option disabled value="">
                                                         Валута ...
                                                     </option>
                                                     <option
@@ -409,12 +414,11 @@ const submit = () => {
                                             <!-- DDV -->
                                             <div class="md:col-span-2">
                                                 <InputLabel for="tax_id"
-                                                    >Избери ДДВ
-                                                    Стапка</InputLabel
-                                                >
+                                                    >Избери ДДВ Стапка
+                                                </InputLabel>
                                                 <select
-                                                    v-model="form.tax_id"
                                                     id="tax_id"
+                                                    v-model="form.tax_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
                                                     <option value="0">
@@ -439,15 +443,14 @@ const submit = () => {
                                             <!-- Terms -->
                                             <div class="md:col-span-2">
                                                 <InputLabel for="term_id"
-                                                    >Услови за
-                                                    плаќање</InputLabel
-                                                >
+                                                    >Услови за плаќање
+                                                </InputLabel>
                                                 <select
-                                                    v-model="form.term_id"
                                                     id="term_id"
+                                                    v-model="form.term_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
-                                                    <option value="" disabled>
+                                                    <option disabled value="">
                                                         Услови за плаќање ...
                                                     </option>
                                                     <option
@@ -469,15 +472,14 @@ const submit = () => {
                                             <!-- IncoTerms -->
                                             <div class="md:col-span-2">
                                                 <InputLabel for="incoterm_id"
-                                                    >Испорака /
-                                                    Паритет</InputLabel
-                                                >
+                                                    >Испорака / Паритет
+                                                </InputLabel>
                                                 <select
-                                                    v-model="form.incoterm_id"
                                                     id="incoterm_id"
+                                                    v-model="form.incoterm_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
-                                                    <option value="" disabled>
+                                                    <option disabled value="">
                                                         Incoterms ...
                                                     </option>
                                                     <option
@@ -505,14 +507,14 @@ const submit = () => {
                                                 class="mb-4 border-gray-200 md:col-span-2"
                                             >
                                                 <InputLabel for="drawing_no"
-                                                    >Испорака</InputLabel
-                                                >
+                                                    >Испорака
+                                                </InputLabel>
 
                                                 <TextInput
-                                                    v-model="form.delivery"
-                                                    type="text"
                                                     id="delivery"
+                                                    v-model="form.delivery"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                    type="text"
                                                 />
 
                                                 <span
@@ -526,14 +528,14 @@ const submit = () => {
                                             <!-- Vehicle -->
                                             <div class="md:col-span-1">
                                                 <InputLabel for="vehicle_id"
-                                                    >Избери Возило</InputLabel
-                                                >
+                                                    >Избери Возило
+                                                </InputLabel>
                                                 <select
-                                                    v-model="form.vehicle_id"
                                                     id="vehicle_id"
+                                                    v-model="form.vehicle_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
-                                                    <option value="" disabled>
+                                                    <option disabled value="">
                                                         Возило ...
                                                     </option>
                                                     <option
@@ -560,14 +562,14 @@ const submit = () => {
                                             <!-- Driver -->
                                             <div class="md:col-span-1">
                                                 <InputLabel for="driver_id"
-                                                    >Избери Возач</InputLabel
-                                                >
+                                                    >Избери Возач
+                                                </InputLabel>
                                                 <select
-                                                    v-model="form.driver_id"
                                                     id="driver_id"
+                                                    v-model="form.driver_id"
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
-                                                    <option value="" disabled>
+                                                    <option disabled value="">
                                                         Возач ...
                                                     </option>
                                                     <option
@@ -598,19 +600,19 @@ const submit = () => {
                                             >
                                                 <InputLabel
                                                     for="advance_payment"
-                                                    >Авансна Уплата</InputLabel
-                                                >
+                                                    >Авансна Уплата
+                                                </InputLabel>
                                                 <div
                                                     class="flex items-center gap-2"
                                                 >
                                                     <TextInput
+                                                        id="advance_payment"
                                                         v-model="
                                                             form.advance_payment
                                                         "
-                                                        type="number"
-                                                        step="0.01"
-                                                        id="advance_payment"
                                                         class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                        step="0.01"
+                                                        type="number"
                                                     />
                                                     <span
                                                         class="text-xl font-bolder"
@@ -634,17 +636,17 @@ const submit = () => {
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-2"
                                             >
                                                 <InputLabel for="discount"
-                                                    >Попуст</InputLabel
-                                                >
+                                                    >Попуст
+                                                </InputLabel>
                                                 <div
                                                     class="flex items-center gap-2"
                                                 >
                                                     <TextInput
-                                                        v-model="form.discount"
-                                                        type="number"
-                                                        step="0.01"
                                                         id="discount"
+                                                        v-model="form.discount"
                                                         class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
+                                                        step="0.01"
+                                                        type="number"
                                                     />
                                                     <span
                                                         class="text-xl font-bolder"
@@ -664,16 +666,21 @@ const submit = () => {
                                             <div
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-2"
                                             >
-                                                <InputLabel for="incoterm_place_id"
-                                                    >INCOTERM Место на/за Испорака</InputLabel
-                                                >
+                                                <InputLabel
+                                                    for="incoterm_place_id"
+                                                    >INCOTERM Место на/за
+                                                    Испорака
+                                                </InputLabel>
                                                 <select
-                                                    v-model="form.incoterm_place_id "
                                                     id="incoterm_place_id "
+                                                    v-model="
+                                                        form.incoterm_place_id
+                                                    "
                                                     class="w-full h-10 px-4 mt-1 text-sm border rounded bg-gray-50"
                                                 >
-                                                    <option value="" disabled>
-                                                        Incoterm Delivery Place...
+                                                    <option disabled value="">
+                                                        Incoterm Delivery
+                                                        Place...
                                                     </option>
                                                     <option
                                                         v-for="place in places"
@@ -687,7 +694,8 @@ const submit = () => {
                                                 <span
                                                     class="text-xs italic text-red-600"
                                                     >{{
-                                                        form.errors.incoterm_place_id
+                                                        form.errors
+                                                            .incoterm_place_id
                                                     }}</span
                                                 >
                                             </div>
@@ -697,17 +705,17 @@ const submit = () => {
                                                 class="py-4 mb-4 border-b border-gray-200 md:col-span-6"
                                             >
                                                 <InputLabel for="note"
-                                                    >Забелешки</InputLabel
-                                                >
+                                                    >Забелешки
+                                                </InputLabel>
                                                 <div
                                                     class="flex items-center gap-2"
                                                 >
                                                     <textarea
+                                                        id="note"
                                                         v-model="form.note"
                                                         class="w-full border px-4 py-2 rounded focus:border-blue-500 focus:shadow-outline outline-none"
-                                                        rows="15"
                                                         placeholder="Забелешки ..."
-                                                        id="note"
+                                                        rows="15"
                                                     ></textarea>
                                                 </div>
 
@@ -726,8 +734,8 @@ const submit = () => {
                                                     class="inline-flex items-end"
                                                 >
                                                     <button
-                                                        type="submit"
                                                         class="px-4 py-2 text-white rounded font-bolder bg-sky-500 hover:bg-sky-700"
+                                                        type="submit"
                                                     >
                                                         Зачувај и додај
                                                         производи
