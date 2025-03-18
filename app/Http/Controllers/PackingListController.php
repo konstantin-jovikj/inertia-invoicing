@@ -26,21 +26,21 @@ class PackingListController extends Controller
      */
     public function create(PackingList $packingList)
     {
-// dd($packingList);
+        // dd($packingList);
         // Load related data for the document
         $packingList->load('company', 'document.documentType');
-    
+
         $products = Product::where('packing_list_id', $packingList->id)->get();
-        
+
         $products->load('manufacturers.place.country');
 
         $packingList->total_weight = 0;
         $packingList->total_volume = 0;
-        
+
 
         $packingList->total_weight = $products->sum('product_total_weight');
         $packingList->total_volume = $products->sum('product_total_volume');
-    
+
         $packingList->save();
         // Return response with the created packing list and related data
         return inertia('PackingList/PackingListAdd', [
@@ -48,8 +48,8 @@ class PackingListController extends Controller
             'products' => $products,
         ]);
     }
-    
-    
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -60,11 +60,11 @@ class PackingListController extends Controller
         $document->load('documentType', 'company', 'curency', 'tax');
         // dd($document->id);
 
-        
+
         // Fetch products associated with the document and load related data
         $products = Product::where('document_id', $document->id)->get();
         $products->load('manufacturers.place.country');
-        
+
         // dd($document);
         // Create Packing List
         $packingList = PackingList::create([
@@ -88,17 +88,18 @@ class PackingListController extends Controller
             'delivery' => $document->delivery,
         ]);
         // dd('packing_list_id', $packingList->id,);
-    
+
         // Loop through document products and add them to the created Packing List
         foreach ($products as $product) {
-            $newProduct = $product->replicate(); // Creates a new instance
+            $newProduct = $product->replicate();
+            $newProduct->document_id = null; // Remove association with the document
             $newProduct->packing_list_id = $packingList->id;
             $newProduct->save();
         }
 
         return redirect()
-        ->route('packinglist.create', ['packingList' => $packingList])
-        ->with('message', 'Packing List saved successfully!');
+            ->route('packinglist.create', ['packingList' => $packingList])
+            ->with('message', 'Packing List saved successfully!');
     }
 
     /**
@@ -133,7 +134,7 @@ class PackingListController extends Controller
      */
     public function update(Request $request, PackingList $packingList)
     {
-                // Validate all fields coming from the user
+        // Validate all fields coming from the user
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'owner_id' => 'required|exists:companies,id',
@@ -152,7 +153,7 @@ class PackingListController extends Controller
     {
 
         $existingOrder = Product::where('packing_list_id', $packingList->id)->get();
- 
+
         $emptyRow = new Product([
             "id" => $product->id,
             "packing_list_id" => $packingList->id,
@@ -169,11 +170,11 @@ class PackingListController extends Controller
         $newOrder->each(fn($order) => Product::create($order->toArray()));
 
         return redirect()
-        ->route('packinglist.create', ['packingList' => $packingList->id])
-        ->with('message', 'Empty Row inserted successfully!');
+            ->route('packinglist.create', ['packingList' => $packingList->id])
+            ->with('message', 'Empty Row inserted successfully!');
     }
 
-    
+
 
     /**
      * Remove the specified resource from storage.
