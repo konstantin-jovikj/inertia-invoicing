@@ -17,6 +17,7 @@ import { Tippy } from "vue-tippy";
 import WarrantyIcon from "@/Components/WarrantyIcon.vue";
 import PrintIcon from "@/Components/PrintIcon.vue";
 import { latinToCyrillic } from "@/helpers/latinToCyrillic";
+import { NumberToWordsMk } from "@/helpers/NumberToWordsMk";
 import AlbanianFlag from "@/Components/AlbanianFlag.vue";
 import MacedonianFlag from "@/Components/MacedonianFlag.vue";
 
@@ -28,7 +29,9 @@ const props = defineProps({
     secondLatestDoc: Object
 });
 
-console.log(props.products);
+
+
+// console.log(props.document);
 // Accessing Inertia's page props
 const page = usePage(); // This gives you access to all shared props
 const flashMessage = ref(page.props.flash?.message || ""); // Access flash message from shared props
@@ -60,122 +63,6 @@ onMounted(() => {
     }
 });
 
-function numberToWordsMK(number) {
-    const units = [
-        "",
-        "еден",
-        "два",
-        "три",
-        "четири",
-        "пет",
-        "шест",
-        "седум",
-        "осум",
-        "девет",
-    ];
-    const teens = [
-        "десет",
-        "единаесет",
-        "дванаесет",
-        "тринаесет",
-        "четиринаесет",
-        "петнаесет",
-        "шеснаесет",
-        "седумнаесет",
-        "осумнаесет",
-        "деветнаесет",
-    ];
-    const tens = [
-        "",
-        "",
-        "дваесет",
-        "триесет",
-        "четириесет",
-        "педесет",
-        "шеесет",
-        "седумдесет",
-        "осумдесет",
-        "деведесет",
-    ];
-    const hundreds = [
-        "",
-        "сто",
-        "двеста",
-        "триста",
-        "четиристотини",
-        "петстотини",
-        "шестотини",
-        "седумстотини",
-        "осумстотини",
-        "деветстотини",
-    ];
-    const thousands = ["", "илјада", "илјади"];
-    const millions = ["", "милион", "милиони"];
-
-    if (number === 0) {
-        return "нула";
-    }
-
-    let words = "";
-
-    // Handle millions
-    if (number >= 1000000) {
-        const millionPart = Math.floor(number / 1000000);
-        number %= 1000000;
-
-        words += this.numberToWordsMK(millionPart) + " ";
-        words += millionPart === 1 ? millions[1] : millions[2];
-        if (number > 0) {
-            words += " и ";
-        }
-    }
-
-    // Handle thousands
-    if (number >= 1000) {
-        const thousandPart = Math.floor(number / 1000);
-        number %= 1000;
-
-        words += this.numberToWordsMK(thousandPart) + " ";
-        words += thousandPart === 1 ? thousands[1] : thousands[2];
-        if (number > 0) {
-            words += " и ";
-        }
-    }
-
-    // Handle hundreds
-    if (number >= 100) {
-        const hundredPart = Math.floor(number / 100);
-        number %= 100;
-
-        words += hundreds[hundredPart];
-        if (number > 0) {
-            words += " и ";
-        }
-    }
-
-    // Handle tens and units
-    if (number >= 10 && number < 20) {
-        words += teens[number - 10];
-    } else {
-        const tenPart = Math.floor(number / 10);
-        const unitPart = number % 10;
-
-        if (tenPart > 0) {
-            words += tens[tenPart];
-            if (unitPart > 0) {
-                words += " и ";
-            }
-        }
-
-        if (unitPart > 0) {
-            words += units[unitPart];
-        }
-    }
-
-    return words;
-}
-
-console.log("packingListExists", props.packingListExists);
 
 const createPackingList = () => {
     router.post(`/packinglist/add/${props.document.id}`);
@@ -183,6 +70,7 @@ const createPackingList = () => {
 </script>
 
 <template>
+
     <Head title="Products" />
 
     <AuthenticatedLayout>
@@ -190,68 +78,51 @@ const createPackingList = () => {
             <div class="mx-auto max-w-11/12 sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <div
-                        class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8"
-                        >
-                        <p v-if="props.secondLatestDoc" class=" py-1 px-4 border bg-orange-200 rounded-md shadow-sm border-red-400">
-                            Последно Внесен Документ од Исти тип:
-                            <span class="px-2 text-lg font-bold">
-                                {{ props.secondLatestDoc.document_no }}
-                            </span>
-                        </p>
+                        <div class="p-4 px-4 mb-6 bg-white rounded shadow-lg md:p-8">
+                            <p v-if="props.secondLatestDoc"
+                                class=" py-1 px-4 border bg-orange-200 rounded-md shadow-sm border-red-400">
+                                Последно Внесен Документ од Исти тип:
+                                <span class="px-2 text-lg font-bold">
+                                    {{ props.secondLatestDoc.document_no }}
+                                </span>
+                            </p>
                             <!-- Izmeni Dokument -->
                             <div class="flex gap-2 mt-2 px-4">
-                                <ModalLink
-                                    class="hover:text-green-600 text-slate-300"
-                                    :href="
-                                        route(
-                                            'document.edit',
-                                            props.document.id,
-                                        )
-                                    "
-                                >
-                                    <EditIcon
-                                        v-tippy="{
-                                            content: `Измени ${latinToCyrillic(props.document.document_type.type)}`,
-                                            arrow: true,
-                                            theme: 'light',
-                                        }"
-                                    />
+                                <ModalLink class="hover:text-green-600 text-slate-300" :href="route(
+                                    'document.edit',
+                                    props.document.id,
+                                )
+                                    ">
+                                    <EditIcon v-tippy="{
+                                        content: `Измени ${latinToCyrillic(props.document.document_type.type)}`,
+                                        arrow: true,
+                                        theme: 'light',
+                                    }" />
                                 </ModalLink>
 
-                                <a
-                                    class="px-4 hover:text-sky-600 text-slate-300"
-                                    :href="`/document/print/${props.document.id}`"
-                                    target="_blank"
-                                >
-                                    <PrintIcon
-                                        v-tippy="{
-                                            content: `Принтај ${latinToCyrillic(props.document.document_type.type)}`,
-                                            arrow: true,
-                                            theme: 'light',
-                                        }"
-                                    />
+                                <a class="px-4 hover:text-sky-600 text-slate-300"
+                                    :href="`/document/print/${props.document.id}`" target="_blank">
+                                    <PrintIcon v-tippy="{
+                                        content: `Принтај ${latinToCyrillic(props.document.document_type.type)}`,
+                                        arrow: true,
+                                        theme: 'light',
+                                    }" />
                                 </a>
 
                                 <!-- Create Packing List AddIcon -->
-                                <a
-                                    v-if="!packingListExists"
-                                    class="px-4 hover:text-sky-600 text-slate-300"
-                                    @click.prevent="createPackingList"
-                                >
-                                    <PackageIcon
-                                        v-tippy="{
-                                            content: 'Направи Пакинг Листа',
-                                            arrow: true,
-                                            theme: 'light',
-                                        }"
-                                    />
+                                <a v-if="!packingListExists" class="px-4 hover:text-sky-600 text-slate-300"
+                                    @click.prevent="createPackingList">
+                                    <PackageIcon v-tippy="{
+                                        content: 'Направи Пакинг Листа',
+                                        arrow: true,
+                                        theme: 'light',
+                                    }" />
                                 </a>
                             </div>
                             <!-- Izmeni Dokument end-->
                             <div class="grid grid-cols-1 gap-4 text-sm gap-y-2">
                                 <div class="flex-col text-gray-500">
-                                    
+
                                     <div class="flex items-center  border-y-4 border-red-400 py-2 mt-2 ps-4">
                                         <span class="italic text-lg font-medium pe-2 text-sky-600">
                                             {{
@@ -261,68 +132,45 @@ const createPackingList = () => {
                                                 )
                                             }}
                                         </span>
-                                        <span
-                                            v-if="props.document.is_for_export"
-                                            class="italic text-lg font-medium text-green-600 px-2"
-                                        >
+                                        <span v-if="props.document.is_for_export"
+                                            class="italic text-lg font-medium text-green-600 px-2">
                                             EXPORT
                                         </span>
                                         <span class="italic text-lg font-medium text-sky-600">
                                             Бр:
                                         </span>
-                                        <span
-                                            class="text-lg font-bold text-red-600 px-2"
-                                            >{{
-                                                props.document.document_no
-                                            }}</span
-                                        >
+                                        <span class="text-lg font-bold text-red-600 px-2">{{
+                                            props.document.document_no
+                                        }}</span>
 
-                                        <span
-                                            class="ps-4 text-black"
-                                            v-if="document.packing_list"
-                                        >
-                                            <Link
-                                                :href="`/packinglist/create/${document.packing_list.id}`"
-                                                class="text-md font-semibold px-4"
-                                            >
-                                                {{
-                                                    `со пакинг листа бр: ${document.packing_list.document_no}`
-                                                }}
+                                        <span class="ps-4 text-black" v-if="document.packing_list">
+                                            <Link :href="`/packinglist/create/${document.packing_list.id}`"
+                                                class="text-md font-semibold px-4">
+                                            {{
+                                                `со пакинг листа бр: ${document.packing_list.document_no}`
+                                            }}
                                             </Link>
                                         </span>
-                                        <span
-                                            v-if="props.document.is_translation"
-                                            class=""
-                                        >
+                                        <span v-if="props.document.is_translation" class="">
                                             <AlbanianFlag></AlbanianFlag>
                                         </span>
-                                        <span
-                                            v-else
-                                            class=""
-                                        >
+                                        <span v-else class="">
                                             <MacedonianFlag></MacedonianFlag>
                                         </span>
                                     </div>
                                     <div class="ps-4  font-medium py-2">
-                                        <span class="italic text-lg text-sky-600"
-                                            >Kлиент:
+                                        <span class="italic text-lg text-sky-600">Kлиент:
                                         </span>
 
-                                        <Link
-                                            class=" text-slate-300 content-center"
-                                            :href="
-                                                route(
-                                                    'company.show',
-                                                    props.document.company.id,
-                                                )
-                                            "
-                                            ><span
-                                                class="text-lg font-bold text-black hover:text-green-600"
-                                            >
-                                                {{
-                                                    props.document.company.name
-                                                }}
-                                            </span>
+                                        <Link class=" text-slate-300 content-center" :href="route(
+                                            'company.show',
+                                            props.document.company.id,
+                                        )
+                                            "><span class="text-lg font-bold text-black hover:text-green-600">
+                                            {{
+                                                props.document.company.name
+                                            }}
+                                        </span>
                                         </Link>
                                     </div>
                                     <!-- <hr /> -->
@@ -330,108 +178,68 @@ const createPackingList = () => {
 
                                 <div class="lg:col-span-2">
                                     <hr class="my-4" />
-                                    <div
-                                        class="grid grid-cols-1 gap-4 text-sm gap-y-2 md:grid-cols-6"
-                                    >
+                                    <div class="grid grid-cols-1 gap-4 text-sm gap-y-2 md:grid-cols-6">
                                         <div class="md:col-span-6">
                                             <p>Производи</p>
 
                                             <table
-                                                class="min-w-full text-sm font-light text-center border-collapse text-surface border-e"
-                                            >
-                                                <thead
-                                                    class="font-medium border-b border-neutral-200"
-                                                >
+                                                class="min-w-full text-sm font-light text-center border-collapse text-surface border-e">
+                                                <thead class="font-medium border-b border-neutral-200">
                                                     <tr>
-                                                        <th
-                                                            scope="col"
-                                                            class="px-2 py-1 text-gray-400"
-                                                        >
+                                                        <th scope="col" class="px-2 py-1 text-gray-400">
                                                             Id
                                                         </th>
-                                                        <th
-                                                            scope="col"
-                                                            class="px-2 py-1"
-                                                        >
+                                                        <th scope="col" class="px-2 py-1">
                                                             Бр
                                                         </th>
-                                                        <th
-                                                            scope="col"
-                                                            class="px-2 py-1"
-                                                        >
+                                                        <th scope="col" class="px-2 py-1">
                                                             Ред.Бр
                                                         </th>
-                                                        <th
-                                                            scope="col"
-                                                            class="px-2 py-1"
-                                                        >
+                                                        <th scope="col" class="px-2 py-1">
                                                             Опис
                                                         </th>
-                                                        <th
-                                                            scope="col"
-                                                            class="px-2 py-1"
-                                                        >
+                                                        <th scope="col" class="px-2 py-1">
                                                             Кол
                                                         </th>
-                                                        <th
-                                                            scope="col"
-                                                            class="px-2 py-1"
-                                                        >
+                                                        <th scope="col" class="px-2 py-1">
                                                             Цена
                                                         </th>
-                                                        <th
-                                                            scope="col"
-                                                            class="px-2 py-1"
-                                                        >
+                                                        <th scope="col" class="px-2 py-1">
                                                             Вк.Цена
                                                         </th>
-                                                        <th
-                                                            scope="col"
-                                                            class="px-2 py-1"
-                                                        >
+                                                        <th scope="col" class="px-2 py-1">
                                                             Акција
                                                         </th>
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                    <tr
-                                                        class="border-b border-neutral-200 border-e hover:bg-blue-50"
+                                                    <tr class="border-b border-neutral-200 border-e hover:bg-blue-50"
                                                         v-for="(
-                                                            product, index
-                                                        ) in products"
-                                                        :key="
-                                                            product.id || index
-                                                        "
-                                                    >
+product, index
+                                                        ) in products" :key="product.id || index
+                                                            ">
                                                         <td
-                                                            class="px-1 py-1 text-xs text-left text-gray-300 bg-gray-100 whitespace-nowrap border-e"
-                                                        >
+                                                            class="px-1 py-1 text-xs text-left text-gray-300 bg-gray-100 whitespace-nowrap border-e">
                                                             {{ product.id }}
                                                         </td>
 
-                                                        <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
-                                                        >
+                                                        <td class="px-2 py-1 text-left whitespace-nowrap border-e">
                                                             {{ index + 1 }}
                                                         </td>
                                                         <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e  font-medium text-red-600"
-                                                        >
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e  font-medium text-red-600">
                                                             {{ product.product_code }}
                                                         </td>
 
                                                         <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e flex font-normal"
-                                                        >
+                                                            class="px-2 py-1 text-left whitespace-nowrap border-e flex font-normal">
                                                             {{
                                                                 product.description
                                                             }}
-                                                            <div
-                                                                v-if="
-                                                                    product.length
-                                                                "
-                                                            >
+                                                            <div v-if="
+                                                                product.length
+                                                            ">
                                                                 <span> - </span>
                                                                 {{
                                                                     new Intl.NumberFormat(
@@ -446,11 +254,9 @@ const createPackingList = () => {
                                                                 }}
                                                                 x
                                                             </div>
-                                                            <div
-                                                                v-if="
-                                                                    product.width
-                                                                "
-                                                            >
+                                                            <div v-if="
+                                                                product.width
+                                                            ">
                                                                 {{
                                                                     new Intl.NumberFormat(
                                                                         "en-US",
@@ -464,11 +270,9 @@ const createPackingList = () => {
                                                                 }}
                                                                 x
                                                             </div>
-                                                            <div
-                                                                v-if="
-                                                                    product.height
-                                                                "
-                                                            >
+                                                            <div v-if="
+                                                                product.height
+                                                            ">
                                                                 {{
                                                                     new Intl.NumberFormat(
                                                                         "en-US",
@@ -481,24 +285,17 @@ const createPackingList = () => {
                                                                     )
                                                                 }}
                                                             </div>
-                                                            <div
-                                                                v-if="
-                                                                    product.manufacturer_id
-                                                                "
-                                                            >
+                                                            <div v-if="
+                                                                product.manufacturer_id
+                                                            ">
                                                                 -
-                                                                <span
-                                                                    class="font-bold text-green-900"
-                                                                    >{{
-                                                                        product
-                                                                            .manufacturers
-                                                                            .name
-                                                                    }}</span
-                                                                >
+                                                                <span class="font-bold text-green-900">{{
+                                                                    product
+                                                                        .manufacturers
+                                                                        .name
+                                                                }}</span>
                                                                 -
-                                                                <span
-                                                                    class="text-blue-800"
-                                                                >
+                                                                <span class="text-blue-800">
                                                                     {{
                                                                         product
                                                                             .manufacturers
@@ -509,25 +306,21 @@ const createPackingList = () => {
                                                                 </span>
                                                             </div>
                                                         </td>
-                                                        <td
-                                                            class="px-2 py-1 text-left whitespace-nowrap border-e"
-                                                            :class="product.qty > 0 ? 'font-bold text-orange-500' : ''"
-                                                        >
-                                                        {{new Intl.NumberFormat(
-                                                                    "en-US",
-                                                                    {
-                                                                        minimumFractionDigits: 0,
-                                                                        maximumFractionDigits: 4,
-                                                                    },
-                                                                ).format(
-                                                                    product.qty,
-                                                                )}}
-                                                            
+                                                        <td class="px-2 py-1 text-left whitespace-nowrap border-e"
+                                                            :class="product.qty > 0 ? 'font-bold text-orange-500' : ''">
+                                                            {{ new Intl.NumberFormat(
+                                                                "en-US",
+                                                                {
+                                                                    minimumFractionDigits: 0,
+                                                                    maximumFractionDigits: 4,
+                                                                },
+                                                            ).format(
+                                                                product.qty,
+                                                            ) }}
+
                                                         </td>
-                                                        <td
-                                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
-                                                             :class="product.single_price > 0 ? 'font-bold text-red-500' : ''"
-                                                        >
+                                                        <td class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                                            :class="product.single_price > 0 ? 'font-bold text-red-500' : ''">
                                                             {{
                                                                 new Intl.NumberFormat(
                                                                     "en-US",
@@ -545,10 +338,8 @@ const createPackingList = () => {
                                                                     .symbol
                                                             }}
                                                         </td>
-                                                        <td
-                                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
-                                                            :class="product.total_price > 0 ? 'font-bold text-purple-500' : ''"
-                                                        >
+                                                        <td class="px-2 py-1 text-right whitespace-nowrap border-e"
+                                                            :class="product.total_price > 0 ? 'font-bold text-purple-500' : ''">
                                                             {{
                                                                 new Intl.NumberFormat(
                                                                     "en-US",
@@ -566,119 +357,87 @@ const createPackingList = () => {
                                                                     .symbol
                                                             }}
                                                         </td>
-                                                        <td
-                                                            class="px-2 py-1 text-right whitespace-nowrap border-e"
-                                                            
-                                                        >
+                                                        <td class="px-2 py-1 text-right whitespace-nowrap border-e">
                                                             <div></div>
-                                                            <div
-                                                                class="flex gap-1"
-                                                            >
-                                                                <Link
-                                                                    class="px-4 hover:text-orange-600 text-slate-300"
-                                                                    :href="`/documents/add/row/${props.document.id}/${product.id}`"
-                                                                >
-                                                                    <AddRowIcon
-                                                                        v-tippy="{
-                                                                            content:
-                                                                                'Додај Празен Ред',
-                                                                            arrow: true,
-                                                                            theme: 'light',
-                                                                        }"
-                                                                    />
+                                                            <div class="flex gap-1">
+                                                                <Link class="px-4 hover:text-orange-600 text-slate-300"
+                                                                    :href="`/documents/add/row/${props.document.id}/${product.id}`">
+                                                                <AddRowIcon v-tippy="{
+                                                                    content:
+                                                                        'Додај Празен Ред',
+                                                                    arrow: true,
+                                                                    theme: 'light',
+                                                                }" />
                                                                 </Link>
 
-                                                                <ModalLink
-                                                                    class="hover:text-green-600 text-slate-300"
-                                                                    :href="
-                                                                        route(
-                                                                            'product.edit',
-                                                                            product.id,
-                                                                        )
-                                                                    "
-                                                                >
-                                                                    <EditIcon
-                                                                        v-tippy="{
-                                                                            content:
-                                                                                'Измени Производ',
-                                                                            arrow: true,
-                                                                            theme: 'light',
-                                                                        }"
-                                                                    />
+                                                                <ModalLink class="hover:text-green-600 text-slate-300"
+                                                                    :href="route(
+                                                                        'product.edit',
+                                                                        product.id,
+                                                                    )
+                                                                        ">
+                                                                    <EditIcon v-tippy="{
+                                                                        content:
+                                                                            'Измени Производ',
+                                                                        arrow: true,
+                                                                        theme: 'light',
+                                                                    }" />
                                                                 </ModalLink>
 
-                                                                <button
-                                                                    class="hover:text-red-700 text-slate-300"
+                                                                <button class="hover:text-red-700 text-slate-300"
                                                                     @click="
                                                                         () =>
                                                                             deleteProduct(
                                                                                 product.id,
                                                                             )
-                                                                    "
-                                                                >
-                                                                    <DeleteIcon
-                                                                        v-tippy="{
-                                                                            content:
-                                                                                'Избриши Производ',
-                                                                            arrow: true,
-                                                                            theme: 'light',
-                                                                        }"
-                                                                    />
+                                                                    ">
+                                                                    <DeleteIcon v-tippy="{
+                                                                        content:
+                                                                            'Избриши Производ',
+                                                                        arrow: true,
+                                                                        theme: 'light',
+                                                                    }" />
                                                                 </button>
 
-                                                                <a
-                                                                    class="px-2 hover:text-green-600 text-slate-300"
+                                                                <a class="px-2 hover:text-green-600 text-slate-300"
                                                                     :href="`/product/warranty/${product.id}`"
-                                                                    target="_blank"
-                                                                >
-                                                                    <WarrantyIcon
-                                                                        v-tippy="{
-                                                                            content:
-                                                                                'Гаранција',
-                                                                            arrow: true,
-                                                                            theme: 'light',
-                                                                        }"
-                                                                    />
+                                                                    target="_blank">
+                                                                    <WarrantyIcon v-tippy="{
+                                                                        content:
+                                                                            'Гаранција',
+                                                                        arrow: true,
+                                                                        theme: 'light',
+                                                                    }" />
                                                                 </a>
 
                                                                 <!-- CE Declaration -->
-                                                                <div
-                                                                v-if="product.manufacturer_id ==1"
-                                                                class="flex">
+                                                                <div v-if="product.manufacturer_id == 1" class="flex">
 
-                                                                
-                                                                <a
-                                                                    class="px-2 hover:text-orange-300 text-slate-300"
-                                                                    :href="`/ce/print/${product.id}`"
-                                                                    target="_blank"
-                                                                >
-                                                                    <CertificateIcon
-                                                                        v-tippy="{
+
+                                                                    <a class="px-2 hover:text-orange-300 text-slate-300"
+                                                                        :href="`/ce/print/${product.id}`"
+                                                                        target="_blank">
+                                                                        <CertificateIcon v-tippy="{
                                                                             content:
                                                                                 'CE Certificate',
                                                                             arrow: true,
                                                                             theme: 'light',
-                                                                        }"
-                                                                    />
-                                                                </a>
+                                                                        }" />
+                                                                    </a>
 
-                                                                <!-- Freon Certificate -->
+                                                                    <!-- Freon Certificate -->
 
-                                                                <a
-                                                                    class="px-2 hover:text-green-700 text-slate-300"
-                                                                    :href="`/freon/print/${product.id}`"
-                                                                    target="_blank"
-                                                                >
-                                                                    <FreonIcon
-                                                                        v-tippy="{
+                                                                    <a class="px-2 hover:text-green-700 text-slate-300"
+                                                                        :href="`/freon/print/${product.id}`"
+                                                                        target="_blank">
+                                                                        <FreonIcon v-tippy="{
                                                                             content:
                                                                                 'Freon Certificate',
                                                                             arrow: true,
                                                                             theme: 'light',
-                                                                        }"
-                                                                    />
-                                                                </a>
-                                                            </div>
+                                                                        }" />
+                                                                    </a>
+                                                                </div>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -687,10 +446,8 @@ const createPackingList = () => {
                                         </div>
 
                                         <div class="mt-4">
-                                            <ModalLink
-                                                :href="`/products/add/modal/${props.document.id}`"
-                                                class="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-900 font-medium whitespace-nowrap"
-                                            >
+                                            <ModalLink :href="`/products/add/modal/${props.document.id}`"
+                                                class="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-900 font-medium whitespace-nowrap">
                                                 Додај Производ
                                             </ModalLink>
                                         </div>
@@ -700,24 +457,16 @@ const createPackingList = () => {
                                 <!-- CALCULATED FIELDS -->
                                 <div class="flex justify-end">
                                     <table
-                                        class="font-light text-center border-collapse w-[400px] text-sm text-surface border-e mt-4"
-                                    >
-                                        <tr
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                        
-                                            <th
-                                                class="border-indigo-300 bg-indigo-50 border-e"
-                                            >
+                                        class="font-light text-center border-collapse w-[400px] text-sm text-surface border-e mt-4">
+                                        <tr class="border-t border-b border-indigo-300 border-e border-s">
+
+                                            <th class="border-indigo-300 bg-indigo-50 border-e">
                                                 <span
-                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md"
-                                                >
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md">
                                                     Основица
                                                 </span>
                                             </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600"
-                                            >
+                                            <td class="text-lg font-bold text-right text-indigo-600">
                                                 {{
                                                     new Intl.NumberFormat(
                                                         "en-US",
@@ -730,9 +479,7 @@ const createPackingList = () => {
                                                     )
                                                 }}
                                             </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
-                                            >
+                                            <td class="text-lg font-bold text-right text-indigo-600 pe-4">
                                                 {{
                                                     props.document.curency
                                                         .symbol
@@ -742,20 +489,14 @@ const createPackingList = () => {
 
                                         <!-- DISCOUNT -->
 
-                                        <tr
-                                            v-if="
-                                                props.document.discount !==
-                                                    null &&
-                                                props.document.discount > 0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-indigo-50 border-e"
-                                            >
+                                        <tr v-if="
+                                            props.document.discount !==
+                                            null &&
+                                            props.document.discount > 0
+                                        " class="border-t border-b border-indigo-300 border-e border-s">
+                                            <th class="border-indigo-300 bg-indigo-50 border-e">
                                                 <span
-                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md"
-                                                >
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md">
                                                     Попуст
                                                     {{
                                                         props.document.discount
@@ -763,9 +504,7 @@ const createPackingList = () => {
                                                     %
                                                 </span>
                                             </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600"
-                                            >
+                                            <td class="text-lg font-bold text-right text-indigo-600">
                                                 {{
                                                     new Intl.NumberFormat(
                                                         "en-US",
@@ -779,9 +518,7 @@ const createPackingList = () => {
                                                     )
                                                 }}
                                             </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
-                                            >
+                                            <td class="text-lg font-bold text-right text-indigo-600 pe-4">
                                                 {{
                                                     props.document.curency
                                                         .symbol
@@ -791,19 +528,13 @@ const createPackingList = () => {
 
                                         <!-- DDV -->
 
-                                        <tr
-                                            v-if="
-                                                props.document.tax &&
-                                                props.document.tax.tax_rate != 0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-indigo-50 border-e"
-                                            >
+                                        <tr v-if="
+                                            props.document.tax &&
+                                            props.document.tax.tax_rate != 0
+                                        " class="border-t border-b border-indigo-300 border-e border-s">
+                                            <th class="border-indigo-300 bg-indigo-50 border-e">
                                                 <span
-                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md"
-                                                >
+                                                    class="italic font-normal text-right text-indigo-600 pe-4 text-md">
                                                     ДДВ
                                                     {{
                                                         props.document.tax
@@ -812,9 +543,7 @@ const createPackingList = () => {
                                                     %
                                                 </span>
                                             </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600"
-                                            >
+                                            <td class="text-lg font-bold text-right text-indigo-600">
                                                 {{
                                                     new Intl.NumberFormat(
                                                         "en-US",
@@ -828,9 +557,7 @@ const createPackingList = () => {
                                                     )
                                                 }}
                                             </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-indigo-600 pe-4"
-                                            >
+                                            <td class="text-lg font-bold text-right text-indigo-600 pe-4">
                                                 {{
                                                     props.document.curency
                                                         .symbol
@@ -840,21 +567,13 @@ const createPackingList = () => {
 
                                         <!-- Document Grand Total -->
 
-                                        <tr
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-pink-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-pink-600 pe-4 text-md"
-                                                >
+                                        <tr class="border-t border-b border-indigo-300 border-e border-s">
+                                            <th class="border-indigo-300 bg-pink-50 border-e">
+                                                <span class="italic font-normal text-right text-pink-600 pe-4 text-md">
                                                     Вкупно со ДДВ
                                                 </span>
                                             </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-pink-600"
-                                            >
+                                            <td class="text-lg font-bold text-right text-pink-600">
                                                 {{
                                                     new Intl.NumberFormat(
                                                         "en-US",
@@ -868,9 +587,7 @@ const createPackingList = () => {
                                                     )
                                                 }}
                                             </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-pink-600 pe-4"
-                                            >
+                                            <td class="text-lg font-bold text-right text-pink-600 pe-4">
                                                 {{
                                                     props.document.curency
                                                         .symbol
@@ -880,27 +597,18 @@ const createPackingList = () => {
 
                                         <!-- AVANS -->
 
-                                        <tr
-                                            v-if="
-                                                props.document
-                                                    .advance_payment !== null &&
-                                                props.document.advance_payment >
-                                                    0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-teal-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
-                                                >
+                                        <tr v-if="
+                                            props.document
+                                                .advance_payment !== null &&
+                                            props.document.advance_payment >
+                                            0
+                                        " class="border-t border-b border-indigo-300 border-e border-s">
+                                            <th class="border-indigo-300 bg-teal-50 border-e">
+                                                <span class="italic font-normal text-right text-teal-600 pe-4 text-md">
                                                     Аванс
                                                 </span>
                                             </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600"
-                                            >
+                                            <td class="text-lg font-bold text-right text-teal-600">
                                                 {{
                                                     new Intl.NumberFormat(
                                                         "en-US",
@@ -914,9 +622,7 @@ const createPackingList = () => {
                                                     )
                                                 }}
                                             </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600 pe-4"
-                                            >
+                                            <td class="text-lg font-bold text-right text-teal-600 pe-4">
                                                 {{
                                                     props.document.curency
                                                         .symbol
@@ -926,27 +632,18 @@ const createPackingList = () => {
 
                                         <!-- Preostanata Osnovica -->
 
-                                        <tr
-                                            v-if="
-                                                props.document
-                                                    .advance_payment !== null &&
-                                                props.document.advance_payment >
-                                                    0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-teal-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
-                                                >
+                                        <tr v-if="
+                                            props.document
+                                                .advance_payment !== null &&
+                                            props.document.advance_payment >
+                                            0
+                                        " class="border-t border-b border-indigo-300 border-e border-s">
+                                            <th class="border-indigo-300 bg-teal-50 border-e">
+                                                <span class="italic font-normal text-right text-teal-600 pe-4 text-md">
                                                     Преостаната Основица
                                                 </span>
                                             </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600"
-                                            >
+                                            <td class="text-lg font-bold text-right text-teal-600">
                                                 {{
                                                     new Intl.NumberFormat(
                                                         "en-US",
@@ -960,9 +657,7 @@ const createPackingList = () => {
                                                     )
                                                 }}
                                             </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600 pe-4"
-                                            >
+                                            <td class="text-lg font-bold text-right text-teal-600 pe-4">
                                                 {{
                                                     props.document.curency
                                                         .symbol
@@ -972,27 +667,18 @@ const createPackingList = () => {
 
                                         <!-- Preostanatо ДДВ -->
 
-                                        <tr
-                                            v-if="
-                                                props.document
-                                                    .advance_payment !== null &&
-                                                props.document.advance_payment >
-                                                    0
-                                            "
-                                            class="border-t border-b border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-teal-50 border-e"
-                                            >
-                                                <span
-                                                    class="italic font-normal text-right text-teal-600 pe-4 text-md"
-                                                >
+                                        <tr v-if="
+                                            props.document
+                                                .advance_payment !== null &&
+                                            props.document.advance_payment >
+                                            0
+                                        " class="border-t border-b border-indigo-300 border-e border-s">
+                                            <th class="border-indigo-300 bg-teal-50 border-e">
+                                                <span class="italic font-normal text-right text-teal-600 pe-4 text-md">
                                                     Преостанатo ДДВ
                                                 </span>
                                             </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600"
-                                            >
+                                            <td class="text-lg font-bold text-right text-teal-600">
                                                 {{
                                                     new Intl.NumberFormat(
                                                         "en-US",
@@ -1006,9 +692,7 @@ const createPackingList = () => {
                                                     )
                                                 }}
                                             </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-teal-600 pe-4"
-                                            >
+                                            <td class="text-lg font-bold text-right text-teal-600 pe-4">
                                                 {{
                                                     props.document.curency
                                                         .symbol
@@ -1018,27 +702,19 @@ const createPackingList = () => {
 
                                         <!-- VKUPNO ZA NAPLATA -->
 
-                                        <tr
-                                            v-if="
-                                                props.document
-                                                    .advance_payment !== null &&
-                                                props.document.advance_payment >
-                                                    0
-                                            "
-                                            class="border-t border-b-4 border-b-red-500 border-indigo-300 border-e border-s"
-                                        >
-                                            <th
-                                                class="border-indigo-300 bg-red-100 border-e"
-                                            >
-                                                <span
-                                                    class="font-medium text-right text-red-600 pe-4 text-md"
-                                                >
+                                        <tr v-if="
+                                            props.document
+                                                .advance_payment !== null &&
+                                            props.document.advance_payment >
+                                            0
+                                        "
+                                            class="border-t border-b-4 border-b-red-500 border-indigo-300 border-e border-s">
+                                            <th class="border-indigo-300 bg-red-100 border-e">
+                                                <span class="font-medium text-right text-red-600 pe-4 text-md">
                                                     Вк.Преостанато со ДДВ
                                                 </span>
                                             </th>
-                                            <td
-                                                class="text-lg font-bold text-right text-red-600 bg-red-100"
-                                            >
+                                            <td class="text-lg font-bold text-right text-red-600 bg-red-100">
                                                 {{
                                                     new Intl.NumberFormat(
                                                         "en-US",
@@ -1052,9 +728,7 @@ const createPackingList = () => {
                                                     )
                                                 }}
                                             </td>
-                                            <td
-                                                class="text-lg font-bold text-right text-red-600 pe-4 bg-red-100"
-                                            >
+                                            <td class="text-lg font-bold text-right text-red-600 pe-4 bg-red-100">
                                                 {{
                                                     props.document.curency
                                                         .symbol
@@ -1066,12 +740,9 @@ const createPackingList = () => {
                             </div>
                             <!-- WORDS -->
                             <div class="text-xs text-purple-400 italic">
-                                {{
-                                    numberToWordsMK(
-                                        props.document
-                                            .total_with_tax_and_discount ?? 0,
-                                    )
-                                }}
+
+                                {{ NumberToWordsMk(props.document.total_with_tax_and_discount ?? 0) }}
+
                                 {{ props.document.curency.symbol }}
                             </div>
                         </div>

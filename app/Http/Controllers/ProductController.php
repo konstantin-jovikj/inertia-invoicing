@@ -37,14 +37,12 @@ class ProductController extends Controller
         $packingListExists = count($isPackingList) > 0;
         $products->load('manufacturers.place.country');
 
-        // $secondLatestDoc = Document::where('document_type_id', $document->document_type_id)
-        //     ->latest() // Orders by `created_at` descending
-        //     ->skip(1)  // Skips the latest document
-        //     ->first(); // Fetches the next document
+
         $secondLatestDoc = Document::where('document_type_id', $document->document_type_id)
-        ->orderBy('date', 'desc') // Orders by `date` column descending
-        ->skip(1)                // Skips the latest document
-        ->first();               // Fetches the next document
+            ->orderBy('date', 'desc') // Orders by `date` column descending
+            ->skip(1)                // Skips the latest document
+            ->first();               // Fetches the next document
+
 
         return inertia('Products/ProductsAdd', [
             'document' => $document,
@@ -191,22 +189,22 @@ class ProductController extends Controller
 
 
 
-        if ($document->curency_id == 1) {
-            $document->total += round($docProduct->total_price);
-            $document->discount_amount = round($document->total * ($document->discount / 100));
-            $document->tax_amount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
-        } else {
-            $document->total += $docProduct->total_price;
-            $document->discount_amount = $document->total * ($document->discount / 100);
- 
-        }
- 
-        $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
+            if ($document->curency_id == 1) {
+                $document->total += round($docProduct->total_price);
+                $document->discount_amount = round($document->total * ($document->discount / 100));
+                $document->tax_amount = round(($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100));
+            } else {
+                $document->total += $docProduct->total_price;
+                $document->discount_amount = $document->total * ($document->discount / 100);
 
-        $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
-        $document->advanced_payment_base = $document->grand_total / (1 + $document->tax->tax_rate / 100);
-        $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
-    }
+            }
+
+            $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
+
+            $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
+            $document->advanced_payment_base = $document->grand_total / (1 + $document->tax->tax_rate / 100);
+            $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
+        }
         $document->save(); // Save the updated document
 
         // Return a success response with the created product
@@ -416,7 +414,7 @@ class ProductController extends Controller
         } else {
             $document->discount_amount = $document->total * ($document->discount / 100);
             $document->tax_amount = ($document->total - $document->discount_amount) * ($document->tax->tax_rate / 100);
-            $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;           
+            $document->total_with_tax_and_discount = $document->total - $document->discount_amount + $document->tax_amount;
             $document->grand_total = $document->total_with_tax_and_discount - $document->advance_payment;
             $document->advanced_payment_base = $document->grand_total / (1 + $document->tax->tax_rate / 100);
             $document->advanced_payment_tax = $document->grand_total - $document->advanced_payment_base;
@@ -431,10 +429,10 @@ class ProductController extends Controller
                 'advanced_payment_base' => round($document->advanced_payment_base, 2),
                 'advanced_payment_tax' => round($document->advanced_payment_tax, 2),
             ]);
-            
-            }else{
-                $document->save();
-            }
+
+        } else {
+            $document->save();
+        }
 
         // Return a success response with the created product
         return redirect()
