@@ -224,6 +224,7 @@ class PDFController extends Controller
                 ->headerView('Pdf.header', $headerData)
                 ->footerView('Pdf.footer', [
                     'document' => $document,
+                    'pageNumber' => null
                 ])
                 ->format(Format::A4)
                 ->name($docName);
