@@ -62,7 +62,7 @@ class DocumentController extends Controller
             })
             ->orderBy('created_at', 'desc')
             ->paginate(20)
-            ->withQueryString(); // Retains query parameters (for pagination)
+            ->appends($request->query()); // Retains query parameters (for pagination)
         // dd($documents->pluck('packingList'));
         return inertia('Documents/DocumentsIndex', [
             'documents' => $documents,
@@ -133,7 +133,7 @@ class DocumentController extends Controller
             'curency_id' => $request->curency_id ?? 1,
         ]);
 
-        
+
 
         return $request->validate([
             'user_id' => 'required|exists:users,id',
