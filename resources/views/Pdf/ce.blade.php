@@ -184,6 +184,17 @@
                     <p>{{ $product->model->model }}</p>
                 @endif
             </div>
+            <div
+                class="w-full mx-auto  flex justify-center mt-1 border border-sky-700 rounded-md py-1 uppercase text-[8px] italic">
+                @if ($product->serial_no)
+                    <p>
+                        <span class="font-normal">Serial No:</span>
+                        <span class="text-sky-700 font-bold">
+                            {{ $product->serial_no }}
+                        </span>
+                    </p>
+                @endif
+            </div>
             {{-- Direktivi --}}
 
             <div class="w-full leading-[8px] text-[7px] flex mt-2">
@@ -409,15 +420,15 @@
             <div class="w-1/3">
 
             </div>
-            <div class="w-1/3">
-                <div>
+            <div class="w-1/3 flex justify-end  my-0 py-0">
+                <div class="">
                     <p>Bunjamin Jashari</p>
                 </div>
-                <div>
+                <div class=" my-0 py-0">
 
-                    <!DOCTYPE svg
-                        PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="60pt" height="60pt"
+                    {{-- <!DOCTYPE svg
+                        PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd"> --}}
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="50pt" height="50pt"
                         viewBox="0 0 497.000000 304.000000" preserveAspectRatio="xMidYMid meet">
 
                         <g transform="translate(0.000000,304.000000) scale(0.100000,-0.100000)" fill="#000000"
